@@ -1,0 +1,12 @@
+{extends file="layout.html"}
+
+{block name="content"}
+	<div class="container-flex">
+        {include file="./form_item.html" title="Alles leeren" id="clear-all"}
+        {include file="./form_item.html" title="Core Cache leeren" id="clear-core"}
+	</div>
+{/block}
+
+{block name="custom_scripts"}
+	<script src="{$overviewJs}"></script>
+{/block}

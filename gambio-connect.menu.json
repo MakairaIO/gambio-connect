@@ -1,0 +1,16 @@
+[
+    {
+        "id": "makaira_gambio-connect",
+        "sort": 3,
+        "class": "fa fa-hand-sparkles",
+        "title": "Makaira Gambio Connect",
+        "type": "standalone",
+        "items": [
+            {
+                "sort": 10,
+                "link": "makaira/gambio-connect",
+                "title": "Makaira Gambio Connect"
+            }
+        ]
+    }
+]
