@@ -1,5 +1,6 @@
-const btnAll = document.querySelector('.clear-all button');
-const btnCore = document.querySelector('.clear-core button');
+const btnExport = document.querySelector('.export button');
+const btnReplace = document.querySelector('.replace button');
+const btnSwitch = document.querySelector('.switch button');
 const successKey = 'gx-admin:send-info-box-success-message';
 const warningKey = 'gx-admin:send-info-box-warning-message';
 
@@ -9,7 +10,7 @@ function handleClick(event, callbackUrl) {
 		method: 'post'
 	});
 	btn.setAttribute('disabled', true);
-	
+
 	request.then(response => {
 		if (response.ok) {
 			window.dispatchEvent(new Event(successKey));
@@ -32,5 +33,6 @@ function addCallbackListener(button, callbackUrl) {
 	});
 }
 
-addCallbackListener(btnAll, `${window.jsEnvironment.baseUrl}/admin/gambio-samples/cache-cleaner/clear-all`);
-addCallbackListener(btnCore, `${window.jsEnvironment.baseUrl}/admin/gambio-samples/cache-cleaner/clear-core`);
+addCallbackListener(btnExport, `${window.jsEnvironment.baseUrl}/admin/makaira/gambio-connect/sync/export`);
+addCallbackListener(btnReplace, `${window.jsEnvironment.baseUrl}/admin/makaira/gambio-connect/sync/replace`);
+addCallbackListener(btnSwitch, `${window.jsEnvironment.baseUrl}/admin/makaira/gambio-connect/sync/switch`);

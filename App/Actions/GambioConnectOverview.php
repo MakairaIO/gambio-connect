@@ -1,13 +1,4 @@
 <?php
-/* --------------------------------------------------------------
- CacheCleanerOverview.php 2020-08-27
- Gambio GmbH
- http://www.gambio.de
- Copyright (c) 2020 Gambio GmbH
- Released under the GNU General Public License (Version 2)
- [http://www.gnu.org/licenses/gpl-2.0.html]
- --------------------------------------------------------------
- */
 
 declare(strict_types=1);
 
@@ -31,6 +22,15 @@ class GambioConnectOverview extends AdminModuleAction
     {
         $pageTitle    = 'Makaira Gambio Connect';
         $templatePath = __DIR__ . '/../../ui/template/overview.html';
+
+        // $gxCoreLoader = \MainFactory::create(
+        //     'GXCoreLoader',
+        //     \MainFactory::create('GXCoreLoaderSettings')
+        // );
+        // $db = $gxCoreLoader->getDatabaseQueryBuilder();
+
+
+
 
         $data     = [
             'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js"

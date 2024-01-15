@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace GXModules\Makaira\GambioConnect;
 
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
-use Gambio\Core\Application\ValueObjects\Path;
-use Gambio\Core\Cache\Services\CacheFactory;
-use GXModules\GambioSamples\CacheCleaner\App\Actions\ClearAllCaches;
-use GXModules\GambioSamples\CacheCleaner\App\Actions\ClearCoreCache;
-use GXModules\GambioSamples\CacheCleaner\Service\CacheCleanerService;
+use GXModules\Makaira\GambioConnect\App\Actions\Export;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
+use GXModules\Makaira\GambioConnect\App\MakairaClient;
+use GXModules\Makaira\GambioConnect\App\MakairaLogger;
+use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
+use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\Services\AdditionalOptionReadService;
+use Doctrine\DBAL\Connection;
+
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
+use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
+
 
 /**
  * Class GambioConnectServiceProvider
@@ -26,8 +33,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     {
         return [
             GambioConnectOverview::class,
-            // ClearAllCaches::class,
-            // ClearCoreCache::class,
+            Export::class,
+            VariantUpdateEventListener::class,
         ];
     }
 
@@ -38,10 +45,33 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function register(): void
     {
         $this->application->registerShared(GambioConnectOverview::class);
-        // $this->application->registerShared(ClearAllCaches::class)->addArgument(CacheCleanerService::class);
-        // $this->application->registerShared(ClearCoreCache::class)->addArgument(CacheCleanerService::class);
+        $this->application->registerShared(Export::class)->addArgument(GambioConnectService::class);
+
+        $this->application->registerShared(MakairaLogger::class);
+        $this->application->registerShared(MakairaClient::class);
+
+        $this->application->registerShared(GambioConnectService::class, App\GambioConnectService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(ProductVariantsReadService::class)
+            ->addArgument(AdditionalOptionReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
+
+        $this->application->registerShared(VariantUpdateEventListener::class)
+            ->addArgument(GambioConnectService::class);
+
+        $this->application->registerShared(MakairaProduct::class)
+            ->addArgument(ProductVariantsReadService::class);
+
+
+
 
         // $this->application->registerShared(CacheCleanerService::class, App\CacheCleanerService::class)
         //     ->addArguments([CacheFactory::class, Path::class]);
+    }
+
+    public function boot(): void
+    {
+        $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
     }
 }

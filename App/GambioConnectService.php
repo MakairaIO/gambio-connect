@@ -1,25 +1,21 @@
 <?php
-/* --------------------------------------------------------------
- CacheCleanerService.php 2020-08-27
- Gambio GmbH
- http://www.gambio.de
- Copyright (c) 2020 Gambio GmbH
- Released under the GNU General Public License (Version 2)
- [http://www.gnu.org/licenses/gpl-2.0.html]
- --------------------------------------------------------------
- */
 
 declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App;
 
-use Gambio\Core\Application\ValueObjects\Path;
-use Gambio\Core\Cache\Services\CacheFactory;
-use GXModules\Makaira\GambioConnect\Service\GambioConnectorService as GambioConnectServiceInterface;
-use Psr\SimpleCache\InvalidArgumentException;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
+use Gambio\Admin\Modules\Option\App\OptionReadService;
+use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
+use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
+use MainFactory;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
+use Gambio\Admin\Modules\ProductOption\App\ProductOptionReadService;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
+use Doctrine\DBAL\Connection;
+use IdType;
+use LanguageCode;
+use ProductRepositoryReader;
+use StringType;
 
 /**
  * Class GambioConnectService
@@ -28,98 +24,100 @@ use SplFileInfo;
  */
 class GambioConnectService implements GambioConnectServiceInterface
 {
-    /**
-     * @var CacheFactory
-     */
-    private $cacheFactory;
-
-    /**
-     * @var Path
-     */
-    private $path;
+    private MakairaClient $client;
+    private MakairaLogger $logger;
+    private ProductVariantsReadService $variantReadService;
+    private AdditionalOptionReadService $additionalOptionReadService;
+    private Connection $connection;
+    // private ProductRepositoryReader $productReadService;
 
 
-    /**
-     * @param CacheFactory $cacheFactory
-     * @param Path         $path
-     */
-    public function __construct(CacheFactory $cacheFactory, Path $path)
-    {
-        $this->cacheFactory = $cacheFactory;
-        $this->path         = $path;
+    public function __construct(
+        MakairaClient $client,
+        ProductVariantsReadService $variantReadService,
+        AdditionalOptionReadService $additionalOptionReadService,
+        Connection $connection,
+        MakairaLogger $logger,
+        //   ProductRepositoryReader $productReadService,
+
+    ) {
+        $this->logger = $logger;
+        $this->client = $client;
+        $this->variantReadService = $variantReadService;
+        $this->additionalOptionReadService = $additionalOptionReadService;
+        $this->connection = $connection;
+        // $this->productReadService = $productReadService;
     }
 
-
-    /**
-     * @inheritDoc
-     */
-    public function clearAll(): void
+    public function export(int $productId = null): void
     {
-        $this->clearCacheDirectory();
-    }
+
+        $lang = 2;
+        if ($productId === null) {
+            $this->exportAll();
+        } else {
+
+            $product = $this->connection->fetchAllAssociative(
+                '
+                SELECT p.*, pd.products_name, pd.products_name, pd.products_description, pd.products_short_description, pd.products_url, pd.products_viewed
+                  FROM ' . 'products' . ' p
+             LEFT JOIN ' . 'products_description' . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"
+             WHERE p.products_id ="' . $productId . '"'
+            );
 
 
-    /**
-     * @inheritDoc
-     */
-    public function clearCore(): void
-    {
-        try {
-            $coreCache = $this->cacheFactory->createCacheFor('core');
-            $coreCache->clear();
-        } catch (InvalidArgumentException $e) {
+            $specificProductVariants = $this->variantReadService->getProductVariantsByProductId($productId);
+            $document = new MakairaProduct($product[0], $specificProductVariants);
+            $this->client->push_revision($document->addMakairaDocumentWrapper());
         }
     }
 
 
-    private function clearCacheDirectory(): void
+
+    public function exportAll(): void
     {
-        $excludes           = [
-            '.htaccess',
-            'index.html',
-        ];
-        $cacheDir           = "{$this->path->base()}/cache";
-        $validationCallback = static function (SplFileInfo $file) use ($excludes): bool {
-            return !in_array($file->getFilename(), $excludes, true)
-                && strpos(
-                    $file->getPathname(),
-                    '/sessions/'
-                ) === false;
-        };
 
-        $this->deleteRecursive($cacheDir, $validationCallback);
-    }
+        $lang = 2;
 
-
-    /**
-     * @param string        $path
-     * @param callable|null $validationCallback
-     */
-    private function deleteRecursive(string $path, callable $validationCallback = null): void
-    {
-        foreach ($this->iterator($path) as $file) {
-            $condition = $validationCallback ? $file->isFile() && $validationCallback($file) : $file->isFile();
-
-            if ($condition) {
-                @unlink($file->getPathname());
-            }
-        }
-    }
-
-
-    /**
-     * @param string $path
-     *
-     * @return RecursiveIteratorIterator
-     */
-    private function iterator(string $path): RecursiveIteratorIterator
-    {
-        return new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $path,
-                RecursiveDirectoryIterator::SKIP_DOTS
-            ),
-            RecursiveIteratorIterator::SELF_FIRST
+        $products = $this->connection->fetchAllAssociative(
+            '
+            SELECT p.*, pd.products_name, pd.products_description, pd.products_short_description, pd.products_url, pd.products_viewed
+			  FROM ' . 'products' . ' p
+		 LEFT JOIN ' . 'products_description' . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"
+         '
         );
+
+        $this->logger->info(json_encode($products));
+
+
+
+        foreach ($products as $product) {
+            $specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
+            $document = new MakairaProduct($product, $specificProductVariants);
+            $this->client->push_revision($document->addMakairaDocumentWrapper());
+
+            $this->logger->info(json_encode($document->addMakairaDocumentWrapper()));
+        }
+
+        // $specificProductOption = $this->additionalOptionReadService->getAdditionalOptionsByProductId($productid);
+        //  $this->logger->info(json_encode($prod));
+        //$this->logger->info(json_encode($product->getName(new LanguageCode(new StringType('de')))));
+        //$this->logger->info(json_encode($document->add_makaira_document_wrapper()));
+    }
+
+    public function exportByVariantId(int $variantId): void
+    {
+        $specificProductVariants = $this->variantReadService->getProductVariantById($variantId);
+        $this->export($specificProductVariants->productId());
+    }
+
+    public function replace(): void
+    {
+        $this->client->rebuild(['products']);
+    }
+
+    public function switch(): void
+    {
+        $this->client->switch(['products']);
     }
 }

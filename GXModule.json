@@ -1,24 +1,24 @@
 {
-    "title": "gambio_connect.module_title",
-    "description": "gambio_connect.module_description",
-    "forceIncludingFiles": false,
-    "configuration": [
-        {
-            "title": "gambio_connect.settings",
-            "fields": {
-                "makairaUrl": {
-                    "type": "text",
-                    "label": "gambio_connect.makaira_url"
-                },
-                "makairaInstance": {
-                    "type": "text",
-                    "label": "gambio_connect.makaira_instance"
-                },
-                "makairaSecret": {
-                    "type": "password",
-                    "label": "gambio_connect.makaira_secret"
-                }
-            }
+  "title": "gambioconnect.module_title",
+  "description": "gambioconnect.module_description",
+  "forceIncludingFiles": false,
+  "configuration": [
+    {
+      "title": "gambioconnect.settings",
+      "fields": {
+        "makairaUrl": {
+          "type": "text",
+          "label": "gambioconnect.makaira_url"
+        },
+        "makairaInstance": {
+          "type": "text",
+          "label": "gambioconnect.makaira_instance"
+        },
+        "makairaSecret": {
+          "type": "password",
+          "label": "gambioconnect.makaira_secret"
         }
-    ]
+      }
+    }
+  ]
 }
