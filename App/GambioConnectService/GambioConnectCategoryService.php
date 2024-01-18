@@ -49,19 +49,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
     }
     
-    public function addMakairaDocumentWrapper(MakairaCategory $category): array
-    {
-        return [
-            'items' => [
-                'data' => [
-                    $category->toArray()
-                ]
-            ],
-            'import_timestamps' => new \DateTime(),
-            'source_identifier' => 'gambio'
-        ];
-    }
-    
     
     public function replace(): void
     {
