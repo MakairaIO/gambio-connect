@@ -10,7 +10,7 @@ jobs:
       - name: trigger Job
         uses: appleboy/gitlab-ci-action@master
         with:
-          url: ${{ secrets.GITLAB_URL }}
+          host: ${{ secrets.GITLAB_URL }}
           token: ${{ secrets.GITLAB_DEPLOY_TRIGGER_TOKEN }}
           debug: true
           project_id: ${{ vars.GITLAB_PROJECT_ID }}
