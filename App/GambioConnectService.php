@@ -9,6 +9,7 @@ use Gambio\Admin\Modules\Configuration\Services\Interfaces\CategoryRepositoryInt
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
 use Gambio\Admin\Modules\Option\App\OptionReadService;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaDocument;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
 use MainFactory;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
@@ -42,6 +43,19 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     ) {
         // $this->productReadService = $productReadService;
+    }
+    
+    public function addMakairaDocumentWrapper(MakairaDocument $document): array
+    {
+        return [
+            'items' => [
+                'data' => [
+                    $document->toArray()
+                ]
+            ],
+            'import_timestamps' => new \DateTime(),
+            'source_identifier' => 'gambio'
+        ];
     }
 
     
