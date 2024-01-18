@@ -15,3 +15,4 @@ jobs:
           access_token: ${{ secrets.GITLAB_DEPLOY_ACCESS_TOKEN }}
           id: ${{ vars.GITLAB_PROJECT_ID }}
           ref: ${{ vars.GITLAB_REF }}
+          variables: {}
