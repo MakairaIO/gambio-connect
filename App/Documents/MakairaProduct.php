@@ -8,7 +8,7 @@ use DateTime;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 
-class MakairaProduct
+class MakairaProduct extends MakairaDocument
 {
 
     const DOC_TYPE = 'product';
@@ -91,10 +91,6 @@ class MakairaProduct
 
     private function mapVariant(ProductVariant $variant): array
     {
-        if (!$variant) {
-            return null;
-        }
-
         $document = [
             'data' =>  [
                 'type'                         => "variant",

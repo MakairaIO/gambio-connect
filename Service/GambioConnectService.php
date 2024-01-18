@@ -11,7 +11,4 @@ namespace GXModules\Makaira\GambioConnect\Service;
  */
 interface GambioConnectService
 {
-    public function export(): void;
-    public function replace(): void;
-    public function switch(): void;
 }
