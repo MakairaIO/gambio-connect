@@ -2,29 +2,41 @@
 
 namespace GXModules\Makaira\GambioConnect\App;
 
+use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use MainFactory;
 
 class MakairaClient
 {
-    private $options;
-    private $nonce = "";
-    private $client;
+    private string $nonce = "";
+    private Client $client;
+    private string $makairaUrl;
+    private string $makairaSecret;
+    private string $makairaInstance;
 
-    public function __construct()
+
+    /**
+     * @var ConfigurationFinder
+     */
+    private $configurationFinder;
+
+    public function __construct(ConfigurationFinder $configurationFinder)
     {
-        //        $this->options = MainFactory::create('GXModuleConfigurationStorage', 'Makaira/GambioConnect');
-        $this->nonce = "1234";
+
+        $this->configurationFinder = $configurationFinder;
+        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', null);
+        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', null);
+        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', null);
+        $this->nonce = bin2hex(random_bytes(8));
 
 
         //  dump($this->options->get('makairaInstance'));
 
         $this->client = new Client([
-            //   'base_uri' => rtrim($this->options->get('makairaUrl'), "/") . '/persistence/', // we trim the url to make sure we have no double slashes
-            'base_uri' => rtrim("https://stage.makaira.io", "/") . '/persistence/', // we trim the url to make sure we have no double slashes
+            'base_uri' => rtrim($this->makairaUrl, "/") . '/persistence/', // we trim the url to make sure we have no double slashes
             'headers' => [
-                'X-Makaira-Instance' => "gambio", // $this->options->get('makairaInstance'),
+                'X-Makaira-Instance' => $this->makairaInstance,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
             ]
@@ -32,13 +44,13 @@ class MakairaClient
     }
 
 
-    private function get_hash($body)
+    private function  get_hash($body): string
     {
-        return  hash_hmac(
+        return hash_hmac(
             'sha256',
             $this->nonce . ':' . json_encode($body),
-            "aAO3XD4D2FoGxGKCVz4t"
-        );    //    $this->options->get('makairaSecret')
+            $this->makairaSecret
+        );
     }
 
     private function getHeaders($body): array
@@ -65,11 +77,6 @@ class MakairaClient
     public function push_revision($document)
     {
         return $this->do_request('PUT', 'revisions', $document);
-    }
-
-
-    public function delete_revision($document)
-    {
     }
 
     public function rebuild(array $types)
