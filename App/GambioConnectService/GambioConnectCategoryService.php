@@ -9,7 +9,7 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectCategoryService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    
+    private Language $currentLanguage;
     public function export(int $categoryId = null): void
     {
         if (!$categoryId) {
@@ -25,6 +25,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->languageReadService->getLanguages();
         
         foreach ($languages as $language) {
+            $this->currentLanguage = $language;
             $categories = $this->getQuery($language);
             
             foreach ($categories as $category) {
@@ -38,6 +39,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->languageReadService->getLanguages();
         
         foreach($languages as $language) {
+            $this->currentLanguage = $language;
             $this->pushRevision($this->getQuery($language, $categoryId));
             
         }
@@ -47,11 +49,25 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         $makairaCategory = MakairaCategory::mapFromCategory($category);
         
+        $calculatedCategoryData = $this->calculateCategoryDepth($category);
+        
+        $makairaCategory->setDepth($calculatedCategoryData['depth']);
+        
+        $makairaCategory->setHierarchy($calculatedCategoryData['hierarchy']);
+        
+        $makairaCategory->setSubcategories($this->getSubcategories($category['categories_id']));
+        
         $data = $this->addMakairaDocumentWrapper($makairaCategory);
         
-        $this->client->push_revision($data);
+        foreach($data['items'] as $itemIndex => $item) {
+            $data['items'][$itemIndex]['language_id'] = $this->currentLanguage->code();
+        }
         
         $this->logger->info(\GuzzleHttp\json_encode($data));
+        
+        $response = $this->client->push_revision($data);
+        
+        $this->logger->info("Makaira Status for " . $category['categories_id'] . ": " . $response->getStatusCode());
     }
     
     
@@ -95,5 +111,41 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
         
         return $query->fetchAllAssociative();
+    }
+    
+    private function getSubcategories(int $category_id): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('categories_id')
+            ->from('categories')
+            ->where('parent_id = :categories_id')
+            ->setParameter('categories_id', $category_id)
+            ->fetchAllAssociative();
+    }
+    
+    private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array {
+        if(empty($category['parent_id'])) {
+            return [
+                'depth' => $depth,
+                'hierarchy' => $category['categories_id']
+            ];
+        }
+        
+        $depth += 1;
+        
+        $parentCategory = $this->connection->createQueryBuilder()
+            ->select('categories_id, parent_id')
+            ->from('categories')
+            ->where('parent_id = :parent_id')
+            ->setParameter('parent_id', $category['parent_id'])
+            ->fetchOne();
+        
+        if(empty($hierarchy)) {
+            $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
+        } else {
+            $hierarchy = $parentCategory['categories_id'] . '//' . $hierarchy;
+        }
+        
+        return $this->calculateCategoryDepth($parentCategory, $depth, $hierarchy);
     }
 }

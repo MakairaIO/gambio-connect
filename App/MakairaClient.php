@@ -57,9 +57,8 @@ class MakairaClient
                 'json' => $body,
             ]);
         } catch (ClientException $e) {
-            // throw new Exception('Request failed: Response: ' . Psr7\Message::toString($e->getResponse()));
+            throw new \Exception('Request failed: Response: ' . $e->getMessage());
         }
-        return null;
     }
 
     public function push_revision($document)

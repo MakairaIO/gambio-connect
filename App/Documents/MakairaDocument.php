@@ -6,6 +6,8 @@ abstract class MakairaDocument
 {
     protected array $mappingFields = [];
     
+    protected int $shopId = 1;
+    
     public function __construct(
         private string $docType,
         private string $languageId,
@@ -29,6 +31,11 @@ abstract class MakairaDocument
         return $this->delete;
     }
     
+    public function getShopId(): int
+    {
+        return $this->shopId;
+    }
+    
     
     public function setDocType(string $docType): void
     {
@@ -45,5 +52,12 @@ abstract class MakairaDocument
     public function setDelete(bool $delete): void
     {
         $this->delete = $delete;
+    }
+    
+    public function toArray(): array
+    {
+        return [
+            'type' => $this->getDocType()
+        ];
     }
 }

@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 class MakairaCategory extends MakairaDocument
 {
     protected array $mappingFields = [
-        'categories_id',
+        'categories_id' => 'id',
         'categories_image',
         'parent_id',
         'categories_status',
@@ -29,7 +29,11 @@ class MakairaCategory extends MakairaDocument
         'categories_meta_description',
         'categories_meta_keywords',
         'gm_alt_text',
-        'gm_url_keywords'
+        'gm_url_keywords',
+        'shop_id',
+        'hierarchy',
+        'depth',
+        'subcategories'
     ];
     
     private int $categories_id;
@@ -58,7 +62,7 @@ class MakairaCategory extends MakairaDocument
     
     private int $categories_icon_h;
     
-    private int $language_id;
+    private string $language_id;
     
     private string $categories_name;
     
@@ -77,6 +81,12 @@ class MakairaCategory extends MakairaDocument
     private string $gm_alt_text;
     
     private string $gm_url_keywords;
+    
+    private int $depth;
+    
+    private string $hierarchy;
+    
+    private array $subcategories = [];
     
     public function getCategoriesId(): int
     {
@@ -353,6 +363,43 @@ class MakairaCategory extends MakairaDocument
         $this->gm_url_keywords = $gm_url_keywords;
     }
     
+    
+    public function getDepth(): int
+    {
+        return $this->depth;
+    }
+    
+    
+    public function setDepth(int $depth): void
+    {
+        $this->depth = $depth;
+    }
+    
+    
+    public function getHierarchy(): string
+    {
+        return $this->hierarchy;
+    }
+    
+    
+    public function setHierarchy(string $hierarchy): void
+    {
+        $this->hierarchy = $hierarchy;
+    }
+    
+    
+    public function getSubcategories(): array
+    {
+        return $this->subcategories;
+    }
+    
+    
+    public function setSubcategories(array $subcategories): void
+    {
+        $this->subcategories = $subcategories;
+    }
+    
+    
     public static function mapFromCategory(array $category): static
     {
         $instance = new MakairaCategory(
@@ -371,11 +418,16 @@ class MakairaCategory extends MakairaDocument
     
     public function toArray(): array
     {
-        $data = [];
+        $data = parent::toArray();
         
-        foreach($this->mappingFields as $field) {
-            $getter = self::convertSnakeToCamel('get_' . $field);
-            $data[$field] = $this->$getter();
+        foreach($this->mappingFields as $key => $field) {
+            if(is_int($key)) {
+                $getter = self::convertSnakeToCamel('get_' . $field);
+                $data[self::convertSnakeToCamel($field)] = $this->$getter();
+            } else {
+                $getter = self::convertSnakeToCamel('get_' . $key);
+                $data[self::convertSnakeToCamel($field)] = $this->$getter();
+            }
         }
         return $data;
     }

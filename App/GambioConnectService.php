@@ -30,33 +30,34 @@ use StringType;
 class GambioConnectService implements GambioConnectServiceInterface
 {
     // private ProductRepositoryReader $productReadService;
-
-
+    
     public function __construct(
-        protected MakairaClient $client,
-        protected LanguageReadService $languageReadService,
-        protected ProductVariantsReadService $variantReadService,
+        protected MakairaClient               $client,
+        protected LanguageReadService         $languageReadService,
+        protected ProductVariantsReadService  $variantReadService,
         protected AdditionalOptionReadService $additionalOptionReadService,
-        protected Connection $connection,
-        protected MakairaLogger $logger,
+        protected Connection                  $connection,
+        protected MakairaLogger               $logger,
         //   ProductRepositoryReader $productReadService,
-
-    ) {
+    
+    )
+    {
         // $this->productReadService = $productReadService;
     }
+    
     
     public function addMakairaDocumentWrapper(MakairaDocument $document): array
     {
         return [
-            'items' => [
-                'data' => [
-                    $document->toArray()
-                ]
+            'items'             => [
+                [
+                    'data' => $document->toArray(),
+                ],
             ],
-            'import_timestamps' => new \DateTime(),
-            'source_identifier' => 'gambio'
+            'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
+            'source_identifier' => 'gambio',
         ];
     }
-
+    
     
 }
