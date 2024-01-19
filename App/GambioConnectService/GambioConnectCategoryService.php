@@ -28,13 +28,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             $categories = $this->getQuery($language);
             
             foreach ($categories as $category) {
-                $makairaCategory = MakairaCategory::mapFromCategory($category);
-                
-                $data = $this->addMakairaDocumentWrapper($makairaCategory);
-                
-                $this->client->push_revision($data);
-                
-                $this->logger->info(\GuzzleHttp\json_encode($data));
+                $this->pushRevision($category);
             }
         }
     }
@@ -44,28 +38,32 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->languageReadService->getLanguages();
         
         foreach($languages as $language) {
-            $category = $this->getQuery($language, $categoryId);
+            $this->pushRevision($this->getQuery($language, $categoryId));
             
-            $makairaCategory = MakairaCategory::mapFromCategory($category);
-            
-            $data = $this->addMakairaDocumentWrapper($makairaCategory);
-            
-            $this->client->push_revision($data);
-            
-            $this->logger->info(\GuzzleHttp\json_encode($data));
         }
+    }
+    
+    private function pushRevision(array $category): void
+    {
+        $makairaCategory = MakairaCategory::mapFromCategory($category);
+        
+        $data = $this->addMakairaDocumentWrapper($makairaCategory);
+        
+        $this->client->push_revision($data);
+        
+        $this->logger->info(\GuzzleHttp\json_encode($data));
     }
     
     
     public function replace(): void
     {
-        // TODO: Implement replace() method.
+        $this->client->rebuild(['category']);
     }
     
     
     public function switch(): void
     {
-        // TODO: Implement switch() method.
+        $this->client->rebuild(['category']);
     }
     
     
