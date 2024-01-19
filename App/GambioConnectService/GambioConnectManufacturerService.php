@@ -63,6 +63,17 @@ class GambioConnectManufacturerService extends GambioConnectService
         $this->logger->info("Makaira Manufacturer Status for " . $manufacturer['manufacturers_id'] . ": " . $response->getStatusCode());
     }
     
+    public function replace(): void
+    {
+        $this->client->rebuild(['manufacturer']);
+    }
+    
+    
+    public function switch(): void
+    {
+        $this->client->rebuild(['manufacturer']);
+    }
+    
     
     public function getQuery(Language $language, int|null $manufacturer_id = null): array
     {
