@@ -1,0 +1,13 @@
+{
+    "title": "gambioconnect.module_title",
+    "description": "gambioconnect.module_description",
+    "forceIncludingFiles": true,
+    "install": {
+        "controller": "GXModules\\Makaira\\GambioConnect\\GambioConnectInstaller",
+        "method": "onInstallation"
+    },
+    "uninstall": {
+        "controller": "GXModules\\Makaira\\GambioConnect\\GambioConnectInstaller",
+        "method": "onUninstallation"
+    }
+}

@@ -34,6 +34,7 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function provides(): array
     {
         return [
+            GambioConnectInstaller::class,
             GambioConnectOverview::class,
             Export::class,
             VariantUpdateEventListener::class,
@@ -69,6 +70,9 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
 
         $this->application->registerShared(MakairaProduct::class)
             ->addArgument(ProductVariantsReadService::class);
+        
+        $this->application->registerShared(GambioConnectInstaller::class)
+            ->addArgument(Connection::class);
     }
 
     public function boot(): void

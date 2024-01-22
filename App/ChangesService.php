@@ -17,43 +17,20 @@ class ChangesService
     ) {
     }
 
-    public function createTable(): void
-    {
-        $this->connection->executeStatement(
-            "CREATE TABLE IF NOT EXISTS `" . self::TABLE_NAME .  "` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `gambioid` varchar(255) NOT NULL,
-                `type` varchar(255) NOT NULL,
-                `comment` varchar(255) NOT NULL,
-                `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `consumed_at` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE INDEX idx_unique_gambioid_type (gambioid, type)
-              )"
-        );
-    }
-
-    public function dropTable(): void
-    {
-        $this->connection->executeStatement(
-            "DROP TABLE IF EXISTS " . self::TABLE_NAME
-        );
-    }
-
 
     public function dispatch(string $gambioId, string $type, string $comment = ""): bool
     {
         $sql = '
-                INSERT INTO ' . self::TABLE_NAME . ' (gambioid, type, comment)
-                VALUES (:gambioid, :type, :comment)
+                INSERT INTO ' . self::TABLE_NAME . ' (gabio_id, type, comment)
+                VALUES (:gambioId, :type, :comment)
                 ON DUPLICATE KEY UPDATE
-                    gambioid = VALUES(gambioid),
+                    gambio_id = VALUES(gambioId),
                     type = VALUES(type)
             ';
 
         $stmt = $this->connection->prepare($sql);
 
-        $stmt->bindValue('gambioid', $gambioId, \PDO::PARAM_STR);
+        $stmt->bindValue('gambioId', $gambioId, \PDO::PARAM_STR);
         $stmt->bindValue('type', $type, \PDO::PARAM_STR);
         $stmt->bindValue('comment', $comment, \PDO::PARAM_STR);
 
