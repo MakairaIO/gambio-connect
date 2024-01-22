@@ -5,34 +5,25 @@ namespace GXModules\Makaira\GambioConnect\App\Models;
 
 class Change
 {
-
-    //define table name as constant
-    private int    $id;
-    private string $gambioId;
-    private string $type;
-    private string $comment = "";
-    private string $created_at;
-    private ?string $consumed_at = null;
-
-    public function __construct(int $id, string $gambioid, string $type, string $comment, string $created_at, ?string $consumed_at)
-    {
-        $this->id       = $id;
-        $this->gambioId = $gambioid;
-        $this->type     = $type;
-        $this->comment = $comment;
-        $this->created_at = $created_at;
-        $this->consumed_at = $consumed_at;
-    }
+    public function __construct(
+        private int $id,
+        private string $gambioid,
+        private string $type,
+        private string $created_at,
+        private string $comment = "",
+        private ?string $consumed_at = null
+    )
+    {}
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'gambioid' => $this->gambioId,
-            'type' => $this->type,
-            'comment' => $this->comment,
-            'created_at' => $this->created_at,
-            'consumed_at' => $this->consumed_at,
+            'id' => $this->getId(),
+            'gambio_id' => $this->getGambioId(),
+            'type' => $this->getType(),
+            'comment' => $this->getComment(),
+            'created_at' => $this->getCreatedAt(),
+            'consumed_at' => $this->getConsumedAt(),
         ];
     }
 
@@ -48,7 +39,7 @@ class Change
 
     public function getGambioId(): string
     {
-        return $this->gambioId;
+        return $this->gambioid;
     }
 
     public function setGambioId(string $gambioId): void
@@ -78,21 +69,21 @@ class Change
 
     public function getCreatedAt(): string
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(string $created_at): void
+    public function setCreatedAt(string $createdAt): void
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
     }
 
     public function getConsumedAt(): string
     {
-        return $this->consumed_at;
+        return $this->consumedAt;
     }
 
-    public function setConsumedAt(string $consumed_at): void
+    public function setConsumedAt(string $consumedAt): void
     {
-        $this->consumed_at = $consumed_at;
+        $this->consumedAt = $consumedAt;
     }
 }
