@@ -16,6 +16,7 @@ use Doctrine\DBAL\Connection;
 
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
 
@@ -57,7 +58,11 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(ProductVariantsReadService::class)
             ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ChangesService::class);
+
+        $this->application->registerShared(ChangesService::class)
+            ->addArgument(Connection::class);
 
         $this->application->registerShared(VariantUpdateEventListener::class)
             ->addArgument(GambioConnectService::class);
