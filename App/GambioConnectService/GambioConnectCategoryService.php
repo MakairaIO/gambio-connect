@@ -2,14 +2,21 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
+use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectCategoryService extends GambioConnectService implements GambioConnectEntityInterface
 {
     private Language $currentLanguage;
+    
+    
+    /**
+     * @throws Exception
+     */
     public function export(int $categoryId = null): void
     {
         if (!$categoryId) {
@@ -20,6 +27,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     }
     
     
+    /**
+     * @throws Exception
+     */
     public function exportAll(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -34,6 +44,10 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
     }
     
+    
+    /**
+     * @throws Exception
+     */
     public function exportCategory(int $categoryId): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -45,25 +59,25 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
     }
     
+    
+    /**
+     * @throws Exception
+     */
     private function pushRevision(array $category): void
     {
-        $makairaCategory = MakairaCategory::mapFromCategory($category);
+        $hierarchy = $this->calculateCategoryDepth($category);
         
-        $calculatedCategoryData = $this->calculateCategoryDepth($category);
+        $this->logger->info(json_encode($hierarchy));
         
-        $makairaCategory->setDepth($calculatedCategoryData['depth']);
+        $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy);
         
-        $makairaCategory->setHierarchy($calculatedCategoryData['hierarchy']);
+        $this->logger->info(json_encode($makairaCategory->toArray()));
         
-        $makairaCategory->setSubcategories($this->getSubcategories($category['categories_id']));
+        exit();
         
         $data = $this->addMakairaDocumentWrapper($makairaCategory);
         
-        foreach($data['items'] as $itemIndex => $item) {
-            $data['items'][$itemIndex]['language_id'] = $this->currentLanguage->code();
-        }
-        
-        $this->logger->info(\GuzzleHttp\json_encode($data));
+        $this->logger->info(json_encode($data));
         
         $response = $this->client->push_revision($data);
         

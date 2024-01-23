@@ -4,15 +4,16 @@ namespace GXModules\Makaira\GambioConnect\App\Mapper;
 
 use DateTime;
 use Gambio\Admin\Modules\Language\Model\Language;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 
-class MakairaManufacturerMapper
+class MakairaDataMapper
 {
     /**
      * @throws \Exception
      */
-    public function map(array $data, Language $language): MakairaManufacturer
+    public function mapManufacturer(array $data, Language $language): MakairaManufacturer
     {
         $transfer = new MakairaManufacturer();
         
@@ -34,6 +35,22 @@ class MakairaManufacturerMapper
             ->setRemoteUrl($data['manufacturers_url'])
             ->setIsUrlClicked($data['url_clicked'])
             ->setLastClickedAt($lastClickedAt);
+            
+        return $transfer;
+    }
+    
+    /**
+     * @throws \Exception
+     */
+    public static function mapCategory(array $data, array $hierarchy) : MakairaCategory
+    {
+        $transfer = new MakairaCategory();
+        
+        $transfer
+            ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
+            ->setId($data['categories_id'])
+            ->setTitle($data['categories_name']);
+            //->setHierarchy($hierarchy);
             
         return $transfer;
     }

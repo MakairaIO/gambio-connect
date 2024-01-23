@@ -6,7 +6,7 @@ use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
-use GXModules\Makaira\GambioConnect\App\Mapper\MakairaManufacturerMapper;
+use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 
 class GambioConnectManufacturerService extends GambioConnectService
 {
@@ -66,8 +66,8 @@ class GambioConnectManufacturerService extends GambioConnectService
     {
         $this->logger->info("Pushing Makaira Manufacturer for " . $manufacturer['manufacturers_id']);
         
-        $mapper = new MakairaManufacturerMapper();
-        $makairaManufacturer = $mapper->map($manufacturer, $this->currentLanguage);
+        $mapper = new MakairaDataMapper();
+        $makairaManufacturer = $mapper->mapManufacturer($manufacturer, $this->currentLanguage);
         
         $this->logger->info(json_encode($makairaManufacturer));
         
