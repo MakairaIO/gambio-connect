@@ -20,6 +20,8 @@ use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\Services\Additional
 use Doctrine\DBAL\Connection;
 
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
+use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
 
@@ -37,6 +39,7 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function provides(): array
     {
         return [
+            GambioConnectInstaller::class,
             GambioConnectOverview::class,
             Export::class,
             VariantUpdateEventListener::class,
@@ -56,7 +59,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(GambioConnectManufacturerService::class);
 
         $this->application->registerShared(MakairaLogger::class);
-        $this->application->registerShared(MakairaClient::class);
+        $this->application->registerShared(MakairaClient::class)
+            ->addArgument(ConfigurationFinder::class);
 
         $this->application->registerShared(GambioConnectProductService::class)
             ->addArgument(MakairaClient::class)
@@ -80,19 +84,20 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(ProductVariantsReadService::class)
             ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ChangesService::class);
+
+        $this->application->registerShared(ChangesService::class)
+            ->addArgument(Connection::class);
 
         $this->application->registerShared(VariantUpdateEventListener::class)
             ->addArgument(GambioConnectService::class);
 
         $this->application->registerShared(MakairaProduct::class)
             ->addArgument(ProductVariantsReadService::class);
-
-
-
-
-        // $this->application->registerShared(CacheCleanerService::class, App\CacheCleanerService::class)
-        //     ->addArguments([CacheFactory::class, Path::class]);
+        
+        $this->application->registerShared(GambioConnectInstaller::class)
+            ->addArgument(Connection::class);
     }
 
     public function boot(): void

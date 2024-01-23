@@ -9,6 +9,7 @@ use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
+use GXModules\Makaira\GambioConnect\GambioConnectInstaller;
 
 /**
  * Class Export

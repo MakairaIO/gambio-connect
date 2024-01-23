@@ -1,0 +1,17 @@
+name: Deploy Stage
+on:
+  push:
+    branches:
+      - main
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: trigger Job
+        uses: appleboy/gitlab-ci-action@master
+        with:
+          host: ${{ secrets.GITLAB_URL }}
+          token: ${{ secrets.GITLAB_DEPLOY_TRIGGER_TOKEN }}
+          debug: true
+          project_id: ${{ vars.GITLAB_PROJECT_ID }}
+          ref: ${{ vars.GITLAB_REF }}
