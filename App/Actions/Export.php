@@ -20,7 +20,8 @@ class Export extends AbstractAction
 {
     public function __construct(
         protected GambioConnectService\GambioConnectCategoryService $gambioConnectCategoryService,
-        protected GambioConnectService\GambioConnectProductService $gambioConnectProductService
+        protected GambioConnectService\GambioConnectProductService $gambioConnectProductService,
+        protected GambioConnectService\GambioConnectManufacturerService $gambioConnectManufacturerService,
     )
     {
     
@@ -32,6 +33,8 @@ class Export extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
+        $this->gambioConnectManufacturerService->exportAll();
+        
         $this->gambioConnectCategoryService->exportAll();
         
         $this->gambioConnectProductService->exportAll();

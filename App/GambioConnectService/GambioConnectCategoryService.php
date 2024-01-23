@@ -67,7 +67,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         
         $response = $this->client->push_revision($data);
         
-        $this->logger->info("Makaira Status for " . $category['categories_id'] . ": " . $response->getStatusCode());
+        $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": " . $response->getStatusCode());
     }
     
     

@@ -402,7 +402,7 @@ class MakairaCategory extends MakairaDocument
     
     public static function mapFromCategory(array $category): static
     {
-        $instance = new MakairaCategory(
+        $instance = new self(
             docType: 'category',
             languageId: $category['language_id'],
             delete: false
@@ -418,28 +418,6 @@ class MakairaCategory extends MakairaDocument
     
     public function toArray(): array
     {
-        $data = parent::toArray();
-        
-        foreach($this->mappingFields as $key => $field) {
-            if(is_int($key)) {
-                $getter = self::convertSnakeToCamel('get_' . $field);
-                $data[self::convertSnakeToCamel($field)] = $this->$getter();
-            } else {
-                $getter = self::convertSnakeToCamel('get_' . $key);
-                $data[self::convertSnakeToCamel($field)] = $this->$getter();
-            }
-        }
-        return $data;
-    }
-    
-    public static function convertSnakeToCamel(string $snakeString): string
-    {
-        $parts = explode('_', $snakeString);
-        $camel = array_shift($parts);
-        $camel = str_replace('_', '', $camel);
-        foreach($parts as $index => $part) {
-            $camel .= ucfirst($part);
-        }
-        return $camel;
+        return parent::toArray();
     }
 }
