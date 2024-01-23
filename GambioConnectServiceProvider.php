@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect;
 
+use Gambio\Admin\Modules\Configuration\App\Data\Repositories\CategoryRepository;
+use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
@@ -48,14 +53,34 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function register(): void
     {
         $this->application->registerShared(GambioConnectOverview::class);
-        $this->application->registerShared(Export::class)->addArgument(GambioConnectService::class);
+        $this->application->registerShared(Export::class)
+            ->addArgument(GambioConnectCategoryService::class)
+            ->addArgument(GambioConnectProductService::class)
+            ->addArgument(GambioConnectManufacturerService::class);
 
         $this->application->registerShared(MakairaLogger::class);
         $this->application->registerShared(MakairaClient::class)
             ->addArgument(ConfigurationFinder::class);
 
-        $this->application->registerShared(GambioConnectService::class, App\GambioConnectService::class)
+        $this->application->registerShared(GambioConnectProductService::class)
             ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(ProductVariantsReadService::class)
+            ->addArgument(AdditionalOptionReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
+        
+        $this->application->registerShared(GambioConnectCategoryService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(ProductVariantsReadService::class)
+            ->addArgument(AdditionalOptionReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
+        
+        $this->application->registerShared(GambioConnectManufacturerService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
             ->addArgument(ProductVariantsReadService::class)
             ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)

@@ -19,9 +19,13 @@ use GXModules\Makaira\GambioConnect\GambioConnectInstaller;
 class Export extends AbstractAction
 {
     public function __construct(
-        protected GambioConnectService $service
+        protected GambioConnectService\GambioConnectCategoryService $gambioConnectCategoryService,
+        protected GambioConnectService\GambioConnectProductService $gambioConnectProductService,
+        protected GambioConnectService\GambioConnectManufacturerService $gambioConnectManufacturerService,
     )
-    {}
+    {
+    
+    }
 
 
     /**
@@ -29,7 +33,12 @@ class Export extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        $this->service->export();
+        $this->gambioConnectManufacturerService->exportAll();
+        
+        $this->gambioConnectCategoryService->exportAll();
+        
+        $this->gambioConnectProductService->exportAll();
+        
         return $response->withJson(['success' => true]);
     }
 }
