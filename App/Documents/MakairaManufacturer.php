@@ -2,206 +2,148 @@
 
 namespace GXModules\Makaira\GambioConnect\App\Documents;
 
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaDocument;
+use DateTime;
 
-class MakairaManufacturer extends MakairaDocument
+class MakairaManufacturer extends MakairaEntity
 {
-    protected array $mappingFields = [
-        'manufacturers_id' => 'id',
-        'manufacturers_name',
-        'manufacturers_image',
-        'date_added',
-        'last_modified',
-        'language_id',
-        'manufacturers_meta_title',
-        'manufacturers_meta_description',
-        'manufacturers_meta_keywords',
-        'manufacturers_url',
-        'url_clicked',
-        'date_last_click'
-    ];
+    private string $metaTitle;
+    private string $metaDescription;
+    private string $metaKeywords;
+    private string $remoteUrl;
+    private bool $isUrlClicked;
     
-    private int $manufacturers_id;
-    
-    private string $manufacturers_name;
-    
-    private string $manufacturers_image;
-    
-    private string $date_added;
-    
-    private string $last_modified;
-    
-    private string $language_id = '';
-    
-    private string $manufacturers_meta_title = '';
-    
-    private string $manufacturers_meta_description = '';
-    
-    private string $manufacturers_meta_keywords = '';
-    
-    private string $manufacturers_url;
-    
-    private int $url_clicked;
-    
-    private string $date_last_click;
+    private ?DateTime $createdAt = null;
+    private ?DateTime $updatedAt = null;
+    private ?DateTime $lastClickedAt = null;
     
     
-    public function getManufacturersId(): int
+    public function toArray(): array
     {
-        return $this->manufacturers_id;
+        return [
+            /* MAKAIRA fields */
+            ...parent::toArray(),
+            
+            /* Manufacturer fields */
+            'metaTitle' => $this->metaTitle,
+            'metaDescription' => $this->metaDescription,
+            'metaKeywords' => $this->metaKeywords,
+            'remoteUrl' => $this->remoteUrl,
+            'isUrlClicked' => $this->isUrlClicked,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
+            'lastClickedAt' => $this->lastClickedAt,
+        ];
     }
     
     
-    public function setManufacturersId(int $manufacturers_id): void
+    public function getMetaTitle(): string
     {
-        $this->manufacturers_id = $manufacturers_id;
+        return $this->metaTitle;
     }
     
     
-    public function getManufacturersName(): string
+    public function setMetaTitle(string $metaTitle): MakairaManufacturer
     {
-        return $this->manufacturers_name;
+        $this->metaTitle = $metaTitle;
+        
+        return $this;
     }
     
     
-    public function setManufacturersName(string $manufacturers_name): void
+    public function getMetaDescription(): string
     {
-        $this->manufacturers_name = $manufacturers_name;
+        return $this->metaDescription;
     }
     
     
-    public function getManufacturersImage(): string
+    public function setMetaDescription(string $metaDescription): MakairaManufacturer
     {
-        return $this->manufacturers_image;
+        $this->metaDescription = $metaDescription;
+        
+        return $this;
     }
     
     
-    public function setManufacturersImage(string $manufacturers_image): void
+    public function getMetaKeywords(): string
     {
-        $this->manufacturers_image = $manufacturers_image;
+        return $this->metaKeywords;
     }
     
     
-    public function getDateAdded(): string
+    public function setMetaKeywords(string $metaKeywords): MakairaManufacturer
     {
-        return $this->date_added;
+        $this->metaKeywords = $metaKeywords;
+        
+        return $this;
     }
     
     
-    public function setDateAdded(string $date_added): void
+    public function getRemoteUrl(): string
     {
-        $this->date_added = $date_added;
+        return $this->remoteUrl;
     }
     
     
-    public function getLastModified(): string
+    public function setRemoteUrl(string $remoteUrl): MakairaManufacturer
     {
-        return $this->last_modified;
+        $this->remoteUrl = $remoteUrl;
+        
+        return $this;
     }
     
     
-    public function setLastModified(string $last_modified): void
+    public function isUrlClicked(): bool
     {
-        $this->last_modified = $last_modified;
+        return $this->isUrlClicked;
     }
     
     
-    public function getLanguageId(): string
+    public function setIsUrlClicked(bool $isUrlClicked): MakairaManufacturer
     {
-        return $this->language_id;
+        $this->isUrlClicked = $isUrlClicked;
+        
+        return $this;
     }
     
     
-    public function setLanguageId(string $language_id): void
+    public function getCreatedAt(): ?DateTime
     {
-        $this->language_id = $language_id;
+        return $this->createdAt;
     }
     
     
-    public function getManufacturersMetaTitle(): string
+    public function setCreatedAt(?DateTime $createdAt): MakairaManufacturer
     {
-        return $this->manufacturers_meta_title;
+        $this->createdAt = $createdAt;
+        
+        return $this;
     }
     
     
-    public function setManufacturersMetaTitle(string $manufacturers_meta_title): void
+    public function getUpdatedAt(): ?DateTime
     {
-        $this->manufacturers_meta_title = $manufacturers_meta_title;
+        return $this->updatedAt;
     }
     
     
-    public function getManufacturersMetaDescription(): string
+    public function setUpdatedAt(?DateTime $updatedAt): MakairaManufacturer
     {
-        return $this->manufacturers_meta_description;
+        $this->updatedAt = $updatedAt;
+        
+        return $this;
     }
     
     
-    public function setManufacturersMetaDescription(string $manufacturers_meta_description): void
+    public function getLastClickedAt(): ?DateTime
     {
-        $this->manufacturers_meta_description = $manufacturers_meta_description;
+        return $this->lastClickedAt;
     }
     
     
-    public function getManufacturersMetaKeywords(): string
+    public function setLastClickedAt(?DateTime $lastClickedAt): MakairaManufacturer
     {
-        return $this->manufacturers_meta_keywords;
-    }
-    
-    
-    public function setManufacturersMetaKeywords(string $manufacturers_meta_keywords): void
-    {
-        $this->manufacturers_meta_keywords = $manufacturers_meta_keywords;
-    }
-    
-    
-    public function getManufacturersUrl(): string
-    {
-        return $this->manufacturers_url;
-    }
-    
-    
-    public function setManufacturersUrl(string $manufacturers_url): void
-    {
-        $this->manufacturers_url = $manufacturers_url;
-    }
-    
-    
-    public function getUrlClicked(): int
-    {
-        return $this->url_clicked;
-    }
-    
-    
-    public function setUrlClicked(int $url_clicked): void
-    {
-        $this->url_clicked = $url_clicked;
-    }
-    
-    
-    public function getDateLastClick(): string
-    {
-        return $this->date_last_click;
-    }
-    
-    
-    public function setDateLastClick(string|null $date_last_click): void
-    {
-        $this->date_last_click = $date_last_click ?? '';
-    }
-    
-    public static function mapFromManufacturer(array $manufacturer): static
-    {
-        $instance = new self(
-            docType: 'manufacturer',
-            languageId: '',
-            delete: false
-        );
-        foreach($manufacturer as $field => $value) {
-            $setter = self::convertSnakeToCamel('set_' . $field);
-            if(method_exists($instance, $setter)) {
-                $instance->$setter($value);
-            }
-        }
-        return $instance;
+        $this->lastClickedAt = $lastClickedAt;
+        
+        return $this;
     }
 }

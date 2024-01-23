@@ -10,6 +10,7 @@ use Gambio\Admin\Modules\Language\App\LanguageReadService;
 use Gambio\Admin\Modules\Option\App\OptionReadService;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaDocument;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
 use MainFactory;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
@@ -46,10 +47,10 @@ class GambioConnectService implements GambioConnectServiceInterface
     }
     
     
-    public function addMakairaDocumentWrapper(MakairaDocument $document): array
+    public function addMakairaDocumentWrapper(MakairaEntity $document): array
     {
         return [
-            'items'             => [
+            'items' => [
                 [
                     'data' => $document->toArray(),
                 ],

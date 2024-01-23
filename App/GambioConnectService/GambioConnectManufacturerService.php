@@ -2,15 +2,20 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
+use GXModules\Makaira\GambioConnect\App\Mapper\MakairaManufacturerMapper;
 
 class GambioConnectManufacturerService extends GambioConnectService
 {
     private Language $currentLanguage;
     
     
+    /**
+     * @throws Exception
+     */
     public function export(int $manufacturerId = null): void
     {
         if (!$manufacturerId) {
@@ -21,11 +26,15 @@ class GambioConnectManufacturerService extends GambioConnectService
     }
     
     
+    /**
+     * @throws Exception
+     */
     public function exportAll(): void
     {
         $languages = $this->languageReadService->getLanguages();
         
         foreach($languages as $language) {
+            
             $this->currentLanguage = $language;
             $manufacturers = $this->getQuery($language);
             
@@ -36,6 +45,9 @@ class GambioConnectManufacturerService extends GambioConnectService
     }
     
     
+    /**
+     * @throws Exception
+     */
     public function exportManufacturer(int $manufacturer): void
     {
         $language = $this->languageReadService->getLanguages();
@@ -46,18 +58,20 @@ class GambioConnectManufacturerService extends GambioConnectService
         }
     }
     
+    
+    /**
+     * @throws Exception
+     */
     private function pushRevision(array $manufacturer): void
     {
-        $makairaManufacturer = MakairaManufacturer::mapFromManufacturer($manufacturer);
+        $this->logger->info("Pushing Makaira Manufacturer for " . $manufacturer['manufacturers_id']);
+        
+        $mapper = new MakairaManufacturerMapper();
+        $makairaManufacturer = $mapper->map($manufacturer, $this->currentLanguage);
+        
+        $this->logger->info(json_encode($makairaManufacturer));
         
         $data = $this->addMakairaDocumentWrapper($makairaManufacturer);
-        
-        foreach($data['items'] as $itemIndex => $item) {
-            $data['items'][$itemIndex]['language_id'] = $this->currentLanguage->code();
-        }
-        
-        $this->logger->info(\GuzzleHttp\json_encode($data));
-        
         $response = $this->client->push_revision($data);
         
         $this->logger->info("Makaira Manufacturer Status for " . $manufacturer['manufacturers_id'] . ": " . $response->getStatusCode());
