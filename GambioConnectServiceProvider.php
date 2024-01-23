@@ -10,6 +10,7 @@ use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
@@ -54,7 +55,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectOverview::class);
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)
-            ->addArgument(GambioConnectProductService::class);
+            ->addArgument(GambioConnectProductService::class)
+            ->addArgument(GambioConnectManufacturerService::class);
 
         $this->application->registerShared(MakairaLogger::class);
         $this->application->registerShared(MakairaClient::class)
@@ -69,6 +71,14 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(MakairaLogger::class);
         
         $this->application->registerShared(GambioConnectCategoryService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(ProductVariantsReadService::class)
+            ->addArgument(AdditionalOptionReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
+        
+        $this->application->registerShared(GambioConnectManufacturerService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
             ->addArgument(ProductVariantsReadService::class)
