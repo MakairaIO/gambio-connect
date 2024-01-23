@@ -17,6 +17,10 @@
         "makairaSecret": {
           "type": "password",
           "label": "gambioconnect.makaira_secret"
+        },
+        "active_search": {
+          "type": "checkbox",
+          "label": "gambioconnect.active_search"
         }
       }
     }

@@ -1,0 +1,11 @@
+{block name="layout_head_head_additional_html_array_first" prepend}
+	<!-- {if $content_data.active_search} -->
+		<script
+				async
+				data-src='{$content_data.autosuggestion_js_file}'
+				data-type="text/javascript"
+				src='{$content_data.autosuggestion_js_file}'
+				data-test="gambio-test-connectmodule"
+		></script>
+	<!-- {/if} -->
+{/block}

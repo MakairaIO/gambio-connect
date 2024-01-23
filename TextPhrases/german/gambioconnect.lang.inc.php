@@ -7,4 +7,5 @@ $t_language_text_section_content_array = [
     'makaira_url'        => 'Makaira URL',
     'makaira_instance'   => 'Makaira Instanz',
     'makaira_secret'     => 'Makaira Secret',
+    'active_search'      => 'aktivieren für die Suche'
 ];
