@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App\Actions;
 
+use Exception;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
@@ -26,10 +27,11 @@ class Export extends AbstractAction
     {
     
     }
-
-
+    
+    
     /**
      * @inheritDoc
+     * @throws Exception
      */
     public function handle(Request $request, Response $response): Response
     {
