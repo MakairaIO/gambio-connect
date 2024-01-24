@@ -131,7 +131,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         if(empty($category['parent_id'])) {
             return [
                 'depth' => $depth,
-                'hierarchy' => $category['categories_id']
+                'hierarchy' => empty($hierarchy) ? $category['categories_id'] : $hierarchy
             ];
         }
         
@@ -140,9 +140,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $parentCategory = $this->connection->createQueryBuilder()
             ->select('categories_id, parent_id')
             ->from('categories')
-            ->where('parent_id = :parent_id')
+            ->where('categories_id = :parent_id')
             ->setParameter('parent_id', $category['parent_id'])
-            ->fetchOne();
+            ->fetchAssociative();
         
         if(empty($hierarchy)) {
             $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
