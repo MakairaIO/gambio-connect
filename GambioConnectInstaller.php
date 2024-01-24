@@ -4,6 +4,9 @@ namespace GXModules\Makaira\GambioConnect;
 
 use Doctrine\DBAL\Connection;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesDescriptionTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesFilterTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersInfoTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsAttributesTableInstaller;
@@ -91,6 +94,12 @@ class GambioConnectInstaller
         GambioConnectManufacturersTableInstaller::install($this->connection);
         
         GambioConnectManufacturersInfoTableInstaller::install($this->connection);
+        
+        GambioConnectCategoriesTableInstaller::install($this->connection);
+        
+        GambioConnectCategoriesDescriptionTableInstaller::install($this->connection);
+        
+        GambioConnectCategoriesFilterTableInstaller::install($this->connection);
     }
     
     
@@ -135,5 +144,11 @@ class GambioConnectInstaller
         GambioConnectManufacturersTableInstaller::uninstall($this->connection);
         
         GambioConnectManufacturersInfoTableInstaller::uninstall($this->connection);
+        
+        GambioConnectCategoriesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectCategoriesDescriptionTableInstaller::uninstall($this->connection);
+        
+        GambioConnectCategoriesFilterTableInstaller::uninstall($this->connection);
     }
 }
