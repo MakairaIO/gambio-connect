@@ -52,7 +52,26 @@ class GambioConnectService implements GambioConnectServiceInterface
             $data['items'][0]['language_id'] = $language->code();
         }
         
-        $this->logger->debug('Makaira document wrapper', $data);
+        return $data;
+    }
+    
+    public function addMakairaDocumentsWrapper(array $documents, ?Language $language = null): array
+    {
+        $data = [
+            'items' => [],
+            'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
+            'source_identifier' => 'gambio',
+        ];
+        
+        foreach($documents as $document) {
+            $data['items'][] = [
+                'data' => $document->toArray(),
+            ];
+        }
+        
+        if($language) {
+            $data['items'][0]['language_id'] = $language->code();
+        }
         
         return $data;
     }

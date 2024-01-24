@@ -47,16 +47,15 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
          '
         );
         
-
-        $exportData = array_map(function ($product) {
-            MakairaDataMapper::mapProduct($product);
-        }, $products);
+        
         foreach ($products as $product) {
-            //$specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
-            //$document = new MakairaProduct($product, $specificProductVariants);
-            //$this->client->push_revision($document->addMakairaDocumentWrapper());
-            //
-            //$this->logger->info(json_encode($document->addMakairaDocumentWrapper()));
+            $exportProduct = MakairaDataMapper::mapProduct($product);
+            
+            $variants = [];
+            
+            $exportVariants = array_map(function ($variant) use ($product) {
+                return MakairaDataMapper::mapProductVariant($variant, $product);
+            }, $variants);
         }
         
         // $specificProductOption = $this->additionalOptionReadService->getAdditionalOptionsByProductId($productid);
