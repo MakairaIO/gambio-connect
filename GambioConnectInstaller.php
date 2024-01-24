@@ -4,6 +4,22 @@ namespace GXModules\Makaira\GambioConnect;
 
 use Doctrine\DBAL\Connection;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsAttributesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsContentTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsDescriptionTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsGoogleCategoriesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsGraduatedPricesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsHermesoptionsTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsImagesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesAdminSelectTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesCombisDefaultTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesCombisTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesIndexTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsQuantityUnitTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsItemCodesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsToCategoriesTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsXsellTableInstaller;
 
 class GambioConnectInstaller
 {
@@ -27,12 +43,48 @@ class GambioConnectInstaller
         
         $this->connection->executeStatement("
         CREATE PROCEDURE makairaChange (IN id INT, IN entity_type VARCHAR(255))
-            INSERT INTO `makaira_connect_changes` (gambio_id, `type`) VALUES (products_id, entity_type);
+	BEGIN
+		DECLARE entries INTEGER DEFAULT 0;
+        
+        SELECT count(*) INTO entries from `makaira_connect_changes` where gambio_id = id and `type` = entity_type;
+        
+        IF entries < 1 THEN
+			INSERT INTO `makaira_connect_changes` (gambio_id, `type`) VALUES (id, entity_type);
+		END IF;
+    END;
             ");
         
-        $this->connection->executeStatement("CREATE TRIGGER product_create_trigger AFTER INSERT ON products
-                FOR EACH ROW
-                CALL makairaChange(NEW.products_id, 'product');");
+        GambioConnectProductsTableInstaller::install($this->connection);
+        
+        GambioConnectProductsAttributesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsContentTableInstaller::install($this->connection);
+        
+        GambioConnectProductsDescriptionTableInstaller::install($this->connection);
+        
+        GambioConnectProductsGoogleCategoriesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsGraduatedPricesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsHermesoptionsTableInstaller::install($this->connection);
+        
+        GambioConnectProductsImagesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsItemCodesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsPropertiesAdminSelectTableInstaller::install($this->connection);
+        
+        GambioConnectProductsPropertiesCombisTableInstaller::install($this->connection);
+        
+        GambioConnectProductsPropertiesCombisDefaultTableInstaller::install($this->connection);
+        
+        GambioConnectProductsPropertiesIndexTableInstaller::install($this->connection);
+        
+        GambioConnectProductsQuantityUnitTableInstaller::install($this->connection);
+        
+        GambioConnectProductsToCategoriesTableInstaller::install($this->connection);
+        
+        GambioConnectProductsXsellTableInstaller::install($this->connection);
     }
     
     
@@ -40,8 +92,38 @@ class GambioConnectInstaller
     {
         $this->connection->executeStatement("DROP TABLE IF EXISTS " . ChangesService::TABLE_NAME);
         
-        $this->connection->executeStatement("DROP PROCEDURE IF EXISTS makairaProduct;");
+        $this->connection->executeStatement("DROP PROCEDURE IF EXISTS makairaChange;");
         
-        $this->connection->executeStatement("DROP TRIGGER IF EXISTS product_create_trigger;");
+        GambioConnectProductsTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsAttributesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsContentTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsDescriptionTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsGoogleCategoriesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsGraduatedPricesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsHermesoptionsTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsImagesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsItemCodesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsPropertiesAdminSelectTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsPropertiesCombisTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsPropertiesCombisDefaultTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsPropertiesIndexTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsQuantityUnitTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsToCategoriesTableInstaller::uninstall($this->connection);
+        
+        GambioConnectProductsXsellTableInstaller::uninstall($this->connection);
     }
 }
