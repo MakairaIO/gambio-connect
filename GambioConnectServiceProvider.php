@@ -22,6 +22,10 @@ use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectAccount;
+use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
+use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
+use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
 
@@ -41,6 +45,10 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         return [
             GambioConnectInstaller::class,
             GambioConnectOverview::class,
+            GambioConnectDocument::class,
+            GambioConnectWelcome::class,
+            GambioConnectAccount::class,
+            GambioConnectFAQ::class,
             Export::class,
             VariantUpdateEventListener::class,
         ];
@@ -53,6 +61,12 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function register(): void
     {
         $this->application->registerShared(GambioConnectOverview::class);
+        $this->application->registerShared(GambioConnectDocument::class);
+        $this->application->registerShared(GambioConnectWelcome::class);
+        $this->application->registerShared(GambioConnectAccount::class);
+        $this->application->registerShared(GambioConnectFAQ::class);
+
+
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)
             ->addArgument(GambioConnectProductService::class)
