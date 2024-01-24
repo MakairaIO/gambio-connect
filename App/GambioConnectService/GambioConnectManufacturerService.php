@@ -66,8 +66,7 @@ class GambioConnectManufacturerService extends GambioConnectService
     {
         $this->logger->info("Pushing Makaira Manufacturer for " . $manufacturer['manufacturers_id']);
         
-        $mapper = new MakairaDataMapper();
-        $makairaManufacturer = $mapper->mapManufacturer($manufacturer);
+        $makairaManufacturer = MakairaDataMapper::mapManufacturer($manufacturer);
         
         $data = $this->addMakairaDocumentWrapper($makairaManufacturer, $this->currentLanguage);
         

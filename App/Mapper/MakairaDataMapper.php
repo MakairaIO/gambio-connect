@@ -14,7 +14,7 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public function mapManufacturer(array $data): MakairaManufacturer
+    public static function mapManufacturer(array $data): MakairaManufacturer
     {
         $transfer = new MakairaManufacturer();
         
