@@ -55,25 +55,29 @@ class MakairaDataMapper
         return $transfer;
     }
     
-    //public static function mapProduct(array $data): MakairaProduct
-    //{
-    //    $transfer = new MakairaProduct();
-    //
-    //    $stock = 1;
-    //
-    //    $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-    //        ->setId($data['products_id'])
-    //        ->setTitle($data['products_name'])
-    //        ->setStock($stock)
-    //        ->setPrice($data['products_price'])
-    //        ->setIsVariant(false)
-    //        ->setTitle()
-    //        ->setEan()
-    //        ->setShortDescription()
-    //        ->setLongDescription()
-    //
-    //
-    //        ->setSearchKeys($data['products_keywords'] ? : '');
-    //
-    //}
+    public static function mapProduct(array $data): MakairaProduct
+    {
+        $transfer = new MakairaProduct();
+    
+        $stock = 1;
+    
+        $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+            ->setId($data['products_id'])
+            ->setTitle($data['products_name'])
+            ->setStock($stock)
+            ->setOnStock($stock > 0)
+            ->setPrice($data['products_price'])
+            ->setIsVariant(false)
+            ->setEan($data['products_ean'])
+            ->setShortDescription($data['products_short_description'])
+            ->setLongDescription($data['products_description'])
+            ->setUrl('')
+            ->setSearchKeys($data['products_keywords'] ? : '')
+            ->setMainCategory($data['main_category_id'])
+            ->setMainCategoryUrl('')
+            ->setManufacturerId($data['manufacturers_id'])
+            ->setManufacturerTitle('')
+            ->setPictureUrlMain($data['products_image'])
+    
+    }
 }

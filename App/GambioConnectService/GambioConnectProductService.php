@@ -4,6 +4,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
+use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
@@ -46,14 +47,16 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
          '
         );
         
-        $this->logger->info(json_encode($products));
-        
+
+        $exportData = array_map(function ($product) {
+            MakairaDataMapper::mapProduct($product);
+        }, $products);
         foreach ($products as $product) {
-            $specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
-            $document = new MakairaProduct($product, $specificProductVariants);
-            $this->client->push_revision($document->addMakairaDocumentWrapper());
-            
-            $this->logger->info(json_encode($document->addMakairaDocumentWrapper()));
+            //$specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
+            //$document = new MakairaProduct($product, $specificProductVariants);
+            //$this->client->push_revision($document->addMakairaDocumentWrapper());
+            //
+            //$this->logger->info(json_encode($document->addMakairaDocumentWrapper()));
         }
         
         // $specificProductOption = $this->additionalOptionReadService->getAdditionalOptionsByProductId($productid);
