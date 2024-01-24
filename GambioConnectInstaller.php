@@ -4,6 +4,8 @@ namespace GXModules\Makaira\GambioConnect;
 
 use Doctrine\DBAL\Connection;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersInfoTableInstaller;
+use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsAttributesTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsContentTableInstaller;
 use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsDescriptionTableInstaller;
@@ -85,6 +87,10 @@ class GambioConnectInstaller
         GambioConnectProductsToCategoriesTableInstaller::install($this->connection);
         
         GambioConnectProductsXsellTableInstaller::install($this->connection);
+        
+        GambioConnectManufacturersTableInstaller::install($this->connection);
+        
+        GambioConnectManufacturersInfoTableInstaller::install($this->connection);
     }
     
     
@@ -125,5 +131,9 @@ class GambioConnectInstaller
         GambioConnectProductsToCategoriesTableInstaller::uninstall($this->connection);
         
         GambioConnectProductsXsellTableInstaller::uninstall($this->connection);
+        
+        GambioConnectManufacturersTableInstaller::uninstall($this->connection);
+        
+        GambioConnectManufacturersInfoTableInstaller::uninstall($this->connection);
     }
 }
