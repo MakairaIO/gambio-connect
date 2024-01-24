@@ -7,13 +7,14 @@ use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 
 class MakairaDataMapper
 {
     /**
      * @throws \Exception
      */
-    public function mapManufacturer(array $data, Language $language): MakairaManufacturer
+    public function mapManufacturer(array $data): MakairaManufacturer
     {
         $transfer = new MakairaManufacturer();
         
@@ -24,11 +25,10 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
             ->setId($data['manufacturers_id'])
-            ->setTitle($data['manufacturers_name'])
+            ->setManufacturerTitle($data['manufacturers_name'])
             ->setPictureUrlMain($data['manufacturers_image'])
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt)
-            ->setLanguage($language->name())
             ->setMetaTitle($data['manufacturers_meta_title'])
             ->setMetaDescription($data['manufacturers_meta_description'])
             ->setMetaKeywords($data['manufacturers_meta_keywords'])
@@ -49,9 +49,31 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
-            ->setTitle($data['categories_name']);
+            ->setCategoryTitle($data['categories_name']);
             //->setHierarchy($hierarchy);
             
         return $transfer;
     }
+    
+    //public static function mapProduct(array $data): MakairaProduct
+    //{
+    //    $transfer = new MakairaProduct();
+    //
+    //    $stock = 1;
+    //
+    //    $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+    //        ->setId($data['products_id'])
+    //        ->setTitle($data['products_name'])
+    //        ->setStock($stock)
+    //        ->setPrice($data['products_price'])
+    //        ->setIsVariant(false)
+    //        ->setTitle()
+    //        ->setEan()
+    //        ->setShortDescription()
+    //        ->setLongDescription()
+    //
+    //
+    //        ->setSearchKeys($data['products_keywords'] ? : '');
+    //
+    //}
 }

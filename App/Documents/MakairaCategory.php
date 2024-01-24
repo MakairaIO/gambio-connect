@@ -7,8 +7,15 @@ use Psr\Log\LoggerInterface;
 class MakairaCategory extends MakairaEntity
 {
     
-    private string $title;
+    private int $depth = 0;
+    private int $sort = 0;
+    
+    private string $categoryTitle;
     private string $hierarchy = '';
+    private ?string $url = null;
+    
+    private array $subCategories = [];
+    private array $selfLinks = [];
     
     
     public function toArray(): array
@@ -18,21 +25,53 @@ class MakairaCategory extends MakairaEntity
             ...parent::toArray(),
             
             /* Category fields */
-            'title' => $this->title,
+            'depth' => $this->depth,
+            'sort' => $this->sort,
+            'category_title' => $this->categoryTitle,
             'hierarchy' => $this->hierarchy,
+            'url' => $this->url,
+            'subcategories' => $this->subCategories,
+            'selfLinks' => $this->selfLinks,
         ];
     }
     
     
-    public function getTitle(): string
+    public function getDepth(): int
     {
-        return $this->title;
+        return $this->depth;
     }
     
     
-    public function setTitle(string $title): MakairaCategory
+    public function setDepth(int $depth): MakairaCategory
     {
-        $this->title = $title;
+        $this->depth = $depth;
+        
+        return $this;
+    }
+    
+    
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+    
+    
+    public function setSort(int $sort): MakairaCategory
+    {
+        $this->sort = $sort;
+        
+        return $this;
+    }
+    
+    public function getCategoryTitle(): string
+    {
+        return $this->categoryTitle;
+    }
+    
+    
+    public function setCategoryTitle(string $categoryTitle): MakairaCategory
+    {
+        $this->categoryTitle = $categoryTitle;
         
         return $this;
     }
@@ -47,6 +86,48 @@ class MakairaCategory extends MakairaEntity
     public function setHierarchy(string $hierarchy): MakairaCategory
     {
         $this->hierarchy = $hierarchy;
+        
+        return $this;
+    }
+    
+    
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+    
+    
+    public function setUrl(?string $url): MakairaCategory
+    {
+        $this->url = $url;
+        
+        return $this;
+    }
+    
+    
+    public function getSubCategories(): array
+    {
+        return $this->subCategories;
+    }
+    
+    
+    public function setSubCategories(array $subCategories): MakairaCategory
+    {
+        $this->subCategories = $subCategories;
+        
+        return $this;
+    }
+    
+    
+    public function getSelfLinks(): array
+    {
+        return $this->selfLinks;
+    }
+    
+    
+    public function setSelfLinks(array $selfLinks): MakairaCategory
+    {
+        $this->selfLinks = $selfLinks;
         
         return $this;
     }

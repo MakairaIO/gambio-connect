@@ -4,7 +4,6 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
@@ -67,17 +66,8 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         $hierarchy = $this->calculateCategoryDepth($category);
         
-        $this->logger->info(json_encode($hierarchy));
-        
         $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy);
-        
-        $this->logger->info(json_encode($makairaCategory->toArray()));
-        
-        exit();
-        
-        $data = $this->addMakairaDocumentWrapper($makairaCategory);
-        
-        $this->logger->info(json_encode($data));
+        $data = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
         
         $response = $this->client->push_revision($data);
         

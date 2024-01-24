@@ -48,8 +48,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         
         $this->logger->info(json_encode($products));
         
-        
-        
         foreach ($products as $product) {
             $specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
             $document = new MakairaProduct($product, $specificProductVariants);

@@ -4,24 +4,13 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App;
 
-use CategoryReadService;
-use Gambio\Admin\Modules\Configuration\Services\Interfaces\CategoryRepositoryInterface;
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
-use Gambio\Admin\Modules\Option\App\OptionReadService;
+use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaDocument;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
-use MainFactory;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
-use Gambio\Admin\Modules\ProductOption\App\ProductOptionReadService;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use Doctrine\DBAL\Connection;
-use IdType;
-use LanguageCode;
-use ProductRepositoryReader;
-use Psr\Log\LoggerInterface;
-use StringType;
 
 /**
  * Class GambioConnectService
@@ -47,9 +36,9 @@ class GambioConnectService implements GambioConnectServiceInterface
     }
     
     
-    public function addMakairaDocumentWrapper(MakairaEntity $document): array
+    public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
     {
-        return [
+        $data = [
             'items' => [
                 [
                     'data' => $document->toArray(),
@@ -58,6 +47,14 @@ class GambioConnectService implements GambioConnectServiceInterface
             'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
+        
+        if($language) {
+            $data['items'][0]['language_id'] = $language->code();
+        }
+        
+        $this->logger->debug('Makaira document wrapper', $data);
+        
+        return $data;
     }
     
     

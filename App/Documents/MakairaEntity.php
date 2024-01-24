@@ -17,10 +17,9 @@ class MakairaEntity
     
     private bool $active = true;
     private bool $searchable = true;
+    private bool $hidden = false;
     private bool $onStock = true;
     
-    private string $title;
-    private string $language;
     private string $pictureUrlMain = '';
     
     
@@ -32,10 +31,9 @@ class MakairaEntity
             'shop' => $this->shop,
             'active' => $this->active,
             'searchable' => $this->searchable,
+            'hidden' => $this->hidden,
             'onStock' => $this->onStock,
-            'title' => $this->title,
-            'language' => $this->language,
-            'pictureUrlMain' => $this->pictureUrlMain,
+            'picture_url_main' => $this->pictureUrlMain,
         ];
     }
     
@@ -110,6 +108,20 @@ class MakairaEntity
     }
     
     
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+    
+    
+    public function setHidden(bool $hidden): MakairaEntity
+    {
+        $this->hidden = $hidden;
+        
+        return $this;
+    }
+    
+    
     public function isOnStock(): bool
     {
         return $this->onStock;
@@ -119,34 +131,6 @@ class MakairaEntity
     public function setOnStock(bool $onStock): MakairaEntity
     {
         $this->onStock = $onStock;
-        
-        return $this;
-    }
-    
-    
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-    
-    
-    public function setTitle(string $title): MakairaEntity
-    {
-        $this->title = $title;
-        
-        return $this;
-    }
-    
-    
-    public function getLanguage(): string
-    {
-        return $this->language;
-    }
-    
-    
-    public function setLanguage(string $language): MakairaEntity
-    {
-        $this->language = $language;
         
         return $this;
     }
