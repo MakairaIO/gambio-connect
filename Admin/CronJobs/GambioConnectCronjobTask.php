@@ -15,44 +15,40 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     {
         $dependencies = $this->dependencies->getDependencies();
         
-        $this->gambioConnectManufacturerService = new GambioConnectManufacturerService(
-            $dependencies['MakairaClient'],
-            $dependencies['LanguageReadService'],
-            $dependencies['Connection'],
-            $dependencies['MakairaLogger']
-        );
-        
-        $this->gambioConnectCategoryService = new GambioConnectCategoryService(
-            $dependencies['MakairaClient'],
-            $dependencies['LanguageReadService'],
-            $dependencies['Connection'],
-            $dependencies['MakairaLogger']
-        );
-        
-        $this->gambioConnectProductService = new GambioConnectProductService(
-            $dependencies['MakairaClient'],
-            $dependencies['LanguageReadService'],
-            $dependencies['Connection'],
-            $dependencies['MakairaLogger']
-        );
-        
-        return function () {
-            $this->logInfo('GambioConnect Cronjob Started');
+        if($this->moduleIsInstalledAndActive()) {
+            $this->gambioConnectManufacturerService = new GambioConnectManufacturerService($dependencies['MakairaClient'],
+                                                                                           $dependencies['LanguageReadService'],
+                                                                                           $dependencies['Connection'],
+                                                                                           $dependencies['MakairaLogger']);
             
-            $this->logInfo('Begin Export Manufacturers to PersistenceLayer');
+            $this->gambioConnectCategoryService = new GambioConnectCategoryService($dependencies['MakairaClient'],
+                                                                                   $dependencies['LanguageReadService'],
+                                                                                   $dependencies['Connection'],
+                                                                                   $dependencies['MakairaLogger']);
             
-            $this->gambioConnectManufacturerService->exportAll();
+            $this->gambioConnectProductService = new GambioConnectProductService($dependencies['MakairaClient'],
+                                                                                 $dependencies['LanguageReadService'],
+                                                                                 $dependencies['Connection'],
+                                                                                 $dependencies['MakairaLogger']);
             
-            $this->logInfo('Begin Export Categories to PersistenceLayer');
-            
-            $this->gambioConnectCategoryService->exportAll();
-            
-            $this->logInfo('Begin Export Products to PersistenceLayer');
-            
-            $this->gambioConnectProductService->exportAll();
-            
-            $this->logInfo('All Exports to PersistenceLayer Successful');
-        };
+            return function () {
+                $this->logInfo('GambioConnect Cronjob Started');
+                
+                $this->logInfo('Begin Export Manufacturers to PersistenceLayer');
+                
+                $this->gambioConnectManufacturerService->export();
+                
+                $this->logInfo('Begin Export Categories to PersistenceLayer');
+                
+                $this->gambioConnectCategoryService->export();
+                
+                $this->logInfo('Begin Export Products to PersistenceLayer');
+                
+                $this->gambioConnectProductService->export();
+                
+                $this->logInfo('All Exports to PersistenceLayer Successful');
+            };
+        }
     }
     
     
@@ -86,5 +82,13 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     protected function logNotice(string $message): void
     {
         $this->logger->log(['message' => $message, 'level' => 'notice']);
+    }
+    
+    protected function moduleIsInstalledAndActive(): bool
+    {
+        $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
+        $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+        $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
+        return $installed && $active;
     }
 }

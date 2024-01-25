@@ -12,7 +12,8 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
      */
     public function getDependencies()
     {
-        $makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient(LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationFinder::class));
+        $configurationFinder = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationFinder::class);
+        $makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($configurationFinder);
         $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
         $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Language\Services\LanguageReadService::class);
         $makairaLogger = new \GXModules\Makaira\GambioConnect\App\MakairaLogger();
@@ -20,7 +21,9 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
             'MakairaClient' => $makairaClient,
             'LanguageReadService' => $languageReadService,
             'Connection' => $connection,
-            'MakairaLogger' => $makairaLogger
+            'MakairaLogger' => $makairaLogger,
+            'ConfigurationFinder' => $configurationFinder,
+            'active' => $this->storage->get('GambioConnect', 'active')
         ];
     }
 }
