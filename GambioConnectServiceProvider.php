@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use Gambio\Core\TextManager\Services\TextManager;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectAccount;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
@@ -28,7 +29,8 @@ use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
-
+use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
+use GXModules\Makaira\GambioConnect\App\Utils\ModuleConfig;
 
 /**
  * Class GambioConnectServiceProvider
@@ -51,6 +53,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             GambioConnectFAQ::class,
             Export::class,
             VariantUpdateEventListener::class,
+            MakairaRequest::class,
+            ModuleConfig::class
         ];
     }
 
@@ -62,7 +66,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     {
         $this->application->registerShared(GambioConnectOverview::class);
         $this->application->registerShared(GambioConnectDocument::class);
-        $this->application->registerShared(GambioConnectWelcome::class);
+        $this->application->registerShared(GambioConnectWelcome::class)
+            ->addArgument(TextManager::class);
         $this->application->registerShared(GambioConnectAccount::class);
         $this->application->registerShared(GambioConnectFAQ::class);
 
@@ -112,6 +117,9 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         
         $this->application->registerShared(GambioConnectInstaller::class)
             ->addArgument(Connection::class);
+
+        $this->application->registerShared(ModuleConfig::class)
+            ->addArgument(ConfigurationFinder::class);
     }
 
     public function boot(): void
