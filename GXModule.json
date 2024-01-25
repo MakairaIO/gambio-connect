@@ -9,5 +9,29 @@
     "uninstall": {
         "controller": "GXModules\\Makaira\\GambioConnect\\GambioConnectInstaller",
         "method": "onUninstallation"
-    }
+    },
+    "configuration": [
+        {
+          "title": "gambioconnect.settings",
+          "fields": {
+            "makairaUrl": {
+              "type": "text",
+              "label": "gambioconnect.makaira_url"
+            },
+            "makairaInstance": {
+              "type": "text",
+              "label": "gambioconnect.makaira_instance"
+            },
+            "makairaSecret": {
+              "type": "password",
+              "label": "gambioconnect.makaira_secret"
+            },
+            "makairaActiveSearch": {
+              "type": "checkbox",
+              "label": "gambioconnect.makaira_active_search",
+              "default_value": true
+            }
+          }
+        }
+    ]
 }
