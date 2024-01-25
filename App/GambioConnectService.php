@@ -78,5 +78,4 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $data;
     }
     
-    
 }

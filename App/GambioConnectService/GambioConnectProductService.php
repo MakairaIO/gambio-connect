@@ -2,6 +2,8 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
@@ -10,7 +12,23 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    
+    public static array $productRelationTables = [
+        'products_attributes',
+        'products_content',
+        'products_description',
+        'products_google_categories',
+        'products_graduated_prices',
+        'products_hermesoptions',
+        'products_images',
+        'products_item_codes',
+        'products_properties_admin_select',
+        'products_properties_combis',
+        'products_properties_combis_defaults',
+        'products_properties_index',
+        'products_quantity_unit',
+        'products_to_categories',
+        'products_xsell'
+    ];
     
     public function prepareExport(): void
     {
@@ -43,7 +61,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $products = $this->getQuery($language, $makairaChanges);
                 
                 foreach ($products as $product) {
-                    $this->pushRevision($product);
+                    $this->pushRevision($language, $product);
                     $this->exportIsDone($product['products_id'], 'product');
                 }
             }
@@ -60,13 +78,13 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->client->switch(['products']);
     }
     
-    private function pushRevision(array $product): void
+    private function pushRevision(Language $language, array $product): void
     {
         $this->logger->info('Product Data', ['data' => $product]);
         
         $makairaProduct = MakairaDataMapper::mapProduct($product);
         
-        $data = $this->addMakairaDocumentWrapper($makairaProduct);
+        $data = $this->addMakairaDocumentWrapper($makairaProduct, $language);
         
         $response = $this->client->push_revision($data);
         
@@ -75,35 +93,45 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     
     private function getQuery(Language $language, array $makairaChanges = []) {
         $query = $this->connection->createQueryBuilder()
-            ->select(empty($makairaChanges) ? '*' : 'products.products_id')
-            ->from('products')
-            ->setParameter('languageId', $language->id())
-            ->rightJoin('products', 'products_attributes', 'products_attributes', 'products.products_id = products_attributes.products_id')
-            ->rightJoin('products_attributes', 'products_attributes_download', 'products_attributes_download', 'products_attributes.products_attributes_id = products_attributes_download.products_attributes_id')
-            ->rightJoin('products', 'products_content', 'products_content', 'products.products_id = products_content.products_id')
-            ->rightJoin('products', 'products_description', 'products_description', 'products.products_id = products_description.products_id')
-            ->where('products_description.languages_id = :languageId')
-            ->rightJoin('products', 'products_google_categories', 'products_google_categories', 'products.products_id = products_google_categories.products_id')
-            ->rightJoin('products', 'products_graduated_prices', 'products_graduated_prices', 'products.products_id = products_graduated_prices.products_id')
-            ->rightJoin('products', 'products_hermesoptions', 'products_hermesoptions', 'products.products_id = products_hermesoptions.products_id')
-            ->rightJoin('products', 'products_images', 'products_images', 'products.products_id = products_images.products_id')
-            ->rightJoin('products', 'products_item_codes', 'products_item_codes', 'products.products_id = products_item_codes.products_id')
-            ->rightJoin('products', 'products_properties_admin_select', 'products_properties_admin_select', 'products.products_id = products_properties_admin_select.products_id')
-            ->rightJoin('products', 'products_properties_combis', 'products_properties_combis', 'products.products_id = products_properties_combis.products_id')
-            ->rightJoin('products', 'products_properties_combis_defaults', 'products_properties_combis_defaults', 'products.products_id = products_properties_combis_defaults.products_id')
-            ->rightJoin('products', 'products_properties_index', 'products_properties_index',  'products.products_id = products_properties_index.products_id')
-            ->where('products_properties_index.language_id = :languageId')
-            ->rightJoin('products', 'products_quantity_unit', 'products_quantity_unit', 'products.products_id = products_quantity_unit.products_id')
-            ->rightJoin('products', 'products_to_categories', 'products_to_categories', 'products.products_id = products_to_categories.products_id')
-            ->rightJoin('products', 'products_xsell', 'products_xsell', 'products.products_id = products_xsell.products_id')
-            ;
+            ->select('*')
+            ->from('products');
         
         if(!empty($makairaChanges)) {
             $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
-            $query->where('products.products_id IN (:ids)')
-                ->setParameter('ids', implode(',', array_values($ids)));
+            $query
+                ->add('where', $query->expr()->in('products.products_id', $ids), true);
         }
         
-        return $query->fetchAllAssociative();
+        $results = $query->fetchAllAssociative();
+        
+        if(empty($makairaChanges)) {
+            return $results;
+        }
+        
+        foreach($results as $index => $result) {
+            foreach(self::$productRelationTables as $relationTable) {
+                $query = $this->connection->createQueryBuilder()
+                    ->select('*')
+                    ->from($relationTable)
+                    ->where('products_id = :productsId')
+                    ->setParameter('productsId', $result['products_id']);
+                
+                if($relationTable === 'products_description' || $relationTable === 'products_properties_index') {
+                    $query
+                        ->andWhere($relationTable . '.language_id = :languageId')
+                        ->setParameter('languageId', $language->id());
+                }
+                
+                $relationResult = $query->fetchAllAssociative();
+                
+                if(count($relationResult) === 1) {
+                    $results[$index][$relationTable] = $relationResult[0];
+                } else {
+                    $results[$index][$relationTable] = $relationResult;
+                }
+            }
+        }
+        
+        return $results;
     }
 }
