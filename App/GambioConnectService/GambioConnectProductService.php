@@ -2,70 +2,52 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
+use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    public function export(int $productId = null): void
+    
+    
+    public function prepareExport(): void
     {
+        $languages = $this->languageReadService->getLanguages();
         
-        $lang = 2;
-        if ($productId === null) {
-            $this->exportAll();
-        } else {
+        foreach($languages as $language) {
+            $products = $this->getQuery($language);
             
-            $product = $this->connection->fetchAllAssociative(
-                '
-                SELECT p.*, pd.products_name, pd.products_name, pd.products_description, pd.products_short_description, pd.products_url, pd.products_viewed
-                  FROM ' . 'products' . ' p
-             LEFT JOIN ' . 'products_description' . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"
-             WHERE p.products_id ="' . $productId . '"'
-            );
-            
-            
-            $specificProductVariants = $this->variantReadService->getProductVariantsByProductId($productId);
-            $document = new MakairaProduct($product[0], $specificProductVariants);
-            $this->client->push_revision($document->addMakairaDocumentWrapper());
+            foreach($products as $product) {
+                $this->connection->executeQuery('CALL makairaChange(' . $product['products_id'] . ', "product")');
+            }
         }
+    }
+    
+    public function export(): void
+    {
+        $this->exportAll();
     }
     
     
     
     public function exportAll(): void
     {
+        $languages = $this->languageReadService->getLanguages();
         
-        $lang = 2;
+        $makairaChanges = $this->getEntitiesForExport('product');
         
-        $products = $this->connection->fetchAllAssociative(
-            '
-            SELECT p.*, pd.products_name, pd.products_description, pd.products_short_description, pd.products_url, pd.products_viewed
-			  FROM ' . 'products' . ' p
-		 LEFT JOIN ' . 'products_description' . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"
-         '
-        );
-        
-        $this->logger->info(json_encode($products));
-        
-        foreach ($products as $product) {
-            $specificProductVariants = $this->variantReadService->getProductVariantsByProductId((int) $product['products_id']);
-            $document = new MakairaProduct($product, $specificProductVariants);
-            $this->client->push_revision($document->addMakairaDocumentWrapper());
-            
-            $this->logger->info(json_encode($document->addMakairaDocumentWrapper()));
+        if(!empty($makairaChanges)) {
+            foreach ($languages as $language) {
+                $products = $this->getQuery($language, $makairaChanges);
+                
+                foreach ($products as $product) {
+                    $this->pushRevision($product);
+                    $this->exportIsDone($product['products_id'], 'product');
+                }
+            }
         }
-        
-        // $specificProductOption = $this->additionalOptionReadService->getAdditionalOptionsByProductId($productid);
-        //  $this->logger->info(json_encode($prod));
-        //$this->logger->info(json_encode($product->getName(new LanguageCode(new StringType('de')))));
-        //$this->logger->info(json_encode($document->add_makaira_document_wrapper()));
-    }
-    
-    public function exportByVariantId(int $variantId): void
-    {
-        $specificProductVariants = $this->variantReadService->getProductVariantById($variantId);
-        $this->export($specificProductVariants->productId());
     }
     
     public function replace(): void
@@ -76,5 +58,52 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     public function switch(): void
     {
         $this->client->switch(['products']);
+    }
+    
+    private function pushRevision(array $product): void
+    {
+        $this->logger->info('Product Data', ['data' => $product]);
+        
+        $makairaProduct = MakairaDataMapper::mapProduct($product);
+        
+        $data = $this->addMakairaDocumentWrapper($makairaProduct);
+        
+        $response = $this->client->push_revision($data);
+        
+        $this->logger->info('Makaira Product Status for: ' . $product['products_id'] . ': ' . $response->getStatusCode());
+    }
+    
+    private function getQuery(Language $language, array $makairaChanges = []) {
+        $query = $this->connection->createQueryBuilder()
+            ->select(empty($makairaChanges) ? '*' : 'products.products_id')
+            ->from('products')
+            ->setParameter('languageId', $language->id())
+            ->rightJoin('products', 'products_attributes', 'products_attributes', 'products.products_id = products_attributes.products_id')
+            ->rightJoin('products_attributes', 'products_attributes_download', 'products_attributes_download', 'products_attributes.products_attributes_id = products_attributes_download.products_attributes_id')
+            ->rightJoin('products', 'products_content', 'products_content', 'products.products_id = products_content.products_id')
+            ->rightJoin('products', 'products_description', 'products_description', 'products.products_id = products_description.products_id')
+            ->where('products_description.languages_id = :languageId')
+            ->rightJoin('products', 'products_google_categories', 'products_google_categories', 'products.products_id = products_google_categories.products_id')
+            ->rightJoin('products', 'products_graduated_prices', 'products_graduated_prices', 'products.products_id = products_graduated_prices.products_id')
+            ->rightJoin('products', 'products_hermesoptions', 'products_hermesoptions', 'products.products_id = products_hermesoptions.products_id')
+            ->rightJoin('products', 'products_images', 'products_images', 'products.products_id = products_images.products_id')
+            ->rightJoin('products', 'products_item_codes', 'products_item_codes', 'products.products_id = products_item_codes.products_id')
+            ->rightJoin('products', 'products_properties_admin_select', 'products_properties_admin_select', 'products.products_id = products_properties_admin_select.products_id')
+            ->rightJoin('products', 'products_properties_combis', 'products_properties_combis', 'products.products_id = products_properties_combis.products_id')
+            ->rightJoin('products', 'products_properties_combis_defaults', 'products_properties_combis_defaults', 'products.products_id = products_properties_combis_defaults.products_id')
+            ->rightJoin('products', 'products_properties_index', 'products_properties_index',  'products.products_id = products_properties_index.products_id')
+            ->where('products_properties_index.language_id = :languageId')
+            ->rightJoin('products', 'products_quantity_unit', 'products_quantity_unit', 'products.products_id = products_quantity_unit.products_id')
+            ->rightJoin('products', 'products_to_categories', 'products_to_categories', 'products.products_id = products_to_categories.products_id')
+            ->rightJoin('products', 'products_xsell', 'products_xsell', 'products.products_id = products_xsell.products_id')
+            ;
+        
+        if(!empty($makairaChanges)) {
+            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
+            $query->where('products.products_id IN (:ids)')
+                ->setParameter('ids', implode(',', array_values($ids)));
+        }
+        
+        return $query->fetchAllAssociative();
     }
 }

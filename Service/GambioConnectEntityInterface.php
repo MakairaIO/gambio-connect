@@ -9,4 +9,6 @@ interface GambioConnectEntityInterface
     public function replace(): void;
     
     public function switch(): void;
+    
+    public function prepareExport(): void;
 }

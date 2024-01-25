@@ -35,11 +35,11 @@ class Export extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        $this->gambioConnectManufacturerService->exportAll();
+        $this->gambioConnectManufacturerService->prepareExport();
         
-        $this->gambioConnectCategoryService->exportAll();
+        $this->gambioConnectCategoryService->prepareExport();
         
-        // $this->gambioConnectProductService->exportAll();
+        $this->gambioConnectProductService->prepareExport();
         
         return $response->withJson(['success' => true]);
     }

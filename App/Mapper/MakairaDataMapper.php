@@ -56,25 +56,25 @@ class MakairaDataMapper
         return $transfer;
     }
     
-    //public static function mapProduct(array $data): MakairaProduct
-    //{
-    //    $transfer = new MakairaProduct();
-    //
-    //    $stock = 1;
-    //
-    //    $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-    //        ->setId($data['products_id'])
-    //        ->setTitle($data['products_name'])
-    //        ->setStock($stock)
-    //        ->setPrice($data['products_price'])
-    //        ->setIsVariant(false)
-    //        ->setTitle()
-    //        ->setEan()
-    //        ->setShortDescription()
-    //        ->setLongDescription()
-    //
-    //
-    //        ->setSearchKeys($data['products_keywords'] ? : '');
-    //
-    //}
+    public static function mapProduct(array $data): MakairaProduct
+    {
+        $transfer = new MakairaProduct();
+    
+        $stock = 1;
+    
+        $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+            ->setId($data['products_id'])
+            ->setTitle($data['products_name'])
+            ->setStock($stock)
+            ->setPrice($data['products_price'])
+            ->setIsVariant(false)
+            ->setTitle()
+            ->setEan()
+            ->setShortDescription()
+            ->setLongDescription()
+    
+    
+            ->setSearchKeys($data['products_keywords'] ? : '');
+    
+    }
 }

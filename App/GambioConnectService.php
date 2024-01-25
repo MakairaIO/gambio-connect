@@ -24,8 +24,6 @@ class GambioConnectService implements GambioConnectServiceInterface
     public function __construct(
         protected MakairaClient               $client,
         protected LanguageReadService         $languageReadService,
-        protected ProductVariantsReadService  $variantReadService,
-        protected AdditionalOptionReadService $additionalOptionReadService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
         //   ProductRepositoryReader $productReadService,
@@ -33,6 +31,29 @@ class GambioConnectService implements GambioConnectServiceInterface
     )
     {
         // $this->productReadService = $productReadService;
+    }
+    
+    protected function exportIsDone(int $gambio_id, string $type): void
+    {
+        $this->connection->delete(ChangesService::TABLE_NAME, [
+            'gambio_id' => $gambio_id,
+            'type' => $type
+        ]);
+    }
+    
+    protected function getEntitiesForExport(string $type) : array
+    {
+        return $this->getMakairaChangesForType($type);
+    }
+    
+    private function getMakairaChangesForType(string $type): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('gambio_id')
+            ->from(ChangesService::TABLE_NAME)
+            ->where('type = :type')
+            ->setParameter('type', $type)
+            ->fetchAllAssociative();
     }
     
     

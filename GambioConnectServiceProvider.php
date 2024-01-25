@@ -7,6 +7,9 @@ namespace GXModules\Makaira\GambioConnect;
 use Gambio\Admin\Modules\Configuration\App\Data\Repositories\CategoryRepository;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
+use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
+use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
+use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
@@ -79,27 +82,20 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectProductService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
-            ->addArgument(ProductVariantsReadService::class)
-            ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)
             ->addArgument(MakairaLogger::class);
         
         $this->application->registerShared(GambioConnectCategoryService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
-            ->addArgument(ProductVariantsReadService::class)
-            ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)
             ->addArgument(MakairaLogger::class);
         
         $this->application->registerShared(GambioConnectManufacturerService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
-            ->addArgument(ProductVariantsReadService::class)
-            ->addArgument(AdditionalOptionReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ChangesService::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(ChangesService::class)
             ->addArgument(Connection::class);
