@@ -49,8 +49,9 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
-            ->setCategoryTitle($data['categories_name']);
-            //->setHierarchy($hierarchy);
+            ->setCategoryTitle($data['categories_name'])
+            ->setDepth($hierarchy['depth'])
+            ->setHierarchy($hierarchy['hierarchy']);
             
         return $transfer;
     }
