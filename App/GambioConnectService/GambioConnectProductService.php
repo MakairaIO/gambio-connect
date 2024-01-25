@@ -48,13 +48,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     
     public function export(): void
     {
-        $this->exportAll();
-    }
-    
-    
-    
-    public function exportAll(): void
-    {
         $languages = $this->languageReadService->getLanguages();
         
         $makairaChanges = $this->getEntitiesForExport('product');
@@ -82,7 +75,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->client->switch(['products']);
     }
     
-    private function pushRevision(array $product): void
+    public function pushRevision(array $product): void
     {
         $this->logger->info('Product Data', ['data' => $product]);
         
@@ -95,7 +88,8 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->logger->info('Makaira Product Status for: ' . $product['products_id'] . ': ' . $response->getStatusCode());
     }
     
-    private function getQuery(Language $language, array $makairaChanges = []) {
+    public function getQuery(Language $language, array $makairaChanges = []): array
+    {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('products');

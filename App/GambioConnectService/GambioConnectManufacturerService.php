@@ -34,15 +34,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
      */
     public function export(): void
     {
-        $this->exportAll();
-    }
-    
-    
-    /**
-     * @throws Exception
-     */
-    public function exportAll(): void
-    {
         $languages = $this->languageReadService->getLanguages();
         
         $makairaExports = $this->getEntitiesForExport('manufacturer');
@@ -65,7 +56,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    private function pushRevision(array $manufacturer): void
+    public function pushRevision(array $manufacturer): void
     {
         $makairaManufactuer = MakairaDataMapper::mapManufacturer($manufacturer);
         

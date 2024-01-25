@@ -29,15 +29,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     
     public function export(): void
     {
-        $this->exportAll();
-    }
-    
-    
-    /**
-     * @throws Exception
-     */
-    public function exportAll(): void
-    {
         $languages = $this->languageReadService->getLanguages();
         
         $makairaExports = $this->getEntitiesForExport('category');
@@ -59,7 +50,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     /**
      * @throws Exception
      */
-    private function pushRevision(array $category): void
+    public function pushRevision(array $category): void
     {
         $hierarchy = $this->calculateCategoryDepth($category);
         
