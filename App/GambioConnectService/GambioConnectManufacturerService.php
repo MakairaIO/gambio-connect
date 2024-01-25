@@ -54,7 +54,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 $manufacturers = $this->getQuery($language, $makairaExports);
                 
                 foreach($manufacturers as $manufacturer) {
-                    $this->pushRevision($language, $manufacturer);
+                    $this->pushRevision($manufacturer);
                     $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
                 }
             }
@@ -65,11 +65,11 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    private function pushRevision(Language $language, array $manufacturer): void
+    private function pushRevision(array $manufacturer): void
     {
         $makairaManufactuer = MakairaDataMapper::mapManufacturer($manufacturer);
         
-        $data = $this->addMakairaDocumentWrapper($makairaManufactuer, $language);
+        $data = $this->addMakairaDocumentWrapper($makairaManufactuer, $this->currentLanguage);
         
         $response = $this->client->push_revision($data);
         

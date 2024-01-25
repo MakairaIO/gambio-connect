@@ -12,6 +12,9 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
+    
+    public Language $currentLanguage;
+    
     public static array $productRelationTables = [
         'products_attributes',
         'products_content',
@@ -58,10 +61,11 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         
         if(!empty($makairaChanges)) {
             foreach ($languages as $language) {
+                $this->currentLanguage = $language;
                 $products = $this->getQuery($language, $makairaChanges);
                 
                 foreach ($products as $product) {
-                    $this->pushRevision($language, $product);
+                    $this->pushRevision($product);
                     $this->exportIsDone($product['products_id'], 'product');
                 }
             }
@@ -78,13 +82,13 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->client->switch(['products']);
     }
     
-    private function pushRevision(Language $language, array $product): void
+    private function pushRevision(array $product): void
     {
         $this->logger->info('Product Data', ['data' => $product]);
         
         $makairaProduct = MakairaDataMapper::mapProduct($product);
         
-        $data = $this->addMakairaDocumentWrapper($makairaProduct, $language);
+        $data = $this->addMakairaDocumentWrapper($makairaProduct, $this->currentLanguage);
         
         $response = $this->client->push_revision($data);
         
