@@ -25,9 +25,9 @@ class MakairaClient
     {
 
         $this->configurationFinder = $configurationFinder;
-        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', null);
-        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', null);
-        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', null);
+        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', 'https://stage.makaira.io');
+        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', 'aAO3XD4D2FoGxGKCVz4t');
+        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', 'gambio');
         $this->nonce = bin2hex(random_bytes(8));
 
 

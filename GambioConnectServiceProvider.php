@@ -66,8 +66,7 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     {
         $this->application->registerShared(GambioConnectOverview::class);
         $this->application->registerShared(GambioConnectDocument::class);
-        $this->application->registerShared(GambioConnectWelcome::class)
-            ->addArgument(TextManager::class);
+        $this->application->registerShared(GambioConnectWelcome::class);
         $this->application->registerShared(GambioConnectAccount::class);
         $this->application->registerShared(GambioConnectFAQ::class);
 

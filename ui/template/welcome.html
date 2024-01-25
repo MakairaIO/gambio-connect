@@ -1,5 +1,5 @@
 {extends file="layout.html"}
-{load_language_text section="gambio-welcome" name="translationSection"}
+{load_language_text section="gambio_welcome"}
 
 {block name="content"}
 <div>
@@ -8,9 +8,7 @@
   </div>
   <div>
     <div class="welcome__description">
-      
-      {$translation|@var_dump}
-      {$translationSection|@var_dump}
+        {$txt.heading}
     </div>
     <section class="welcome_clients">
       <h3>{$translation.heading}</h3>
