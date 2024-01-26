@@ -31,7 +31,8 @@ class GambioConnectWelcome extends AdminModuleAction
             'totalPackages' => [
                 'price' =>  45
             ],
-            'professionalPackage'   =>  [
+            'bundlePackage'   =>  [
+                'subscription'  =>  'prod_PQDcothTDeyG5J',
                 'card_color'    =>  'aube',
                 'card_type'     => 'red',
                 'heading' => $this->getTranslateSection('PACKAGE_PROFESSIONAL_HEADING'),
@@ -60,7 +61,9 @@ class GambioConnectWelcome extends AdminModuleAction
 
     private function getPackages()
     {
+        // Package Search
         $package1 = [
+            'subscription'  =>  'prod_POh7K4aYgT4jDg',
             'card_type'     => 'yellow',
             'heading' => $this->getTranslateSection('PACKAGE_0_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_0_DESC'),
@@ -87,7 +90,10 @@ class GambioConnectWelcome extends AdminModuleAction
             'trial' =>  $this->getTranslateSection('PACKAGE_0_TRIAL'),
             'trialbtn'  =>  $this->getTranslateSection('PACKAGE_0_TRIAL_BTN')
         ];
+
+        // Package Recommendation
         $package2 = [
+            'subscription'  =>  'prod_PQDMJ9dlGvv8Wj',
             'card_type'     => 'aube',
             'heading' => $this->getTranslateSection('PACKAGE_1_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_1_DESC'),
@@ -110,7 +116,10 @@ class GambioConnectWelcome extends AdminModuleAction
             'trial' =>  $this->getTranslateSection('PACKAGE_1_TRIAL'),
             'trialbtn'  =>  $this->getTranslateSection('PACKAGE_1_TRIAL_BTN')
         ];
+
+        // Package Advertising spaces
         $package3 = [
+            'subscription'  =>  'prod_PQDYvloTtoO2zs',
             'card_type'     => 'cyan',
             'heading' => $this->getTranslateSection('PACKAGE_2_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_2_DESC'),
