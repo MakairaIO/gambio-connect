@@ -7,102 +7,98 @@ use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
+use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
-class GambioConnectManufacturerService extends GambioConnectService
+class GambioConnectManufacturerService extends GambioConnectService implements GambioConnectEntityInterface
 {
     private Language $currentLanguage;
-    
-    
-    /**
-     * @throws Exception
-     */
-    public function export(int $manufacturerId = null): void
-    {
-        if (!$manufacturerId) {
-            $this->exportAll();
-        } else {
-            $this->exportManufacturer($manufacturerId);
-        }
-    }
-    
-    
-    /**
-     * @throws Exception
-     */
-    public function exportAll(): void
+
+
+
+    public function prepareExport(): void
     {
         $languages = $this->languageReadService->getLanguages();
-        
+
         foreach($languages as $language) {
-            
-            $this->currentLanguage = $language;
             $manufacturers = $this->getQuery($language);
-            
+
             foreach($manufacturers as $manufacturer) {
-                $this->pushRevision($manufacturer);
+                $this->connection->executeQuery('CALL makairaChange(' . $manufacturer['manufacturers_id'] . ', "manufacturer")');
             }
         }
     }
-    
-    
+
+
     /**
      * @throws Exception
      */
-    public function exportManufacturer(int $manufacturer): void
+    public function export(): void
     {
-        $language = $this->languageReadService->getLanguages();
-        
-        foreach($language as $language) {
-            $this->currentLanguage = $language;
-            $this->pushRevision($this->getQuery($language, $manufacturer));
+        $languages = $this->languageReadService->getLanguages();
+
+        $makairaExports = $this->getEntitiesForExport('manufacturer');
+
+        if(!empty($makairaExports)) {
+            foreach($languages as $language) {
+
+                $this->currentLanguage = $language;
+                $manufacturers = $this->getQuery($language, $makairaExports);
+
+                foreach($manufacturers as $manufacturer) {
+                    $this->pushRevision($manufacturer);
+                    $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
+                }
+            }
         }
     }
-    
-    
+
+
     /**
      * @throws Exception
      */
-    private function pushRevision(array $manufacturer): void
+    public function pushRevision(array $manufacturer): void
     {
-        $this->logger->info("Pushing Makaira Manufacturer for " . $manufacturer['manufacturers_id']);
-        
-        $makairaManufacturer = MakairaDataMapper::mapManufacturer($manufacturer);
-        
-        $data = $this->addMakairaDocumentWrapper($makairaManufacturer, $this->currentLanguage);
-        
+        $makairaManufactuer = MakairaDataMapper::mapManufacturer($manufacturer);
+
+        $data = $this->addMakairaDocumentWrapper($makairaManufactuer, $this->currentLanguage);
+
         $response = $this->client->push_revision($data);
-        $this->logger->info("Makaira Manufacturer Status for " . $manufacturer['manufacturers_id'] . ": " . $response->getStatusCode());
+
+        $this->logger->info('Makaira Manufacturer Status for: ' . $manufacturer['manufacturers_id'] . ': ' . $response->getStatusCode());
     }
-    
+
     public function replace(): void
     {
         $this->client->rebuild(['manufacturer']);
     }
-    
-    
+
+
     public function switch(): void
     {
         $this->client->rebuild(['manufacturer']);
     }
-    
-    
-    public function getQuery(Language $language, int|null $manufacturer_id = null): array
+
+
+    public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('manufacturers')
-            ->leftJoin('manufacturers',
-                       'manufacturers_info',
-                       'manufacturers_info',
-                       'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id')
+            ->leftJoin(
+                'manufacturers',
+                'manufacturers_info',
+                'manufacturers_info',
+                'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id'
+            )
             ->where('manufacturers_info.languages_id = :languageId')
             ->setParameter('languageId', $language->id());
-        
-        if ($manufacturer_id) {
-            $query->where('manufacturers.manufacturers_id = :manufacturerId')
-                ->setParameter('manufacturerId', $manufacturer_id);
+
+        if(!empty($makairaChanges)) {
+            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
+            $query->where('manufacturers.manufacturers_id IN (:ids)')
+                ->setParameter('ids', implode(',', array_values($ids)));
         }
-        
+
         return $query->fetchAllAssociative();
     }
 }

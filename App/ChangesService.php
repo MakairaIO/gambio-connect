@@ -12,7 +12,7 @@ class ChangesService
     public const TABLE_NAME = 'makaira_connect_changes';
 
 
-    function __construct(
+    public function __construct(
         private Connection $connection,
     ) {
     }

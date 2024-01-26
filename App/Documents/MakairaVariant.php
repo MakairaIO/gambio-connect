@@ -10,7 +10,6 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 
 class MakairaVariant extends MakairaEntity
 {
-
     private array $makairaDocument = [];
     private array $product;
     private ProductVariants $variants;
@@ -21,16 +20,16 @@ class MakairaVariant extends MakairaEntity
 
     public function toArray(): array
     {
-       return [
-            /* Makaira fields */
-            ...parent::toArray(),
-            
-            /* Product fields */
-            
-       ];
+        return [
+             /* Makaira fields */
+             ...parent::toArray(),
+
+             /* Product fields */
+
+        ];
     }
-    
-    
+
+
     private function mapProduct(): array
     {
         if (!$this->product) {
