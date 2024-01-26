@@ -1,0 +1,43 @@
+<div class="makaira-card {if $limit_width eq 'true' } card--limit-width {/if} card--{$package.card_type} {if $package.card_color} card--color-{$package.card_color} {/if}">
+  <div class="makaira-card__box">
+    <div class="makaira-card__box__wrapper">
+      <div class="makaira-card__header">
+        <i class="fa fa-{$package.icon}"></i>
+        <div>{$package.heading}</div>
+      </div>
+      <div class="makaira-card__content">
+        <div class="description">{$package.desc}</div>
+        {if $package.features|@count > 0 }
+        <ul class="features">
+          {foreach $package.features as $feature }
+          <li>
+            <i class="fa fa-check"></i>
+            <div>
+              <div>{$feature.name}</div>
+              <div class="description">{$feature.desc}</div>
+            </div>
+          </li>
+          {/foreach}
+        </ul>
+        {/if}
+      </div>
+    </div>
+    {if $package.orderNowBtn == true }
+    <div class="makaira-card__box__wrapper">
+      <div class="package-price price--hot"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
+      <button class="makaira-cart-btn btn--hot"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+    </div>
+    {/if}
+  </div>
+  {if $package.orderNowBtn == null or $package.orderNowBtn == false }
+  <div class="makaira-card__footer">
+    <div class="package-price"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
+    {if $package.trial != '' }
+    <div class="package-status">✓ {$package.trial}</div>
+    {/if}
+    {if $package.trialbtn != '' }
+    <button class="trial-btn"> <i class="fa fa-plus"></i> {$package.trialbtn}</button>
+    {/if}
+  </div>
+  {/if}
+</div>

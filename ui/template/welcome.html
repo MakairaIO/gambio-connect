@@ -1,61 +1,53 @@
 {extends file="layout.html"}
-{load_language_text section="gambio_welcome"}
+{load_language_text section="gambio_welcome" name="translation"}
 
 {block name="content"}
 <div>
-  <div>
-    <img src="" alt="makaira-icon"/>
-  </div>
-  <div>
-    <div class="welcome__description">
-        {$txt.heading}
+  <section class="makaira-section">
+    <div class="makaira-section--logo">
+      <picture>
+        <img src="{$logo}" alt="makaira-logo" />
+      </picture>
     </div>
-    <section class="welcome_clients">
-      <h3>{$translation.heading}</h3>
-      <div class="">
-        {foreach name=connectedClient item=client from=$clients.items}
-          <picture>
-            <img src="{$client.logo}" alt="{$client.name}"/>
-          </picture>
-        {/foreach}
-      </div>
-    </section>
-    <section>
-      <h3>{$packages.heading}</h3>
-      <div>
-        {foreach name=availablePackage item=package from=$packages.items}
-          <div class="makaira-card">
-            <div class="makaira-card__header">
-              <img src="{$package.icon}"/>
-              <div>{$package.name}</div>
-            </div>
-            <div class="makaira-card__content">
-
-            </div>
-            <div class="makaira-card__footer">
-              <div>{$package.price} / Monat</div>
-            </div>
-          </div>
-        {/foreach}
-      </div>
-      <div>oder</div>
-      <div>
-        <div class="makaira-card">
-          <div class="makaira-card__header">
-            <img src="{$package.icon}"/>
-            <div>{$package.name}</div>
-          </div>
-          <div class="makaira-card__content">
-            <div>
-
-            </div>
-            <div>{$package.price} / Monat</div>
+    <div>{$translation.intro}</div>
+  </section>
+  <section class="makaira-section">
+    <h3>{$translation.COMPANY_USING}</h3>
+    <div class="makaira-companies">
+      {foreach $companies as $companyLogo}
+      <picture class="company-logo">
+        <img src="{$companyLogo}" />
+      </picture>
+      {/foreach}
+    </div>
+  </section>
+  <section class="makaira-section">
+    <h3>{$translation.heading}</h3>
+    <div class="makaira-cards">
+      {foreach $packages as $package }
+      {if $package@index > 0 }
+      <i class="fa fa-plus makaira-plus"></i>
+      {/if}
+      {include file="./components/card-package.html" package=$package limit_width="true" translation=$translation }
+      {/foreach}
+      <div class="makaira-plus">
+        <i class="fa fa-equals"></i>
+        <div class="makaira-total-packages">
+          <div class="package-price"><span class="price">{$totalPackages.price} €</span> / {$translation.MONTH}</div>
+          <button class="makaira-cart-btn"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+          <div class="description">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>{$translation.ORDER_NOW_DESC}</span>
           </div>
         </div>
       </div>
-    </section>
-  </div>
-<div>
+    </div>
+    <div style="text-align: center; max-width: 827px;">oder</div>
+    <div>
+      {include file="./components/card-package.html" package=$professionalPackage translation=$translation }
+    </div>
+  </section>
+</div>
 
 {/block}
 
@@ -63,3 +55,7 @@
 <script src="{$overviewJs}"></script>
 {/block}
 
+{block name="custom_styles"}
+<link rel="stylesheet" href="{$welcomeCss}">
+</script>
+{/block}

@@ -7,7 +7,6 @@ namespace GXModules\Makaira\GambioConnect\App\Actions;
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
-use Gambio\Core\TextManager\Services\TextManager;
 
 /**
  * Class GambioConnectWelcome
@@ -24,21 +23,113 @@ class GambioConnectWelcome extends AdminModuleAction
         $pageTitle    = 'Makaira Gambio FAQs';
         $templatePath = __DIR__ . '/../../ui/template/welcome.html';
 
-        // $makairaUrl = $this->moduleConfig->makairaUrl();
-        // $makairaInstance = $this->moduleConfig->makairaInstance();
-        // $language = $this->languageService->getLanguageById($languageId);
-        // $makairaRequest = new MakairaRequest($makairaUrl, $makairaInstance, $language->code());
-        // $pageData = $makairaRequest->fetchPageData('/');
-        // $components = $makairaRequest->getPageComponents($pageData);
-
         $data = [
             'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js",
-            'heading' =>  '',
-            // 'pageData' => $pageData,
-            // 'components' => $components
+            'welcomeCss' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.css",
+            'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/logo.svg",
+            'packages'  => $this->getPackages(),
+            'totalPackages' => [
+                'price' =>  45
+            ],
+            'professionalPackage'   =>  [
+                'card_color'    =>  'aube',
+                'card_type'     => 'red',
+                'heading' => $this->getTranslateSection('PACKAGE_PROFESSIONAL_HEADING'),
+                'desc'  => $this->getTranslateSection('PACKAGE_PROFESSIONAL_DESC'),
+                'icon'  => 'box',
+                'price' => "30",
+                'orderNowBtn' =>  true,
+            ],
+            'companies' =>  [
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/hark.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/fielmann.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/ludwing_von_kapff.svg",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/geliebteszuhause.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/wallart.svg",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/pets_premium.png",
+            ]
         ];
         $template = $this->render($pageTitle, $templatePath, $data);
 
         return $response->write($template);
+    }
+
+    private function getTranslateSection(string $phrase) {
+        return $this->translate($phrase, 'gambio_welcome') ?? '';
+    }
+
+    private function getPackages()
+    {
+        $package1 = [
+            'card_type'     => 'yellow',
+            'heading' => $this->getTranslateSection('PACKAGE_0_HEADING'),
+            'desc'  => $this->getTranslateSection('PACKAGE_0_DESC'),
+            'icon'  => 'search',
+            'features'  => [
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_NAME_1'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_DESC_1')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_NAME_2'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_DESC_2')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_NAME_3'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_DESC_3')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_NAME_4'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_DESC_4')
+                ]
+            ],
+            'price' => "30",
+            'trial' =>  $this->getTranslateSection('PACKAGE_0_TRIAL'),
+            'trialbtn'  =>  $this->getTranslateSection('PACKAGE_0_TRIAL_BTN')
+        ];
+        $package2 = [
+            'card_type'     => 'aube',
+            'heading' => $this->getTranslateSection('PACKAGE_1_HEADING'),
+            'desc'  => $this->getTranslateSection('PACKAGE_1_DESC'),
+            'icon'  => 'comment-plus',
+            'features'  => array(
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_NAME_1'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_DESC_1')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_NAME_2'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_DESC_2')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_NAME_3'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_DESC_3')
+                ],
+            ),
+            'price' => "30",
+            'trial' =>  $this->getTranslateSection('PACKAGE_1_TRIAL'),
+            'trialbtn'  =>  $this->getTranslateSection('PACKAGE_1_TRIAL_BTN')
+        ];
+        $package3 = [
+            'card_type'     => 'cyan',
+            'heading' => $this->getTranslateSection('PACKAGE_2_HEADING'),
+            'desc'  => $this->getTranslateSection('PACKAGE_2_DESC'),
+            'icon'  => 'megaphone',
+            'features'  => array(
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_2_FEATURES_NAME_1'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_2_FEATURES_DESC_1')
+                ],
+                [
+                    'name'  =>  $this->getTranslateSection('PACKAGE_2_FEATURES_NAME_2'),
+                    'desc'  =>  $this->getTranslateSection('PACKAGE_2_FEATURES_DESC_2')
+                ],
+            ),
+            'price' => "30",
+            'trial' =>  $this->getTranslateSection('PACKAGE_2_TRIAL'),
+            'trialbtn'  =>  $this->getTranslateSection('PACKAGE_2_TRIAL_BTN')
+        ];
+
+        return array($package1, $package2, $package3);
     }
 }

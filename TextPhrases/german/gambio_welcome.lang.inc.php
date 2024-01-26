@@ -1,5 +1,51 @@
 <?php
 
 $t_language_text_section_content_array = [
-    'heading'           => 'Deine Profi-Tools: Einzeln oder im günstigen Starter-Bundle bestellen'
+    'intro'             =>  'Mit Makaira erweiterst Du die Möglichkeit Deine Shopumsätze mit intelligenten Tools zu erhöhen. Wachse schneller oder lass Dir nur die Arbeit abnehmen, Makaira unterstützt Dich bei beidem, so wie auch bereits viele andere kleine und große Shops seit Jahren. Erfahre mehr …',
+    'heading'           => 'Deine Profi-Tools: Einzeln oder im <span class="highlight--red">günstigen Starter-Bundle</span> bestellen',
+    'PACKAGE_0_HEADING' => 'Suche',
+    'PACKAGE_0_DESC'  => 'Die Makaira-Suche deckt Funktionen ab, die Ihre KundInnen heute erwarten:',
+    'PACKAGE_0_ICON'  => '',
+    'PACKAGE_0_FEATURES_NAME_1' => 'Intelligente Suche mit Ranking Mix',
+    'PACKAGE_0_FEATURES_DESC_1' => 'Für Ergebnisse, die einfach passen',
+    'PACKAGE_0_FEATURES_NAME_2' => 'Filter',
+    'PACKAGE_0_FEATURES_DESC_2' => 'Schneller zum richtigen Produkt',
+    'PACKAGE_0_FEATURES_NAME_3' => 'Monitoring',
+    'PACKAGE_0_FEATURES_DESC_3' => 'Sehen Sie was Ihre Kunden brauchen',
+    'PACKAGE_0_FEATURES_NAME_4' => 'Fuzzy-Suche',
+    'PACKAGE_0_FEATURES_DESC_4' => 'Tippfehler? Lautschrift? No problem!',
+    'PACKAGE_0_TRIAL' =>  'Möchte ich probieren',
+    'PACKAGE_0_TRIAL_BTN'  =>  '',
+
+    'PACKAGE_1_HEADING' => 'Recommendations',
+    'PACKAGE_1_DESC'  => 'Erhöhen Sie Ihre Warenkorbmengen und -werte mit relevanten Empfehlungen',
+    'PACKAGE_1_ICON'  => '',
+    'PACKAGE_1_FEATURES_NAME_1' => 'Text-, Bildähnlichkeit, Einkaufshistorie',
+    'PACKAGE_1_FEATURES_DESC_1' => 'Passend zu den Wünschen Ihrer Kunden',
+    'PACKAGE_1_FEATURES_NAME_2' => 'Zeitgesteuert oder frei einstellbar',
+    'PACKAGE_1_FEATURES_DESC_2' => 'Steuern Sie wann und wie',
+    'PACKAGE_1_FEATURES_NAME_3' => 'Vorschaufunktion',
+    'PACKAGE_1_FEATURES_DESC_3' => 'Sehen Sie was Ihre Kunden sehen werden',
+    'PACKAGE_1_TRIAL' =>  '',
+    'PACKAGE_1_TRIAL_BTN'  =>  'Probieren?',
+
+    'PACKAGE_2_HEADING' => 'Werbeplätze',
+    'PACKAGE_2_DESC'  => 'Bringen Sie Ihre Starprodukte an die Spitze Ihrer Suchen und Listen',
+    'PACKAGE_2_ICON'  => '',
+    'PACKAGE_2_FEATURES_NAME_1' => 'Werbeplatzierungen',
+    'PACKAGE_2_FEATURES_DESC_1' => 'Damit Sie wissen was einen ersten Eindruck auf einer Liste hinterlässt',
+    'PACKAGE_2_FEATURES_NAME_2' => 'Werbebanner',
+    'PACKAGE_2_FEATURES_DESC_2' => 'Schneller zum richtigen Produkt',
+    'PACKAGE_2_TRIAL' =>  'Möchte ich probieren',
+    'PACKAGE_2_TRIAL_BTN'  =>  '',
+    'ORDER_NOW_BTN' =>  'Jetzt bestellen',
+    'ORDER_NOW_DESC'    =>  'Die Abwicklung erfolgt via stripe',
+   
+    'PACKAGE_PROFESSIONAL_HEADING' => 'Starter-Bundle mit allen drei Profi-Tools',
+    'PACKAGE_PROFESSIONAL_DESC'  => 'Suche, Recommendations und Werbeplätze zum einmaligen Einsteiger-Preis. Dieses Angebot ist nur zum Start erhältlich und später nicht mehr buchbar. Perfekt, um alle Tools zu testen!',
+    'PACKAGE_PROFESSIONAL_ICON'  => '',
+    'PACKAGE_PROFESSIONAL_ORDER_NOW' =>  "true",
+
+    'COMPANY_USING' =>  'Wer nutzt sonst noch Makaira zur Shop-Verbesserung?',
+    'MONTH' => 'Monat'
 ];
