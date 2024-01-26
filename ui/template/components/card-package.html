@@ -1,4 +1,6 @@
-<div class="makaira-card {if $limit_width eq 'true' } card--limit-width {/if} card--{$package.card_type} {if $package.card_color} card--color-{$package.card_color} {/if}">
+<div
+  class="makaira-card {if $limit_width eq 'true' } card--limit-width {/if} card--{$package.card_type} {if $package.card_color} card--color-{$package.card_color} {/if}">
+
   <div class="makaira-card__box">
     <div class="makaira-card__box__wrapper">
       <div class="makaira-card__header">
@@ -25,19 +27,26 @@
     {if $package.orderNowBtn == true }
     <div class="makaira-card__box__wrapper">
       <div class="package-price price--hot"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
-      <button class="makaira-cart-btn btn--hot"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+      <form method="post" action="/admin/admin.php?do=MakairaCheckout">
+        <input type="hidden" name="priceId" value="{$package.priceId}" />
+        <button type="submit" class="makaira-cart-btn btn--hot"> <i
+            class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+      </form>
     </div>
     {/if}
   </div>
   {if $package.orderNowBtn == null or $package.orderNowBtn == false }
   <div class="makaira-card__footer">
     <div class="package-price"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
-    {if $package.trial != '' }
-    <div class="package-status">✓ {$package.trial}</div>
-    {/if}
-    {if $package.trialbtn != '' }
-    <button class="trial-btn"> <i class="fa fa-plus"></i> {$package.trialbtn}</button>
-    {/if}
+    <form method="post" action="/admin/admin.php?do=MakairaCheckout">
+      <input type="hidden" name="priceId" value="{$package.priceId}" />
+      {if $package.trial != '' }
+      <button class="link-btn package-status" type="submit"><i class="fa fa-check"></i> {$package.trial}</button>
+      {/if}
+      {if $package.trialbtn != '' }
+      <button class="trial-btn" type="submit"> <i class="fa fa-plus"></i> {$package.trialbtn}</button>
+      {/if}
+    </form>
   </div>
   {/if}
 </div>

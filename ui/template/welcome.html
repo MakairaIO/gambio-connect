@@ -34,7 +34,10 @@
         <i class="fa fa-equals"></i>
         <div class="makaira-total-packages">
           <div class="package-price"><span class="price">{$totalPackages.price} €</span> / {$translation.MONTH}</div>
-          <button class="makaira-cart-btn"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+          <form method="post" action="/admin/admin.php?do=MakairaCheckout">
+            <input type="hidden" name="priceId" value="{$totalPackages.priceId}"/>
+            <button class="makaira-cart-btn"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+          </form>
           <div class="description">
             <i class="fa-solid fa-circle-info"></i>
             <span>{$translation.ORDER_NOW_DESC}</span>

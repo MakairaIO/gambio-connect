@@ -29,7 +29,8 @@ class GambioConnectWelcome extends AdminModuleAction
             'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/logo.svg",
             'packages'  => $this->getPackages(),
             'totalPackages' => [
-                'price' =>  45
+                'price' =>  45,
+                'priceId'   =>  '<package_stripe_price>'
             ],
             'bundlePackage'   =>  [
                 'subscription'  =>  'prod_PQDcothTDeyG5J',
@@ -39,6 +40,7 @@ class GambioConnectWelcome extends AdminModuleAction
                 'desc'  => $this->getTranslateSection('PACKAGE_PROFESSIONAL_DESC'),
                 'icon'  => 'box',
                 'price' => "30",
+                'priceId'   =>  '<package_stripe_price>',
                 'orderNowBtn' =>  true,
             ],
             'companies' =>  [
@@ -87,6 +89,7 @@ class GambioConnectWelcome extends AdminModuleAction
                 ]
             ],
             'price' => "30",
+            'priceId'   =>  '<package_stripe_price>',
             'trial' =>  $this->getTranslateSection('PACKAGE_0_TRIAL'),
             'trialbtn'  =>  $this->getTranslateSection('PACKAGE_0_TRIAL_BTN')
         ];
@@ -113,6 +116,7 @@ class GambioConnectWelcome extends AdminModuleAction
                 ],
             ),
             'price' => "30",
+            'priceId'   =>  '<package_stripe_price>',
             'trial' =>  $this->getTranslateSection('PACKAGE_1_TRIAL'),
             'trialbtn'  =>  $this->getTranslateSection('PACKAGE_1_TRIAL_BTN')
         ];
@@ -135,6 +139,7 @@ class GambioConnectWelcome extends AdminModuleAction
                 ],
             ),
             'price' => "30",
+            'priceId'   =>  '<package_stripe_price>',
             'trial' =>  $this->getTranslateSection('PACKAGE_2_TRIAL'),
             'trialbtn'  =>  $this->getTranslateSection('PACKAGE_2_TRIAL_BTN')
         ];

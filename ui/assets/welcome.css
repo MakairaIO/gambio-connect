@@ -195,6 +195,11 @@
   line-height: 18px;
 }
 
+.makaira-card .makaira-card__footer .link-btn {
+  border: none;
+  background: #FFFFFF;
+}
+
 .makaira-cart-btn {
   padding: 5px 8px 5px 8px;
   display: inline-flex;
