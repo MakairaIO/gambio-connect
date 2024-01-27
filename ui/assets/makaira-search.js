@@ -1,97 +1,86 @@
 function debounce(func, wait, immediate) {
-  var timeout
-  return function() {
+  var timeout;
+  return function () {
     var context = this,
-      args = arguments
-    var later = function() {
-      timeout = null
-      if (!immediate) func.apply(context, args)
+      args = arguments;
+    var later = function () {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
+// document.addEventListener("DOMContentLoaded", () => {
+  const searchFormClass = "makaira-autosuggestion__form";
+  const searchInputId = "searchParam";
+  const searchSubmitBtnClass = "makaira-autosuggestion__submit";
+  const flyoutContainerClass = "makaira-autosuggestion";
+
+  const searchForm = document.querySelector(`.${searchFormClass}`);
+  const searchInput = document.getElementById(searchInputId);
+  const searchSubmitBtn = document.querySelector(`.${searchSubmitBtnClass}`);
+  const flyoutContainer = document.querySelector(`.${flyoutContainerClass}`);
+
+  const enableLoading = () => {
+    searchForm.classList.add("search-loading");
+  };
+
+  const disableLoading = () => {
+    searchForm.classList.remove("search-loading");
+  };
+
+  const renderAutosuggestion = (html) => {
+    let container = flyoutContainer;
+    if (!container) {
+      const _container = document.createElement("div");
+      _container.className = flyoutContainerClass;
+      searchForm.appendChild(container);
+      container = _container;
     }
-    var callNow = immediate && !timeout
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-    if (callNow) func.apply(context, args)
-  }
-}
+    container.innerHTML = html;
+    container.classList.add("open");
+    disableLoading();
+  };
 
-const searchInputId = 'searchParam'
-const searchInput = document.getElementById(`${searchInputId}`)
-const classAutosuggestionContainer = 'makaira-autosuggestion'
+  const fetchAutosuggestion = debounce((e) => {
+    const searchTerm = e.target.value.trim();
 
-const renderAutosuggestions = (response, searchForm) => {
-  // if its the first time we render, add the initial container
-  if (!document.querySelector(`.${classAutosuggestionContainer}`)) {
-    let container = document.createElement('div')
-    container.className = 'makaira-autosuggestion'
-    searchForm.appendChild(container)
-  }
+    if (searchTerm.length > 2) {
+      enableLoading();
 
-  // render List
-  const autosuggestionContainer = document.querySelector(`.${classAutosuggestionContainer}`)
-  autosuggestionContainer.innerHTML = response
-}
+      let shopUrl = searchForm.action;
+      shopUrl += shopUrl.includes("?") ? "&" : "?";
 
-const fetchAutosuggestions = debounce(event => {
-  const searchTerm = event.target.value.trim()
-  const inputContainer = event.target.parentNode
-  const searchForm = inputContainer.parentNode
+      fetch(`${shopUrl}keyword=${encodeURIComponent(searchTerm)}`)
+        .then((res) => res.text())
+        .then((html) => renderAutosuggestion(html, searchForm))
+        .catch((err) => console.error("Processing in Makaira failed", err))
+        .finally(() => disableLoading());
+    }
+  }, 300);
 
-  if (searchTerm.length > 2) {
-    var request = new XMLHttpRequest()
-    var shopUrl = searchForm.action
-    // make sure we have valid syntax for parameters
-    shopUrl += shopUrl.includes('?') ? '&' : '?'
+  const closeAutosuggestion = (event) => {
+    const target = event.target;
 
-    request.open('GET', `${shopUrl}cl=makaira_connect_autosuggest&term=${encodeURIComponent(searchTerm)}`, true)
-
-    request.onload = () => {
-      if (request.status >= 200 && request.status < 400) {
-        // Succes -> we render the suggestions
-        const response = request.responseText
-        renderAutosuggestions(response, inputContainer)
-      } else {
-        // We reached our target server, but it returned an error
-        console.error('Processing in Makaira failed')
+    // only act if search has been fired at least once
+    if (flyoutContainer) {
+      let targetNotSearchInput = target.id !== searchInputId;
+      let targetNotSubmitButton =
+        !target.classList.contains(searchSubmitBtnClass);
+      // close for all targets except the searchInput and submitbutton
+      if (targetNotSearchInput && targetNotSubmitButton) {
+        flyoutContainer.classList.remove("open");
+        flyoutContainer.innerHTML = "";
       }
     }
+  };
 
-    request.onerror = () => {
-      // There was a connection error of some sort
-      console.error('Connection to Makaira failed')
-    }
-
-    request.send()
+  if (searchInput) {
+    searchInput.addEventListener("input", fetchAutosuggestion);
+    document.body.addEventListener("click", closeAutosuggestion);
   }
-}, 250)
-
-const closeAutosuggestions = event => {
-  const target = event.target
-  const autosuggestionContainer = document.querySelector(`.${classAutosuggestionContainer}`)
-
-  // only act if search has been fired at least once
-  if (autosuggestionContainer) {
-    let targetNotSearchInput = target.id !== searchInputId
-    let targetNotSubmitButton = !target.classList.contains('makaira-autosuggestion__submit')
-    // close for all targets except the searchInput and submitbutton
-    if (targetNotSearchInput && targetNotSubmitButton) {
-      autosuggestionContainer.innerHTML = ''
-    }
-  }
-}
-
-const setupSearchInput = () => {
-  searchInput.setAttribute('autocomplete', 'off')
-}
-
-const initHandlers = () => {
-  // fetch and display autosuggestions
-  searchInput.addEventListener('input', fetchAutosuggestions)
-
-  // close autosuggestion list
-  document.body.addEventListener('click', closeAutosuggestions)
-}
-
-if (searchInput) {
-  setupSearchInput()
-  initHandlers()
-}
+// });

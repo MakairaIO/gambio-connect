@@ -1,3 +1,26 @@
-<div style="background-color: #172c43; color: #b8b8b8;">
-	{$param1} {$param2}a - 99999
-</div>
+{load_language_text section="index"}
+
+{if MAKAIRA_ACTIVE_SEARCH == true && 'ENABLE_LIVE_SEARCH'|gm_get_conf == 'true' }
+{block name="header_live_search"}
+<span id="live-search-head">
+    {$txt.text_live_search_head}:
+</span>
+
+<ul class="search-result">
+    {foreach from=$result.products item=product}
+    <li>
+        {if $product.fields.picture_url_main != ''}
+        <img class="img-responsive product-image" src="{$product.fields.picture_url_main}" width="25" height="25" />
+        {else}
+        <div class="product-image fa fa-picture-o">&nbsp;</div>
+        {/if}
+        <a href="{$product.fields.url}" title="{$product.fields.title}">
+            <span>
+                {$product.fields.title}
+            </span>
+        </a>
+    </li>
+    {/foreach}
+</ul>
+{/block}
+{/if}

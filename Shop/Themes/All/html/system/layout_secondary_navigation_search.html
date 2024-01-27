@@ -1,19 +1,19 @@
 {if $content_data.MAKAIRA_ACTIVE_SEARCH == true && 'ENABLE_LIVE_SEARCH'|gm_get_conf == 'true' }
-  {block name="layout_secondary_navigation_search"}
-    <div class="navbar-search collapse">
-        <form action="{$content_data.FORM_ACTION_URL}" method="{$content_data.FORM_METHOD}" class="makaira-autosuggestion">
-          <div class="navbar-search-input-group input-group">
-              <button type="submit">
+{block name="layout_secondary_navigation_search"}
+<div class="navbar-search collapse">
+    <form action="{$content_data.FORM_ACTION_URL}" method="get" class="makaira-autosuggestion__form">
+        <div class="navbar-search-input-group input-group">
+            <button type="submit" class="makaira-autosuggestion__submit">
                 <img src="{$theme_path}images/svgs/search.svg" class="gx-search-input svg--inject" alt="">
-              </button>
-            <input id="searchParam" type="text" name="{$content_data.INPUT_NAME}" placeholder="{$txt.text_default_value}" class="form-control search-input" autocomplete="off" />
-          </div>
-          {if $ARR_categories|count > 0}
-            <input type="hidden" value="1" name="inc_subcat" />
-          {/if}
-          <div class="search-result-container"></div>
-        </form>
-    </div>
-    <script async type="text/javascript" src='{$content_data.makaira_search_js_path}'></script>
-  {/block}
+                <i class="fa fa-circle-o-notch fa-spin"></i>
+            </button>
+            <input id="searchParam" type="text" name="{$content_data.INPUT_NAME}"
+                placeholder="{$txt.text_default_value}" class="form-control search-input" autocomplete="off" />
+        </div>
+        <div class="search-result-container makaira-autosuggestion"></div>
+    </form>
+</div>
+<link type="text/css" rel="stylesheet" href="{$content_data.makaira_search_css_path}">
+<script async type="text/javascript" src='{$content_data.makaira_search_js_path}'></script>
+{/block}
 {/if}

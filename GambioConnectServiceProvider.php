@@ -29,10 +29,6 @@ use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListener;
-use MakairaHttpRenderController;
-use HttpContextReaderInterface;
-use HttpResponseProcessorInterface;
-use ContentViewInterface;
 
 /**
  * Class GambioConnectServiceProvider
@@ -56,7 +52,6 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             Export::class,
             VariantUpdateEventListener::class,
             LanguageService::class,
-            MakairaHttpRenderController::class,
         ];
     }
 
@@ -71,10 +66,6 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectWelcome::class);
         $this->application->registerShared(GambioConnectAccount::class);
         $this->application->registerShared(GambioConnectFAQ::class);
-        $this->application->registerShared(MakairaHttpRenderController::class)
-            ->addArgument(HttpContextReaderInterface::class)
-            ->addArgument(HttpResponseProcessorInterface::class)
-            ->addArgument(ContentViewInterface::class);
 
 
         $this->application->registerShared(Export::class)
