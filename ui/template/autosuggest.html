@@ -1,10 +1,10 @@
-{load_language_text section="index"}
+{load_language_text section="search" name="text"}
 
 {if MAKAIRA_ACTIVE_SEARCH == true && 'ENABLE_LIVE_SEARCH'|gm_get_conf == 'true' }
     {block name="header_live_search"}
         {if $result.products|@count > 0 }
             <span id="live-search-head">
-                {$txt.text_live_search_head}:
+                {$text.search_suggestion_products}:
             </span>
             <ul class="search-result">
                 {foreach from=$result.products item=product}
@@ -25,7 +25,7 @@
         {/if}
         {if $result.categories|@count > 0 }
             <span id="live-search-head">
-                Categories
+                {$text.search_suggestion_categories}:
             </span>
             <ul class="search-result">
                 {foreach from=$result.categories item=category}
@@ -46,7 +46,7 @@
         {/if}
         {if $result.manufacturers|@count > 0 }
             <span id="live-search-head">
-                Manufactures
+                {$text.search_suggestion_manufacturers}:
             </span>
             <ul class="search-result">
                 {foreach from=$result.manufacturers item=manufacturer}
@@ -67,7 +67,7 @@
         {/if}
         {if $result.links|@count > 0 }
             <span id="live-search-head">
-                Links
+                {$text.search_suggestion_links}:
             </span>
             <ul class="search-result">
                 {foreach from=$result.links item=link}
@@ -98,7 +98,7 @@
         {/if}
         {if $result.pages|@count > 0 }
             <span id="live-search-head">
-                Pages
+                {$text.search_suggestion_pages}:
             </span>
             <ul class="search-result">
                 {foreach from=$result.pages item=page}
