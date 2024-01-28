@@ -51,17 +51,16 @@ class MakairaSearchController extends HttpViewController
 		$aCategories = $result['category']['items'];
 		$aManufacturers = $result['manufacturer']['items'];
 		$aLinks = $result['links']['items'];
-		$aSuggestions = $result['suggestion']['items'];
+		$aPages = $result['page']['items'];
 
 		$this->contentView->set_template_dir(__DIR__ . DIRECTORY_SEPARATOR);
 		$html = $this->_render('../ui/template/autosuggest.html', array(
 			'result' => [
 				'products'      => $aProducts,
-				'productCount'  => $result['product']->total,
 				'categories'    => $aCategories,
 				'manufacturers' => $aManufacturers,
 				'links'         => $aLinks,
-				'suggestions'   => $aSuggestions,
+				'pages'   => $aPages,
 			],
 			'MAKAIRA_ACTIVE_SEARCH' => $this->configurationStorage->get('makairaActiveSearch'),
 		));
