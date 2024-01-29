@@ -9,12 +9,12 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 class SwitchAction extends AbstractAction
 {
-    
     public function __construct(
         protected GambioConnectService $service
-    ) { }
-    
-    
+    ) {
+    }
+
+
     /**
      * @inheritDoc
      */

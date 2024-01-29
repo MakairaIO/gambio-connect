@@ -30,13 +30,12 @@ class GambioConnectInstaller
 {
     public function __construct(
         protected Connection $connection
-    ) {
-    }
+    ) {}
     
     
-    public function onInstallation()
-    {
-        $this->connection->executeStatement("CREATE TABLE IF NOT EXISTS `" . ChangesService::TABLE_NAME . "` (
+    public function onInstallation() {
+        $this->connection->executeStatement(
+            "CREATE TABLE IF NOT EXISTS `" . ChangesService::TABLE_NAME .  "` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `gambio_id` varchar(255) NOT NULL,
                 `type` varchar(255) NOT NULL,

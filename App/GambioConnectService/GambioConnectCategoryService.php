@@ -17,10 +17,10 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     public function prepareExport(): void
     {
         $languages = $this->languageReadService->getLanguages();
-        
+
         foreach ($languages as $language) {
             $categories = $this->getQuery($language);
-            
+
             foreach ($categories as $category) {
                 $this->connection->executeQuery('CALL makairaChange(' . $category['categories_id'] . ', "category")');
             }
@@ -53,7 +53,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     public function pushRevision(array $category): void
     {
         $hierarchy = $this->calculateCategoryDepth($category);
-        
+
         $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy);
         $data            = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
         
@@ -74,6 +74,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         $this->client->rebuild(['category']);
     }
+    
     
     /**
      * @param Language $language

@@ -44,7 +44,7 @@ class MakairaClient
     }
 
 
-    private function  get_hash($body): string
+    private function get_hash($body): string
     {
         return hash_hmac(
             'sha256',
