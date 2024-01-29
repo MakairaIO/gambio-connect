@@ -47,11 +47,11 @@ class MakairaSearchController extends HttpViewController
 		$keyword = $this->_getQueryParameter('keyword');
 		$result = $this->makairaRequest->fetchAutoSuggest($keyword);
 
-		$aProducts = $result['product']['items'];
-		$aCategories = $result['category']['items'];
-		$aManufacturers = $result['manufacturer']['items'];
-		$aLinks = $result['links']['items'];
-		$aPages = $result['page']['items'];
+		$aProducts = isset($result['product']) ? $result['product']['items'] : [];
+		$aCategories = isset($result['category']) ? $result['category']['items'] : [];
+		$aManufacturers = isset($result['manufacturer']) ? $result['manufacturer']['items'] : [];
+		$aLinks = isset($result['links']) ? $result['links']['items'] : [];
+		$aPages = isset($result['page']) ? $result['page']['items'] : [];
 
 		$this->contentView->set_template_dir(__DIR__ . DIRECTORY_SEPARATOR);
 		$html = $this->_render('../ui/template/autosuggest.html', array(
