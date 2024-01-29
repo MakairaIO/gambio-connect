@@ -30,13 +30,12 @@ class GambioConnectInstaller
 {
     public function __construct(
         protected Connection $connection
-    ) {
-    }
-
-
-    public function onInstallation()
-    {
-        $this->connection->executeStatement("CREATE TABLE IF NOT EXISTS `" . ChangesService::TABLE_NAME . "` (
+    ) {}
+    
+    
+    public function onInstallation() {
+        $this->connection->executeStatement(
+            "CREATE TABLE IF NOT EXISTS `" . ChangesService::TABLE_NAME .  "` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `gambio_id` varchar(255) NOT NULL,
                 `type` varchar(255) NOT NULL,
@@ -45,7 +44,7 @@ class GambioConnectInstaller
                 `consumed_at` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
               )");
-
+        
         $this->connection->executeStatement("
         CREATE PROCEDURE makairaChange (IN id INT, IN entity_type VARCHAR(255))
 	BEGIN
@@ -58,97 +57,97 @@ class GambioConnectInstaller
 		END IF;
     END;
             ");
-
+        
         GambioConnectProductsTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsAttributesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsContentTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsDescriptionTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsGoogleCategoriesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsGraduatedPricesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsHermesoptionsTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsImagesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsItemCodesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsPropertiesAdminSelectTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsPropertiesCombisTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsPropertiesCombisDefaultTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsPropertiesIndexTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsQuantityUnitTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsToCategoriesTableInstaller::install($this->connection);
-
+        
         GambioConnectProductsXsellTableInstaller::install($this->connection);
-
+        
         GambioConnectManufacturersTableInstaller::install($this->connection);
-
+        
         GambioConnectManufacturersInfoTableInstaller::install($this->connection);
-
+        
         GambioConnectCategoriesTableInstaller::install($this->connection);
-
+        
         GambioConnectCategoriesDescriptionTableInstaller::install($this->connection);
-
+        
         GambioConnectCategoriesFilterTableInstaller::install($this->connection);
     }
-
-
+    
+    
     public function onUninstallation()
     {
         $this->connection->executeStatement("DROP TABLE IF EXISTS " . ChangesService::TABLE_NAME);
-
+        
         $this->connection->executeStatement("DROP PROCEDURE IF EXISTS makairaChange;");
-
+        
         GambioConnectProductsTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsAttributesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsContentTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsDescriptionTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsGoogleCategoriesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsGraduatedPricesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsHermesoptionsTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsImagesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsItemCodesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsPropertiesAdminSelectTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsPropertiesCombisTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsPropertiesCombisDefaultTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsPropertiesIndexTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsQuantityUnitTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsToCategoriesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectProductsXsellTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectManufacturersTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectManufacturersInfoTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectCategoriesTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectCategoriesDescriptionTableInstaller::uninstall($this->connection);
-
+        
         GambioConnectCategoriesFilterTableInstaller::uninstall($this->connection);
     }
 }
