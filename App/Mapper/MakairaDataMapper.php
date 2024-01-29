@@ -71,8 +71,6 @@ class MakairaDataMapper
             ->setEan($data['products_item_codes']['code_mpn'])
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
-
-
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
 
         return $transfer;

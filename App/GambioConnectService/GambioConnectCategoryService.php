@@ -33,7 +33,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         $makairaExports = $this->getEntitiesForExport('category');
 
-        if(!empty($makairaExports)) {
+        if (!empty($makairaExports)) {
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $categories            = $this->getQuery($language, $makairaExports);
@@ -60,7 +60,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $response = $this->client->push_revision($data);
 
         $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": "
-                            . $response->getStatusCode());
+            . $response->getStatusCode());
     }
 
 
@@ -101,7 +101,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->where('categories_description.language_id = :languageId')
             ->setParameter('languageId', $language->id());
 
-        if(!empty($makairaChanges)) {
+        if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
             $query->where('categories.categories_id IN (:ids)')
                 ->setParameter('ids', implode(',', array_values($ids)));
@@ -128,6 +128,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             return [
                 'depth'     => $depth,
                 'hierarchy' => empty($hierarchy) ? $category['categories_id'] : $hierarchy,
+
             ];
         }
 
