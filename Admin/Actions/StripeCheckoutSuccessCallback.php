@@ -23,5 +23,7 @@ class StripeCheckoutSuccessCallback extends AbstractAction
         $installationService->setShopUrl($request->getUri()->getHost());
         $installationService->setSubdomain($request->getUri()->getUserInfo());
         $installationService->callRegistrationService();
+        
+        return $response->withJson(['success' => true]);
     }
 }
