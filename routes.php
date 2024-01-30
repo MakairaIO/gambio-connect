@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Gambio\Core\Application\Routing\RouteCollector;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
+use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectAccount;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
@@ -18,6 +20,10 @@ return static function (RouteCollector $routeCollector) {
     $routeCollector->get('/admin/makaira/faq', GambioConnectFAQ::class);
     $routeCollector->get('/admin/makaira/document', GambioConnectDocument::class);
     $routeCollector->get('/admin/makaira/account', GambioConnectAccount::class);
+    
+    $routeCollector->post('/admin/makaira/gambio-connect/stripe-checkout', MakairaCheckoutAction::class);
+    
+    $routeCollector->get('/admin/makaira/gambio-connect/stripe-checkout-success-callback', StripeCheckoutSuccessCallback::class);
 
     $routeCollector->post('/admin/makaira/gambio-connect/sync/export', Export::class);
     $routeCollector->post('/admin/makaira/gambio-connect/sync/replace', ReplaceAction::class);
