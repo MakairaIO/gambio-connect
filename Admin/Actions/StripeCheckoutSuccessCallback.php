@@ -5,6 +5,8 @@ namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
+use Gambio\Core\Configuration\Services\ConfigurationService;
+use GXModules\Makaira\GambioConnect\Admin\Services\MakairaInstallationService;
 
 class StripeCheckoutSuccessCallback extends AbstractAction
 {
@@ -14,6 +16,12 @@ class StripeCheckoutSuccessCallback extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        // TODO: Implement handle() method.
+        $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
+        $installationService = new MakairaInstallationService();
+        $installationService->setEmail('hendrik.mennen@marmalade.de');
+        $installationService->setCheckoutSessionId($configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession'));
+        $installationService->setShopUrl($request->getUri()->getHost());
+        $installationService->setSubdomain($request->getUri()->getUserInfo());
+        $installationService->callRegistrationService();
     }
 }
