@@ -18,7 +18,7 @@ class StripeCheckoutSuccessCallback extends AbstractAction
     {
         $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
         $installationService = new MakairaInstallationService();
-        $installationService->setEmail('hendrik.mennen@marmalade.de');
+        $installationService->setEmail($configurationService->find('modules/MakairaGambioConnect/stripeCheckoutEmail'));
         $installationService->setCheckoutSessionId($configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession'));
         $installationService->setShopUrl($request->getUri()->getHost());
         $installationService->setSubdomain($request->getUri()->getUserInfo());

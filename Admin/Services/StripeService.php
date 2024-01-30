@@ -85,5 +85,7 @@ class StripeService
                                ]);
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutSession', $session->id);
+        
+        $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $session->customer_email);
     }
 }
