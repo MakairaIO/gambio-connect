@@ -17,10 +17,12 @@ class MakairaInstallationServiceCallback extends AbstractAction
     {
         $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
         
-        $configurationService->save('modules/MakairaGambioConnect/makairaUrl', $request->getParsedBodyParam('makaira_url'));
+        $configurationService->save('modules/MakairaGambioConnect/makairaUrl', $request->getParsedBodyParam('url'));
         
-        $configurationService->save('modules/MakairaGambioConnect/makairaInstance', $request->getParsedBodyParam('makaira_instance'));
+        $configurationService->save('modules/MakairaGambioConnect/makairaInstance', $request->getParsedBodyParam('instance'));
         
-        $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('makaira_secret'));
+        $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('secret'));
+        
+        return $response->withJson(['success' => true]);
     }
 }
