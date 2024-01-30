@@ -29,6 +29,8 @@ class MakairaCheckoutAction extends AbstractAction
         
         $stripeService->setSuccessUrl($request->getUri()->getHost() . '/admin/makaira/gambio-connect/stripe-checkout-success-callback');
         
+        $stripeService->setCancelUrl($request->getUri()->getHost() . '/admin/makaira/gambio-connect/stripe-checkout-cancel-callback');
+        
         $session = $stripeService->createCheckoutSession();
         
         return $response->withRedirect($session->url);
