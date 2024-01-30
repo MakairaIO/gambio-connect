@@ -1,5 +1,8 @@
 <?php
-\Stripe\Stripe::setApiKey('<STRIPE API KEY>');
+
+use Gambio\Core\Configuration\Services\ConfigurationService;
+use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
+
 /**
  * Class SampleHttpController
  *
@@ -20,7 +23,9 @@
  */
 class MakairaCheckoutController extends AdminHttpViewController
 {
-  /**
+    
+    
+    /**
    * Default action method.
    *
    * This method is invoked by the request url: 'start.php?do=MakairaCheckout'
@@ -29,20 +34,17 @@ class MakairaCheckoutController extends AdminHttpViewController
    */
   public function actionDefault()
   {
-    $priceId = $this->_getPostData('priceId');
-
-    $session = \Stripe\Checkout\Session::create([
-      'payment_method_types' => ['card'],
-      'line_items' => [
-        [
-          'price' => $priceId, // Replace with the actual price ID
-          'quantity' => 1,
-        ],
-      ],
-      'mode' => 'subscription',
-      'success_url' => 'http://0.0.0.0:2001/success',
-      'cancel_url' => 'http://0.0.0.0:2001/cancel',
-    ]);
+      $stripeService = new StripeService();
+      
+      $configurationService = LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
+      
+      $stripeService->setConfigurationService($configurationService);
+      
+      foreach($this->_getPostData('priceIds') as $priceId) {
+          $stripeService->addPriceId($priceId);
+      }
+      
+      $session = $stripeService->createCheckoutSession();
 
     // Execute business logic here!
     return new RedirectHttpControllerResponse($session->url);
