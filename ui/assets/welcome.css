@@ -23,7 +23,7 @@
 }
 
 .makaira-plus {
-  color: #61304D;
+  color: #61304d;
   height: 105px;
   align-self: flex-end;
   display: flex;
@@ -62,22 +62,22 @@
 }
 
 .makaira-card.card--yellow {
-  border-color: #EBB000;
-  background-color: #EBB000;
+  border-color: #ebb000;
+  background-color: #ebb000;
 }
 .makaira-card.card--aube {
-  border-color: #61304D;
-  background-color: #61304D;
+  border-color: #61304d;
+  background-color: #61304d;
 }
 .makaira-card.card--cyan {
-  border-color: #63B6C8;
-  background-color: #63B6C8;
+  border-color: #63b6c8;
+  background-color: #63b6c8;
 }
 .makaira-card.card--red {
-  border-color: #E54139;
+  border-color: #e54139;
 }
 .makaira-card.card--color-aube {
-  color: #61304D;
+  color: #61304d;
 }
 
 .makaira-card.card--yellow .makaira-card__header,
@@ -86,7 +86,7 @@
 .makaira-card.card--aube .makaira-card__content,
 .makaira-card.card--cyan .makaira-card__header,
 .makaira-card.card--cyan .makaira-card__content {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .makaira-card .makaira-card__header {
@@ -140,7 +140,7 @@
   margin-top: 4px;
 }
 
-.makaira-card .makaira-card__content ul.features li .description{
+.makaira-card .makaira-card__content ul.features li .description {
   font-size: 13px;
   line-height: 17px;
   font-weight: 400;
@@ -153,7 +153,7 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   flex-direction: column;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   min-height: 105px;
   justify-content: center;
   align-items: center;
@@ -164,11 +164,11 @@
   line-height: 33px;
   text-align: center;
   font-weight: 400;
-  color: #61304D;
+  color: #61304d;
 }
 
 .package-price.price--hot {
-  color: #E54139;
+  color: #e54139;
 }
 
 .package-status {
@@ -176,7 +176,7 @@
   line-height: 18px;
   text-align: center;
   font-weight: 900;
-  color: #84A400;
+  color: #84a400;
 }
 
 .package-price .price {
@@ -188,8 +188,8 @@
   padding: 5px 8px;
   border: 1px solid;
   border-radius: 3px;
-  color: #09202F;
-  background: #FFFFFF;
+  color: #09202f;
+  background: #ffffff;
   font-size: 13px;
   font-weight: 900;
   line-height: 18px;
@@ -197,7 +197,7 @@
 
 .makaira-card .makaira-card__footer .link-btn {
   border: none;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 .makaira-cart-btn {
@@ -205,8 +205,8 @@
   display: inline-flex;
   gap: 4px;
   border-radius: 3px;
-  background-color: #61304D;
-  color: #FFFFFF;
+  background-color: #61304d;
+  color: #ffffff;
   font-weight: 900;
   line-height: 18px;
   font-size: 13px;
@@ -215,7 +215,7 @@
   width: fit-content;
 }
 .makaira-cart-btn.btn--hot {
-  background-color: #E54139;
+  background-color: #e54139;
 }
 
 .makaira-total-packages {
@@ -239,7 +239,7 @@
 }
 
 .highlight--red {
-  color: #E54139;
+  color: #e54139;
 }
 
 .makaira-companies {
@@ -263,7 +263,7 @@
   width: 89px;
   margin: 6px;
   padding: 12px 8px;
-  box-shadow: 0 3px 10px -5px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 0.3);
 }
 
 .makaira-companies .company-logo img {
@@ -275,7 +275,7 @@
 @media (min-width: 768px) {
   .makaira-companies .company-logo {
     width: 127px;
-    padding: 20px 12px ;
+    padding: 20px 12px;
   }
 }
 
@@ -285,4 +285,30 @@
     margin: 10px;
     padding: 24px 20px;
   }
+}
+
+.ck-button label {
+  cursor: pointer;
+}
+
+.ck-button .checked {
+  display: none;
+}
+
+.ck-button .unchecked {
+  display: block;
+}
+
+.ck-button label input,
+input.visually-hidden {
+  position: absolute;
+  left: -100vw;
+}
+
+.ck-button input:checked ~ .checked {
+  display: block;
+}
+
+.ck-button input:checked ~ .unchecked {
+  display: none;
 }

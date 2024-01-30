@@ -26,7 +26,7 @@ class GambioConnectWelcome extends AdminModuleAction
         $templatePath = __DIR__ . '/../../ui/template/welcome.html';
 
         $data = [
-            'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js",
+            'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.js",
             'welcomeCss' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.css",
             'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/logo.svg",
             'packages'  => $this->getPackages(),
@@ -59,7 +59,8 @@ class GambioConnectWelcome extends AdminModuleAction
         return $response->write($template);
     }
 
-    private function getTranslateSection(string $phrase) {
+    private function getTranslateSection(string $phrase)
+    {
         return $this->translate($phrase, 'gambio_welcome') ?? '';
     }
 
