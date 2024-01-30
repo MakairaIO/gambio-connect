@@ -23,7 +23,7 @@ class MakairaCheckoutAction extends AbstractAction
         
         $stripeService->setConfigurationService($configurationService);
         
-        foreach($this->_getPostData('priceIds') as $priceId) {
+        foreach($request->getParsedBodyParam('priceIds') as $priceId) {
             $stripeService->addPriceId($priceId);
         }
         
