@@ -23,9 +23,8 @@ class Export extends AbstractAction
         protected GambioConnectService\GambioConnectCategoryService $gambioConnectCategoryService,
         protected GambioConnectService\GambioConnectProductService $gambioConnectProductService,
         protected GambioConnectService\GambioConnectManufacturerService $gambioConnectManufacturerService,
-    )
-    {
-    
+    ) {
+
     }
 
 
@@ -35,12 +34,12 @@ class Export extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        $this->gambioConnectManufacturerService->exportAll();
-        
-        $this->gambioConnectCategoryService->exportAll();
-        
-        // $this->gambioConnectProductService->exportAll();
-        
+        $this->gambioConnectManufacturerService->prepareExport();
+
+        $this->gambioConnectCategoryService->prepareExport();
+
+        $this->gambioConnectProductService->prepareExport();
+
         return $response->withJson(['success' => true]);
     }
 }

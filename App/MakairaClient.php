@@ -44,7 +44,7 @@ class MakairaClient
     }
 
 
-    private function  get_hash($body): string
+    private function get_hash($body): string
     {
         return hash_hmac(
             'sha256',
@@ -73,7 +73,7 @@ class MakairaClient
         }
     }
 
-    public function push_revision($document)
+    public function push_revision(array $document)
     {
         return $this->do_request('PUT', 'revisions', $document);
     }
