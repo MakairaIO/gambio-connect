@@ -2,12 +2,14 @@
 
 namespace GXModules\Makaira\GambioConnect\Admin\Services;
 
-use http\Client;
+use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 class MakairaInstallationService
 {
-    private const URL = 'https://registration.makaira.io/api';
+    //private const URL = 'https://registration.makaira.io/api';
+    
+    private const URL = 'http://register.makaira.vm/api';
     
     private const USERNAME = 'gambio';
     
@@ -15,13 +17,13 @@ class MakairaInstallationService
     
     private string $source = 'gambio';
     public function __construct(
-        protected ?\GuzzleHttp\Client $client = null,
-        private string $email = '',
-        private string $subdomain = '',
-        private string $shopUrl = '',
-        private string $checkoutSessionId = ''
+        protected ?Client $client = null,
+        private string    $email = '',
+        private string    $subdomain = '',
+        private string    $shopUrl = '',
+        private string    $checkoutSessionId = ''
 ) {
-        $this->client = new \GuzzleHttp\Client([
+        $this->client = new Client([
                                                    'base_url' => self::URL,
                                                    'headers'  => [
                                                        'Authorization' => 'BASIC ' . self::USERNAME . ' '

@@ -21,7 +21,8 @@ class StripeService
         private array $paymentMethodTypes = ['card'],
         private string $mode = 'subscription',
         private string $successUrl = 'http://0.0.0.0:2001/success',
-        private string $cancelUrl = 'http://0.0.0.0:2001/cancel'
+        private string $cancelUrl = 'http://0.0.0.0:2001/cancel',
+        private string $shopUrl = '',
     ) {
         \Stripe\Stripe::setApiKey('rk_test_51OZrRtKFggkIYTFu2fF8ez660T4WGFSR0Dke4BVPsu5JeJepy2paR1QhoMtGTdaoyeIg8Jny6FMCWVVlrlwXRyq000mY2tYjQM');
     }
@@ -52,7 +53,7 @@ class StripeService
     
     public function setSuccessUrl(string $successUrl): static
     {
-        $this->successUrl = $successUrl;
+        $this->successUrl = 'http://' . $successUrl;
         
         return $this;
     }
@@ -60,7 +61,7 @@ class StripeService
     
     public function setCancelUrl(string $cancelUrl): static
     {
-        $this->cancelUrl = $cancelUrl;
+        $this->cancelUrl = 'http://' . $cancelUrl;
         
         return $this;
     }
@@ -74,18 +75,29 @@ class StripeService
         return $this;
     }
     
+    public function setShopUrl(string $shopUrl): static {
+        $this->shopUrl = $shopUrl;
+        
+        return $this;
+    }
+    
     public function createCheckoutSession(): Session
     {
         $session = Session::create([
             'payment_method_types' => $this->paymentMethodTypes,
             'line_items' => $this->lineItems,
             'mode' => $this->mode,
-            'succeess_url' => $this->successUrl,
-            'cancel_url' => $this->cancelUrl
+            'success_url' => $this->successUrl,
+            'cancel_url' => $this->cancelUrl,
+            'metadata' => [
+                'shop_url' => $this->shopUrl
+            ]
                                ]);
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutSession', $session->id);
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $session->customer_email);
+        
+        return $session;
     }
 }
