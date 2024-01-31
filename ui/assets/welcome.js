@@ -24,19 +24,26 @@ function calculateTotal(context) {
 function syncDependencies(checkbox, context) {
 
     const status = checkbox.checked;
-
-    const dependencies = checkbox.getAttribute('data-depends-on');
-    if (!dependencies) {
-        return;
-    }
-
+    const name = checkbox.getAttribute('name');
+    const dependsOn = checkbox.getAttribute('data-depends-on')?.split(',');
     const checkboxes = context.querySelectorAll('input[type="checkbox"].package-checkbox');
-    checkboxes.forEach(checkbox => {
-        if (dependencies.split(',').includes(checkbox.getAttribute('name'))) {
-            checkbox.checked = status;
-        }
-    });
 
+
+    if (status) {
+        checkboxes.forEach(checkbox => {
+            if (dependsOn.includes(checkbox.getAttribute('name'))) {
+                checkbox.checked = status;
+            }
+        });
+    }
+    else {
+        checkboxes.forEach(checkbox => {
+            if (checkbox.getAttribute('data-depends-on')?.split(',').includes(name)) {
+                checkbox.checked = status;
+            }
+        }
+        );
+    }
 }
 
 function attachEventListeners(context) {

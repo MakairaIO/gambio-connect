@@ -47,7 +47,7 @@
     <div class="ck-button">
       <label>
         <input class="package-checkbox" type="checkbox" name="{$package.priceId}" data-price="{$package.price}"
-          data-depends-on="{', '|implode:$package.depended}" {if $package.default eq true } checked {/if} />
+          data-depends-on="{', '|implode:$package.depends_on}" {if $package.default eq true } checked {/if} />
         <span class="unchecked trial-btn">
           <i class="fa fa-plus"></i> {$package.trialbtn}</span>
         <span class="checked link-btn package-status"><i class="fa fa-check"></i> {$package.trial}</span>
