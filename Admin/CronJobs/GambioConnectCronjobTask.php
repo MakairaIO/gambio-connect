@@ -1,5 +1,6 @@
 <?php
 
+use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
@@ -87,8 +88,15 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     protected function moduleIsInstalledAndActive(): bool
     {
         $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
-        $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
-        $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
-        return $installed && $active;
+        $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
+        if($stripeCheckoutId) {
+            $stripe = new StripeService();
+            $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+            $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+            $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
+            return $installed && $active && $checkoutSession->payment_status === "paid";
+        }
+        
+        return false;
     }
 }

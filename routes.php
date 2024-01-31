@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Gambio\Core\Application\Routing\RouteCollector;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
-use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaInstallationServiceCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
@@ -17,8 +16,6 @@ use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\Actions\SwitchAction;
 
 return static function (RouteCollector $routeCollector) {
-    $routeCollector->post('/makaira-installation-service', MakairaInstallationServiceCallback::class);
-    
     $routeCollector->get('/admin/makaira/gambio-connect', GambioConnectOverview::class);
     $routeCollector->get('/admin/makaira/welcome', GambioConnectWelcome::class);
     $routeCollector->get('/admin/makaira/faq', GambioConnectFAQ::class);
