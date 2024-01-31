@@ -23,7 +23,7 @@
   </section>
   <section class="makaira-section">
     <h3>{$translation.heading}</h3>
-    <form class="select-package" method="post" action="/admin/admin.php?do=MakairaCheckout">
+    <form class="select-package" method="post" action="/admin/makaira/gambio-connect/stripe-checkout">
       <div class="makaira-cards">
         {foreach $packages as $package }
         {if $package@index > 0 }
@@ -48,7 +48,7 @@
     </form>
 
     <div style="text-align: center; max-width: 827px;">{$translation.OR}</div>
-    <form class="bundle-package" method="post" action="/admin/admin.php?do=MakairaCheckout">
+    <form class="bundle-package" method="post" action="/admin/makaira/gambio-connect/stripe-checkout">
       <div>
         {include file="./components/card-package.html" package=$bundlePackage translation=$translation }
       </div>
