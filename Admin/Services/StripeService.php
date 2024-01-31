@@ -81,6 +81,11 @@ class StripeService
         return $this;
     }
     
+    public function getCheckoutSession(string $sessionId): Session
+    {
+        return Session::retrieve($sessionId);
+    }
+    
     public function createCheckoutSession(): Session
     {
         $session = Session::create([
@@ -95,8 +100,6 @@ class StripeService
                                ]);
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutSession', $session->id);
-        
-        $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $session->customer_email);
         
         return $session;
     }

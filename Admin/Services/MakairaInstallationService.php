@@ -9,7 +9,7 @@ class MakairaInstallationService
 {
     //private const URL = 'https://registration.makaira.io/api';
     
-    private const URL = 'http://register.makaira.vm/api';
+    private const URL = 'http://register.makaira.vm/api/register';
     
     private const USERNAME = 'gambio';
     
@@ -24,7 +24,7 @@ class MakairaInstallationService
         private string    $checkoutSessionId = ''
 ) {
         $this->client = new Client([
-                                                   'base_url' => self::URL,
+                                                   'base_uri' => self::URL,
                                                    'headers'  => [
                                                        'Authorization' => 'BASIC ' . self::USERNAME . ' '
                                                                           . self::PASSWORD,
@@ -58,7 +58,7 @@ class MakairaInstallationService
     
     public function callRegistrationService(): ResponseInterface
     {
-        return $this->client->post('register', [
+        return $this->client->post('', [
             'source' => $this->source,
             'subdomain' => $this->subdomain,
             'email' => $this->email,
