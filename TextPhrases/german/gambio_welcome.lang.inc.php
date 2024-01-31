@@ -15,7 +15,7 @@ $t_language_text_section_content_array = [
     'PACKAGE_0_FEATURES_NAME_4' => 'Fuzzy-Suche',
     'PACKAGE_0_FEATURES_DESC_4' => 'Tippfehler? Lautschrift? No problem!',
     'PACKAGE_0_TRIAL' =>  'Möchte ich probieren',
-    'PACKAGE_0_TRIAL_BTN'  =>  '',
+    'PACKAGE_0_TRIAL_BTN'  =>  'Probieren?',
 
     'PACKAGE_1_HEADING' => 'Recommendations',
     'PACKAGE_1_DESC'  => 'Erhöhen Sie Ihre Warenkorbmengen und -werte mit relevanten Empfehlungen',
@@ -26,7 +26,7 @@ $t_language_text_section_content_array = [
     'PACKAGE_1_FEATURES_DESC_2' => 'Steuern Sie wann und wie',
     'PACKAGE_1_FEATURES_NAME_3' => 'Vorschaufunktion',
     'PACKAGE_1_FEATURES_DESC_3' => 'Sehen Sie was Ihre Kunden sehen werden',
-    'PACKAGE_1_TRIAL' =>  '',
+    'PACKAGE_1_TRIAL' =>  'Möchte ich probieren',
     'PACKAGE_1_TRIAL_BTN'  =>  'Probieren?',
 
     'PACKAGE_2_HEADING' => 'Werbeplätze',
@@ -37,10 +37,10 @@ $t_language_text_section_content_array = [
     'PACKAGE_2_FEATURES_NAME_2' => 'Werbebanner',
     'PACKAGE_2_FEATURES_DESC_2' => 'Schneller zum richtigen Produkt',
     'PACKAGE_2_TRIAL' =>  'Möchte ich probieren',
-    'PACKAGE_2_TRIAL_BTN'  =>  '',
+    'PACKAGE_2_TRIAL_BTN'  =>  'Probieren?',
     'ORDER_NOW_BTN' =>  'Jetzt bestellen',
     'ORDER_NOW_DESC'    =>  'Die Abwicklung erfolgt via stripe',
-   
+
     'PACKAGE_PROFESSIONAL_HEADING' => 'Starter-Bundle mit allen drei Profi-Tools',
     'PACKAGE_PROFESSIONAL_DESC'  => 'Suche, Recommendations und Werbeplätze zum einmaligen Einsteiger-Preis. Dieses Angebot ist nur zum Start erhältlich und später nicht mehr buchbar. Perfekt, um alle Tools zu testen!',
     'PACKAGE_PROFESSIONAL_ICON'  => '',

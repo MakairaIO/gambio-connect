@@ -26,25 +26,40 @@
     </div>
     {if $package.orderNowBtn == true }
     <div class="makaira-card__box__wrapper">
-      <div class="package-price price--hot"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
-      <input class="visually-hidden package-checkbox" data-price="{$package.price}" type="checkbox"
-        name="{$package.priceId}" checked />
+      <div class="package-price price--hot">
+        <span class="price">{$package.price} € </span>/ {$translation.MONTH}
+      </div>
+      <input
+        class="visually-hidden package-checkbox"
+        data-price="{$package.price}"
+        type="checkbox"
+        name="{$package.priceId}"
+        checked
+      />
 
       <button type="submit" class="makaira-cart-btn btn--hot">
-        <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+        <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}
+      </button>
     </div>
     {/if}
   </div>
   {if $package.orderNowBtn == null or $package.orderNowBtn == false }
   <div class="makaira-card__footer">
-    <div class="package-price"><span class="price">{$package.price} € </span>/ {$translation.MONTH}</div>
+    <div class="package-price">
+      <span class="price">{$package.price} € </span>/ {$translation.MONTH}
+    </div>
 
     <div class="ck-button">
       <label>
-        <input class="package-checkbox" type="checkbox" name="{$package.priceId}" data-price="{$package.price}" />
-        <span class="unchecked trial-btn"> <i class=" fa fa-plus"></i> {$package.trialbtn}</span>
-        <span class="checked link-btn package-status"><i class=" fa fa-check"></i> {$package.trial}</span>
-
+        <input class="package-checkbox" type="checkbox"
+        name="{$package.priceId}" data-price="{$package.price}" {if
+        $package.default eq true } checked {/if} />
+        <span class="unchecked trial-btn">
+          <i class="fa fa-plus"></i> {$package.trialbtn}</span
+        >
+        <span class="checked link-btn package-status"
+          ><i class="fa fa-check"></i> {$package.trial}</span
+        >
       </label>
     </div>
   </div>

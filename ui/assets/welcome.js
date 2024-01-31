@@ -28,5 +28,7 @@ function attachEventListeners(context) {
     });
 }
 
-attachEventListeners(document.querySelector('.select-package'))
+const package = document.querySelector('.select-package');
 
+attachEventListeners(package);
+calculateTotal(package);

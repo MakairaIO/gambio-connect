@@ -14,7 +14,7 @@ $t_language_text_section_content_array = [
     'PACKAGE_0_FEATURES_NAME_4' => 'Fuzzy search',
     'PACKAGE_0_FEATURES_DESC_4' => 'Typo? Phonetic transcription? No problem!',
     'PACKAGE_0_TRIAL' =>  'I would like to try',
-    'PACKAGE_0_TRIAL_BTN'  =>  '',
+    'PACKAGE_0_TRIAL_BTN'  =>  'Try it?',
 
     'PACKAGE_1_HEADING' => 'Recommendations',
     'PACKAGE_1_DESC'  => 'Increase your shopping cart quantities and values with relevant recommendations',
@@ -24,7 +24,7 @@ $t_language_text_section_content_array = [
     'PACKAGE_1_FEATURES_DESC_2' => 'Control when and how',
     'PACKAGE_1_FEATURES_NAME_3' => 'Preview function',
     'PACKAGE_1_FEATURES_DESC_3' => 'See what your customers will see',
-    'PACKAGE_1_TRIAL' =>  '',
+    'PACKAGE_1_TRIAL' =>  'I would like to try',
     'PACKAGE_1_TRIAL_BTN'  =>  'Try it?',
 
     'PACKAGE_2_HEADING' => 'Advertising spaces',
@@ -34,10 +34,10 @@ $t_language_text_section_content_array = [
     'PACKAGE_2_FEATURES_NAME_2' => 'Advertising banner',
     'PACKAGE_2_FEATURES_DESC_2' => 'Find the right product faster',
     'PACKAGE_2_TRIAL' =>  'I would like to try',
-    'PACKAGE_2_TRIAL_BTN'  =>  '',
+    'PACKAGE_2_TRIAL_BTN'  =>  'Try it?',
     'ORDER_NOW_BTN' =>  'Order now',
     'ORDER_NOW_DESC'    =>  'Processing takes place via stripe',
-   
+
     'PACKAGE_PROFESSIONAL_HEADING' => 'Starter bundle with all three professional tools',
     'PACKAGE_PROFESSIONAL_DESC'  => 'Search, recommendations and advertising space at a one-off starter price. This offer is only available at the start and cannot be booked later. Perfect for testing all tools!',
     'PACKAGE_PROFESSIONAL_ICON'  => '',

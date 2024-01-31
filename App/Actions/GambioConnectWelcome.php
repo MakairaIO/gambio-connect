@@ -73,6 +73,7 @@ class GambioConnectWelcome extends AdminModuleAction
             'heading' => $this->getTranslateSection('PACKAGE_0_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_0_DESC'),
             'icon'  => 'search',
+            'default' => true,
             'features'  => [
                 [
                     'name'  =>  $this->getTranslateSection('PACKAGE_0_FEATURES_NAME_1'),
@@ -104,6 +105,7 @@ class GambioConnectWelcome extends AdminModuleAction
             'heading' => $this->getTranslateSection('PACKAGE_1_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_1_DESC'),
             'icon'  => 'comment-plus',
+            'default' => false,
             'features'  => array(
                 [
                     'name'  =>  $this->getTranslateSection('PACKAGE_1_FEATURES_NAME_1'),
@@ -131,6 +133,7 @@ class GambioConnectWelcome extends AdminModuleAction
             'heading' => $this->getTranslateSection('PACKAGE_2_HEADING'),
             'desc'  => $this->getTranslateSection('PACKAGE_2_DESC'),
             'icon'  => 'megaphone',
+            'default' => false,
             'features'  => array(
                 [
                     'name'  =>  $this->getTranslateSection('PACKAGE_2_FEATURES_NAME_1'),
