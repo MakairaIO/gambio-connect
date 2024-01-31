@@ -29,13 +29,8 @@
       <div class="package-price price--hot">
         <span class="price">{$package.price} € </span>/ {$translation.MONTH}
       </div>
-      <input
-        class="visually-hidden package-checkbox"
-        data-price="{$package.price}"
-        type="checkbox"
-        name="{$package.priceId}"
-        checked
-      />
+      <input class="visually-hidden package-checkbox" data-price="{$package.price}" type="checkbox"
+        name="{$package.priceId}" checked />
 
       <button type="submit" class="makaira-cart-btn btn--hot">
         <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}
@@ -51,15 +46,11 @@
 
     <div class="ck-button">
       <label>
-        <input class="package-checkbox" type="checkbox"
-        name="{$package.priceId}" data-price="{$package.price}" {if
-        $package.default eq true } checked {/if} />
+        <input class="package-checkbox" type="checkbox" name="{$package.priceId}" data-price="{$package.price}"
+          data-depends-on="{', '|implode:$package.depended}" {if $package.default eq true } checked {/if} />
         <span class="unchecked trial-btn">
-          <i class="fa fa-plus"></i> {$package.trialbtn}</span
-        >
-        <span class="checked link-btn package-status"
-          ><i class="fa fa-check"></i> {$package.trial}</span
-        >
+          <i class="fa fa-plus"></i> {$package.trialbtn}</span>
+        <span class="checked link-btn package-status"><i class="fa fa-check"></i> {$package.trial}</span>
       </label>
     </div>
   </div>

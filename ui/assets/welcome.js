@@ -5,7 +5,6 @@ function calculateTotal(context) {
     const result = context.querySelector('.total-price');
     const sum = context.querySelector('.sum');
 
-
     if (!result) {
         return;
     }
@@ -22,8 +21,27 @@ function calculateTotal(context) {
 
 }
 
+function syncDependencies(checkbox, context) {
+
+    const status = checkbox.checked;
+
+    const dependencies = checkbox.getAttribute('data-depends-on');
+    if (!dependencies) {
+        return;
+    }
+
+    const checkboxes = context.querySelectorAll('input[type="checkbox"].package-checkbox');
+    checkboxes.forEach(checkbox => {
+        if (dependencies.split(',').includes(checkbox.getAttribute('name'))) {
+            checkbox.checked = status;
+        }
+    });
+
+}
+
 function attachEventListeners(context) {
     context.querySelectorAll('input[type="checkbox"].package-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => syncDependencies(checkbox, context));
         checkbox.addEventListener('change', () => calculateTotal(context));
     });
 }
