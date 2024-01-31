@@ -4,6 +4,7 @@ $t_language_text_section_content_array = [
     'intro'             =>  'Makaira gives you the opportunity to increase your store sales with intelligent tools. Grow faster or just let Makaira do the work for you, Makaira supports you with both, just like many other small and large stores have done for years. Learn more ...',
     'heading'           => 'Deine Profi-Tools: Order individually or in an affordable starter bundle',
     'PACKAGE_0_HEADING' => 'Search',
+    'OR' => "or",
     'PACKAGE_0_DESC'  => 'The Makaira search includes functions that your customers expect today:',
     'PACKAGE_0_FEATURES_NAME_1' => 'Intelligent search with ranking mix',
     'PACKAGE_0_FEATURES_DESC_1' => 'For results that simply fit',

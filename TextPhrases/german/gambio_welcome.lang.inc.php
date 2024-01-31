@@ -4,6 +4,7 @@ $t_language_text_section_content_array = [
     'intro'             =>  'Mit Makaira erweiterst Du die Möglichkeit Deine Shopumsätze mit intelligenten Tools zu erhöhen. Wachse schneller oder lass Dir nur die Arbeit abnehmen, Makaira unterstützt Dich bei beidem, so wie auch bereits viele andere kleine und große Shops seit Jahren. Erfahre mehr …',
     'heading'           => 'Deine Profi-Tools: Einzeln oder im <span class="highlight--red">günstigen Starter-Bundle</span> bestellen',
     'PACKAGE_0_HEADING' => 'Suche',
+    'OR' => "oder",
     'PACKAGE_0_DESC'  => 'Die Makaira-Suche deckt Funktionen ab, die Ihre KundInnen heute erwarten:',
     'PACKAGE_0_ICON'  => '',
     'PACKAGE_0_FEATURES_NAME_1' => 'Intelligente Suche mit Ranking Mix',
