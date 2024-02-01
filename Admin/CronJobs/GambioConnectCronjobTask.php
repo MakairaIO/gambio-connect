@@ -88,13 +88,29 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     protected function moduleIsInstalledAndActive(): bool
     {
         $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
+        
+        $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl')->value();
+        
+        $makairaSecret = $configurationFinder->get('modules/MakairaGambioConnect/makairaSecret')->value();
+        
+        $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance')->value();
+        
+        if(!$makairaUrl || !$makairaInstance || !$makairaSecret) {
+            return false;
+        }
+        
         $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
-        if($stripeCheckoutId) {
-            $stripe = new StripeService();
-            $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
-            $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
-            $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
-            return $installed && $active && $checkoutSession->payment_status === "paid";
+        $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride')?->value();
+        if(!$stripeOverride) {
+            if($stripeCheckoutId) {
+                $stripe = new StripeService();
+                $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+                $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+                $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
+                return $installed && $active && $checkoutSession->payment_status === "paid";
+            }
+        } else if($stripeOverride && $stripeCheckoutId) {
+            return false;
         }
         
         return false;
