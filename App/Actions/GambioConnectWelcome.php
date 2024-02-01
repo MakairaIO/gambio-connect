@@ -44,6 +44,7 @@ class GambioConnectWelcome extends AdminModuleAction
                 'price' => "30",
                 'priceId'   =>  StripeService::BUNDLE_PRICE_ID,
                 'orderNowBtn' =>  true,
+                'features'  => [],
             ],
             'companies' =>  [
                 "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/hark.png",
