@@ -77,8 +77,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     
     public function pushRevision(array $product): void
     {
-        $this->logger->info('Product Data', ['data' => $product]);
-        
         $makairaProduct = MakairaDataMapper::mapProduct($product);
         
         $data = $this->addMakairaDocumentWrapper($makairaProduct, $this->currentLanguage);
