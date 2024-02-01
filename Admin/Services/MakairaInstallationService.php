@@ -24,6 +24,7 @@ class MakairaInstallationService
         private string    $checkoutSessionId = ''
 ) {
         $this->client = new Client([
+
                                                    'base_uri' => self::URL,
                                                    'headers'  => [
                                                        'Authorization' => 'BASIC ' . self::USERNAME . ' '
@@ -58,7 +59,7 @@ class MakairaInstallationService
     
     public function callRegistrationService(): ResponseInterface
     {
-        return $this->client->post('', [
+        return $this->client->post('register', [
             'source' => $this->source,
             'subdomain' => $this->subdomain,
             'email' => $this->email,

@@ -37,6 +37,8 @@ class StripeCheckoutSuccessCallback extends AbstractAction
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
+        $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
+        $installationService = new MakairaInstallationService();
         $installationService->setShopUrl($request->getUri()->getHost());
         $installationService->setSubdomain($request->getUri()->getUserInfo());
         $installationService->callRegistrationService();

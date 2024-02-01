@@ -100,7 +100,7 @@ class StripeService
                                ]);
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutSession', $session->id);
-        
+    
         return $session;
     }
 }
