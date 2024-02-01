@@ -42,7 +42,7 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public static function mapCategory(array $data, array $hierarchy) : MakairaCategory
+    public static function mapCategory(array $data, array $hierarchy, Language $language) : MakairaCategory
     {
         $transfer = new MakairaCategory();
         
@@ -51,7 +51,8 @@ class MakairaDataMapper
             ->setId($data['categories_id'])
             ->setCategoryTitle($data['categories_name'])
             ->setDepth($hierarchy['depth'])
-            ->setHierarchy($hierarchy['hierarchy']);
+            ->setHierarchy($hierarchy['hierarchy'])
+            ->setUrl('?'.xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()));
             
         return $transfer;
     }
@@ -71,7 +72,7 @@ class MakairaDataMapper
             ->setEan($data['products_item_codes']['code_mpn'])
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
-    
+            ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
     
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
         
