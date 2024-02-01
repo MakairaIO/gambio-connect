@@ -1,0 +1,70 @@
+{extends file="layout.html"}
+{load_language_text section="gambio_welcome" name="translation"}
+
+{block name="content"}
+<div style="margin-bottom: 40px;">
+  <section class="makaira-section">
+    <div class="makaira-section--logo">
+      <picture>
+        <img src="{$logo}" alt="makaira-logo" />
+      </picture>
+    </div>
+    <div>{$translation.intro}</div>
+  </section>
+  <section class="makaira-section">
+    <h3>{$translation.COMPANY_USING}</h3>
+    <div class="makaira-companies">
+      {foreach $companies as $companyLogo}
+      <picture class="company-logo">
+        <img src="{$companyLogo}" />
+      </picture>
+      {/foreach}
+    </div>
+  </section>
+  <section class="makaira-section">
+    <h3>{$translation.heading}</h3>
+    <form class="select-package" method="post" action="/admin/makaira/gambio-connect/stripe-checkout">
+      <div class="makaira-cards">
+        {foreach $packages as $package }
+        {if $package@index > 0 }
+        <i class="fa fa-plus makaira-plus"></i>
+        {/if}
+        {include file="./components/card-package.html" package=$package limit_width="true" translation=$translation }
+        {/foreach}
+        <div class="makaira-plus sum">
+          <i class="fa fa-equals"></i>
+          <div class="makaira-total-packages">
+            <div class="package-price"><span class="price ">
+                <span class="total-price"></span> €</span> /
+              {$translation.MONTH}</div>
+            <button class="makaira-cart-btn"> <i class="fa fa-shopping-cart"></i>{$translation.ORDER_NOW_BTN}</button>
+            <div class="description">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>{$translation.ORDER_NOW_DESC}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div style="text-align: center; max-width: 827px;">{$translation.OR}</div>
+    <form class="bundle-package" method="post" action="/admin/makaira/gambio-connect/stripe-checkout">
+      <div>
+        {include file="./components/card-package.html" package=$bundlePackage translation=$translation }
+      </div>
+    </form>
+
+
+  </section>
+</div>
+
+{/block}
+
+{block name="custom_scripts"}
+<script src="{$overviewJs}"></script>
+{/block}
+
+{block name="custom_styles"}
+<link rel="stylesheet" href="{$welcomeCss}">
+</script>
+{/block}

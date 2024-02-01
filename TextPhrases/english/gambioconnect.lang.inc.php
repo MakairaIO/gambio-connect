@@ -7,5 +7,7 @@ $t_language_text_section_content_array = [
     'makaira_url'        => 'Makaira URL',
     'makaira_instance'   => 'Makaira Instanz',
     'makaira_secret'     => 'Makaira Secret',
-    'active_search'      => 'Activate for search'
+    'active_search'      => 'Activate for search',
+    "stripe_checkout_session" => "Stripe Checkout Session ID",
+    "stripe_override"        => 'Nur nutzen, wenn ein eigener Vertrag mit Makaira besteht'
 ];

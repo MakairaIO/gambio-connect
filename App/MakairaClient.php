@@ -25,9 +25,9 @@ class MakairaClient
     {
 
         $this->configurationFinder = $configurationFinder;
-        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', null);
-        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', null);
-        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', null);
+        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', 'https://stage.makaira.io');
+        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', 'aAO3XD4D2FoGxGKCVz4t');
+        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', 'gambio');
         $this->nonce = bin2hex(random_bytes(8));
 
 
@@ -44,7 +44,7 @@ class MakairaClient
     }
 
 
-    private function  get_hash($body): string
+    private function get_hash($body): string
     {
         return hash_hmac(
             'sha256',
@@ -69,12 +69,11 @@ class MakairaClient
                 'json' => $body,
             ]);
         } catch (ClientException $e) {
-            // throw new Exception('Request failed: Response: ' . Psr7\Message::toString($e->getResponse()));
+            throw new \Exception('Request failed: Response: ' . $e->getMessage());
         }
-        return null;
     }
 
-    public function push_revision($document)
+    public function push_revision(array $document)
     {
         return $this->do_request('PUT', 'revisions', $document);
     }
