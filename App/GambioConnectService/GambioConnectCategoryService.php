@@ -54,7 +54,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         $hierarchy = $this->calculateCategoryDepth($category);
 
-        $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy);
+        $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
         $data            = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
         
         $response = $this->client->push_revision($data);

@@ -24,13 +24,13 @@ class MakairaCategory extends MakairaEntity
             ...parent::toArray(),
 
             /* Category fields */
-            'depth' => $this->depth,
-            'sort' => $this->sort,
-            'category_title' => $this->categoryTitle,
-            'hierarchy' => $this->hierarchy,
-            'url' => $this->url,
-            'subcategories' => $this->subCategories,
-            'selfLinks' => $this->selfLinks,
+            'depth' => $this->getDepth(),
+            'sort' => $this->getSort(),
+            'category_title' => $this->getCategoryTitle(),
+            'hierarchy' => $this->getHierarchy(),
+            'url' => $this->getUrl(),
+            'subcategories' => $this->getSubCategories(),
+            'selfLinks' => $this->getSelfLinks(),
         ];
     }
 
