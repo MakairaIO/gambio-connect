@@ -30,6 +30,7 @@ use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\App\Utils\ModuleConfig;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
+use Gambio\Core\Language\Services\LanguageService;
 
 /**
  * Class GambioConnectServiceProvider
@@ -52,6 +53,7 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             GambioConnectFAQ::class,
             Export::class,
             VariantUpdateEventListener::class,
+            LanguageService::class,
             MakairaRequest::class,
             ModuleConfig::class
         ];

@@ -25,7 +25,7 @@ class RequestBuilder
       $constraints['query.language'] = $this->language;
     }
 
-    if ($additionalConstraints->language) {
+    if ($additionalConstraints?->language) {
       $constraints['query.language'] = $additionalConstraints->language;
     }
 
@@ -51,5 +51,4 @@ class RequestBuilder
   {
     return null;
   }
-
 }
