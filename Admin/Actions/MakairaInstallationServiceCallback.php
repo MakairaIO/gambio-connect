@@ -6,10 +6,18 @@ use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 use Gambio\Core\Configuration\Services\ConfigurationService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 
 class MakairaInstallationServiceCallback extends AbstractAction
 {
-
+    public function __construct(
+        protected GambioConnectManufacturerService $gambioConnectManufacturerService,
+        protected GambioConnectCategoryService $gambioConnectCategoryService,
+        protected GambioConnectProductService $gambioConnectProductService
+    ) { }
+   
     /**
      * @inheritDoc
      */
@@ -22,6 +30,12 @@ class MakairaInstallationServiceCallback extends AbstractAction
         $configurationService->save('modules/MakairaGambioConnect/makairaInstance', $request->getParsedBodyParam('instance'));
         
         $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('secret'));
+       
+        $this->gambioConnectManufacturerService->prepareExport();
+        
+        $this->gambioConnectCategoryService->prepareExport();
+        
+        $this->gambioConnectProductService->prepareExport();
         
         return $response->withJson(['success' => true]);
     }
