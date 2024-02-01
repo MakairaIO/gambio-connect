@@ -30,6 +30,10 @@
                     "type" : "text",
                     "label" : "gambioconnect.stripe_checkout_session",
                     "readonly" : true
+                },
+                "stripeOverride": {
+                    "type": "checkbox",
+                    "label": "gambioconnect.stripe_override"
                 }
             }
         }
