@@ -95,19 +95,19 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     {
         $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
 
-        $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl')->value();
+        $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl');
 
-        $makairaSecret = $configurationFinder->get('modules/MakairaGambioConnect/makairaSecret')->value();
+        $makairaSecret = $configurationFinder->get('modules/MakairaGambioConnect/makairaSecret');
 
-        $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance')->value();
+        $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance');
 
         if (!$makairaUrl || !$makairaInstance || !$makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
             return false;
         }
 
-        $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
-        $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride')?->value();
+        $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession');
+        $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride');
         if (!$stripeOverride) {
             $this->logInfo('Stripe Override is not active');
             if ($stripeCheckoutId) {
