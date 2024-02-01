@@ -51,5 +51,4 @@ class RequestBuilder
   {
     return null;
   }
-
 }

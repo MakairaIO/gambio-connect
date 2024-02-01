@@ -49,31 +49,32 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
-            ->setCategoryTitle($data['categories_name']);
-            //->setHierarchy($hierarchy);
+            ->setCategoryTitle($data['categories_name'])
+            ->setDepth($hierarchy['depth'])
+            ->setHierarchy($hierarchy['hierarchy']);
             
         return $transfer;
     }
     
-    //public static function mapProduct(array $data): MakairaProduct
-    //{
-    //    $transfer = new MakairaProduct();
-    //
-    //    $stock = 1;
-    //
-    //    $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-    //        ->setId($data['products_id'])
-    //        ->setTitle($data['products_name'])
-    //        ->setStock($stock)
-    //        ->setPrice($data['products_price'])
-    //        ->setIsVariant(false)
-    //        ->setTitle()
-    //        ->setEan()
-    //        ->setShortDescription()
-    //        ->setLongDescription()
-    //
-    //
-    //        ->setSearchKeys($data['products_keywords'] ? : '');
-    //
-    //}
+    public static function mapProduct(array $data): MakairaProduct
+    {
+        $transfer = new MakairaProduct();
+    
+        $stock = 1;
+    
+        $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+            ->setId($data['products_id'])
+            ->setStock($stock)
+            ->setPrice($data['products_price'])
+            ->setIsVariant(false)
+            ->setTitle($data['products_description']['products_name'])
+            ->setEan($data['products_item_codes']['code_mpn'])
+            ->setShortDescription($data['products_description']['products_short_description'])
+            ->setLongDescription($data['products_description']['products_description'])
+    
+    
+            ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
+        
+        return $transfer;
+    }
 }

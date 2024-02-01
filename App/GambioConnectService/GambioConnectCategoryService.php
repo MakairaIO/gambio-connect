@@ -4,6 +4,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
+use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
@@ -13,32 +14,34 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     private Language $currentLanguage;
     
     
-    /**
-     * @throws Exception
-     */
-    public function export(int $categoryId = null): void
+    public function prepareExport(): void
     {
-        if (!$categoryId) {
-            $this->exportAll();
-        } else {
-            $this->exportCategory($categoryId);
+        $languages = $this->languageReadService->getLanguages();
+
+        foreach ($languages as $language) {
+            $categories = $this->getQuery($language);
+
+            foreach ($categories as $category) {
+                $this->connection->executeQuery('CALL makairaChange(' . $category['categories_id'] . ', "category")');
+            }
         }
     }
     
-    
-    /**
-     * @throws Exception
-     */
-    public function exportAll(): void
+    public function export(): void
     {
         $languages = $this->languageReadService->getLanguages();
         
-        foreach ($languages as $language) {
-            $this->currentLanguage = $language;
-            $categories = $this->getQuery($language);
-            
-            foreach ($categories as $category) {
-                $this->pushRevision($category);
+        $makairaExports = $this->getEntitiesForExport('category');
+        
+        if(!empty($makairaExports)) {
+            foreach ($languages as $language) {
+                $this->currentLanguage = $language;
+                $categories            = $this->getQuery($language, $makairaExports);
+                
+                foreach ($categories as $category) {
+                    $this->pushRevision($category);
+                    $this->exportIsDone($category['categories_id'], 'category');
+                }
             }
         }
     }
@@ -47,31 +50,17 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     /**
      * @throws Exception
      */
-    public function exportCategory(int $categoryId): void
-    {
-        $languages = $this->languageReadService->getLanguages();
-        
-        foreach($languages as $language) {
-            $this->currentLanguage = $language;
-            $this->pushRevision($this->getQuery($language, $categoryId));
-            
-        }
-    }
-    
-    
-    /**
-     * @throws Exception
-     */
-    private function pushRevision(array $category): void
+    public function pushRevision(array $category): void
     {
         $hierarchy = $this->calculateCategoryDepth($category);
-        
+
         $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy);
-        $data = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
+        $data            = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
         
         $response = $this->client->push_revision($data);
         
-        $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": " . $response->getStatusCode());
+        $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": "
+                            . $response->getStatusCode());
     }
     
     
@@ -93,7 +82,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
      * @return \mixed[][]
      * @throws \Doctrine\DBAL\Exception
      */
-    public function getQuery(Language $language, int|null $category_id = null): array
+    public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
@@ -109,13 +98,15 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->where('categories_description.language_id = :languageId')
             ->setParameter('languageId', $language->id());
         
-        if($category_id) {
-            $query->where('categories.categories_id = :categoriesId')
-                ->setParameter('categoriesId', $category_id);
+        if(!empty($makairaChanges)) {
+            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
+            $query->where('categories.categories_id IN (:ids)')
+                ->setParameter('ids', implode(',', array_values($ids)));
         }
         
         return $query->fetchAllAssociative();
     }
+    
     
     private function getSubcategories(int $category_id): array
     {
@@ -127,11 +118,13 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->fetchAllAssociative();
     }
     
-    private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array {
-        if(empty($category['parent_id'])) {
+    
+    private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array
+    {
+        if (empty($category['parent_id'])) {
             return [
-                'depth' => $depth,
-                'hierarchy' => $category['categories_id']
+                'depth'     => $depth,
+                'hierarchy' => empty($hierarchy) ? $category['categories_id'] : $hierarchy,
             ];
         }
         
@@ -140,11 +133,11 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $parentCategory = $this->connection->createQueryBuilder()
             ->select('categories_id, parent_id')
             ->from('categories')
-            ->where('parent_id = :parent_id')
+            ->where('categories_id = :parent_id')
             ->setParameter('parent_id', $category['parent_id'])
-            ->fetchOne();
+            ->fetchAssociative();
         
-        if(empty($hierarchy)) {
+        if (empty($hierarchy)) {
             $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
         } else {
             $hierarchy = $parentCategory['categories_id'] . '//' . $hierarchy;
