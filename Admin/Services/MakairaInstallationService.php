@@ -25,6 +25,48 @@ class MakairaInstallationService
         private string    $checkoutSessionId = ''
 ) {
         $this->client = new Client([
+                                                   'base_uri' => self::URL,
+                                                   'headers'  => [
+                                                       'Authorization' => 'BASIC ' . self::USERNAME . ' '
+                                                                          . self::PASSWORD,
+                                                   ],
+                                               ]);
+    }
+    
+    
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+    
+    
+    public function setSubdomain(string $subdomain): void
+    {
+        $this->subdomain = $subdomain;
+    }
+    
+    
+    public function setShopUrl(string $shopUrl): void
+    {
+        $this->shopUrl = $shopUrl;
+    }
+    
+    
+    public function setCheckoutSessionId(string $checkoutSessionId): void
+    {
+        $this->checkoutSessionId = $checkoutSessionId;
+    }
+    
+    public function callRegistrationService(): ResponseInterface
+    {
+        return $this->client->post('', [
+            'source' => $this->source,
+            'subdomain' => $this->subdomain,
+            'email' => $this->email,
+            'shop_url' => $this->shopUrl,
+            'checkout_id' => $this->checkoutSessionId
+    ) {
+        $this->client = new Client([
                                        'base_uri' => self::URL,
                                        'headers'  => [
                                            'Authorization' => 'Basic ' . self::USERNAME . ' ' . self::PASSWORD,
