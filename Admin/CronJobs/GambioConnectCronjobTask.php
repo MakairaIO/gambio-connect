@@ -96,20 +96,35 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
         $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance')->value();
         
         if(!$makairaUrl || !$makairaInstance || !$makairaSecret) {
+            $this->logInfo('No Makaira Credentials found - CRON can not work');
             return false;
         }
         
         $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
         $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride')?->value();
         if(!$stripeOverride) {
+            $this->logInfo('Stripe Override is not active');
             if($stripeCheckoutId) {
+                $this->logInfo('Stripe Subscription ID found');
                 $stripe = new StripeService();
                 $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+                $isPaid = $checkoutSession->payment_status === "paid";
+                if($isPaid) {
+                    $this->logInfo("Stripe Subscription Status is Paid");
+                }
                 $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+                if($installed) {
+                    $this->logInfo('Module is Installed');
+                }
                 $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
-                return $installed && $active && $checkoutSession->payment_status === "paid";
+                if($active) {
+                    $this->logInfo('Module is Active');
+                }
+                return $installed && $active && $isPaid;
             }
+            $this->logInfo('No Stripe Subscription ID found');
         } else if($stripeOverride && $stripeCheckoutId) {
+            $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
             return false;
         }
         
