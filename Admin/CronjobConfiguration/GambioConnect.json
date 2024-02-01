@@ -6,7 +6,7 @@
             "name": "active",
             "type": "checkbox",
             "label": "cronjob_gambio_connect.cronjob_label_active",
-            "defaultValue": false
+            "defaultValue": true
         },
         "interval": {
             "name": "interval",
