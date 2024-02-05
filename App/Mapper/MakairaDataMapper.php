@@ -4,10 +4,14 @@ namespace GXModules\Makaira\GambioConnect\App\Mapper;
 
 use DateTime;
 use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
+use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaVariant;
 
 class MakairaDataMapper
 {
@@ -57,11 +61,23 @@ class MakairaDataMapper
         return $transfer;
     }
     
-    public static function mapProduct(array $data): MakairaProduct
+    public static function mapProduct(array $data, ProductVariantsRepository $productVariantsReadService): MakairaProduct
     {
         $transfer = new MakairaProduct();
     
         $stock = 1;
+        
+        $variants = [];
+        
+        foreach($productVariantsReadService->getProductVariantsByProductId(ProductId::create($data['products_id'])) as $variant) {
+            $variantDocument = new MakairaVariant();
+            $variantDocument->setProduct($data);
+            $variants[] = $variantDocument->mapVariant($variant);
+            
+            dd($variants);
+        }
+        
+        
     
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
@@ -73,7 +89,12 @@ class MakairaDataMapper
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
             ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
-    
+            ->setFsk18($data['fsk18'] ?? false)
+            ->setTaxClassId($data['products_tax_class_id'])
+            ->setGmAltText($data['products_description']['gm_alt_text'] ?? '')
+            ->setProductsVpe($data['products_vpe'])
+            ->setProductsVpeStatus($data['products_vpe_status'])
+            ->setProductsVpeValue($data['products_vpe_value'])
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
         
         return $transfer;

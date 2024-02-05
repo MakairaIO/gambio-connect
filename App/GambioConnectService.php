@@ -7,6 +7,7 @@ namespace GXModules\Makaira\GambioConnect\App;
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
@@ -26,6 +27,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected LanguageReadService         $languageReadService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
+        protected ProductVariantsRepository $productVariantsRepository,
         //   ProductRepositoryReader $productReadService,
     
     )
