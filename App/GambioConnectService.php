@@ -73,8 +73,6 @@ class GambioConnectService implements GambioConnectServiceInterface
             $data['items'][0]['language_id'] = $language->code();
         }
         
-        $this->logger->debug('Makaira document wrapper', $data);
-        
         return $data;
     }
     
