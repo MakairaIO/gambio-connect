@@ -64,6 +64,7 @@ class MakairaDataMapper
     
     public static function mapVariant(array $product, ProductVariant $variant): MakairaVariant
     {
+        $productDocument = self::mapProduct($product);
         $variantDocument = new MakairaVariant();
         $variantDocument->setProduct($product);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
@@ -78,7 +79,10 @@ class MakairaDataMapper
             ->setStock($variant->stock())
             ->setOnStock($variant->stock() > 1)
             ->setMetaDescription($product['products_description']['products_meta_description'])
-            ->setMetaKeywords($product['products_description']['products_meta_keywords']);
+            ->setMetaKeywords($product['products_description']['products_meta_keywords'])
+            ->setMaincategory($productDocument->getMainCategory())
+            ->setMaincategoryurl($productDocument->getMainCategoryUrl())
+            ->setPictureUrlMain($productDocument->getPictureUrlMain());
         
         return $variantDocument;
     }
