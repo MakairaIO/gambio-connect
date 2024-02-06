@@ -5,6 +5,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
@@ -77,13 +78,20 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     
     public function pushRevision(array $product): void
     {
-        $makairaProduct = MakairaDataMapper::mapProduct($product, $this->productVariantsRepository);
+        $documents = [];
+        $documents[] = MakairaDataMapper::mapProduct($product);
         
-        $data = $this->addMakairaDocumentWrapper($makairaProduct, $this->currentLanguage);
+        $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
         
-        $response = $this->client->push_revision($data);
+        $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
         
-        $this->logger->info('Makaira Product Status for: ' . $product['products_id'] . ': ' . $response->getStatusCode());
+        foreach($variants as $variant) {
+            $documents[] = MakairaDataMapper::mapVariant($product,$variant);
+        }
+        
+        $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+        
+        $this->client->push_revision($data);
     }
     
     public function getQuery(Language $language, array $makairaChanges = []): array

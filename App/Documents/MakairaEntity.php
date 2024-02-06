@@ -16,8 +16,8 @@ class MakairaEntity
 
     private bool $active = true;
     private bool $searchable = true;
-    private bool $hidden = false;
-    private bool $onStock = true;
+    private bool   $hidden  = false;
+    protected bool $onStock = true;
 
     private string $pictureUrlMain = '';
 

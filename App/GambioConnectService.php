@@ -78,4 +78,22 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $data;
     }
     
+    public function addMultipleMakairaDocuments(array $documents, ?Language $language = null): array
+    {
+        $data = [
+            'items' => [],
+            'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
+            'source_identifier' => 'gambio',
+        ];
+        
+        foreach($documents as $index => $document) {
+            $data['items'][]['data'] = $document->toArray();
+            if($language) {
+                $data['items'][$index]['language_id'] = $language->code();
+            }
+        }
+        
+        return $data;
+    }
+    
 }

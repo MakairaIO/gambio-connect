@@ -6,6 +6,7 @@ use DateTime;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
@@ -61,24 +62,33 @@ class MakairaDataMapper
         return $transfer;
     }
     
-    public static function mapProduct(array $data, ProductVariantsRepository $productVariantsReadService): MakairaProduct
+    public static function mapVariant(array $product, ProductVariant $variant): MakairaVariant
+    {
+        $variantDocument = new MakairaVariant();
+        $variantDocument->setProduct($product);
+        $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
+        $variantDocument->setId($variant->id())
+            ->setParent($product['products_id'])
+            ->setLongdesc($product['products_description']['products_description'])
+            ->setShortdesc($product['products_description']['products_short_description'])
+            ->setPrice((float)$product['products_price'])
+            ->setTitle($product['products_description']['products_name'])
+            ->setEan($product['products_item_codes']['products_mpn'] ?? '')
+            ->setIsVariant(true)
+            ->setStock($variant->stock())
+            ->setOnStock($variant->stock() > 1)
+            ->setMetaDescription($product['products_description']['products_meta_description'])
+            ->setMetaKeywords($product['products_description']['products_meta_keywords']);
+        
+        return $variantDocument;
+    }
+    
+    public static function mapProduct(array $data): MakairaProduct
     {
         $transfer = new MakairaProduct();
     
         $stock = 1;
         
-        $variants = [];
-        
-        foreach($productVariantsReadService->getProductVariantsByProductId(ProductId::create($data['products_id'])) as $variant) {
-            $variantDocument = new MakairaVariant();
-            $variantDocument->setProduct($data);
-            $variants[] = $variantDocument->mapVariant($variant);
-            
-            dd($variants);
-        }
-        
-        
-    
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
