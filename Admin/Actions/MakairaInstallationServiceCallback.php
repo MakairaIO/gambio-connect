@@ -29,7 +29,7 @@ class MakairaInstallationServiceCallback extends AbstractAction
         
         $configurationService->save('modules/MakairaGambioConnect/makairaInstance', $request->getParsedBodyParam('instance'));
         
-        $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('secret'));
+        $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('sharedSecret'));
        
         $this->gambioConnectManufacturerService->prepareExport();
         
