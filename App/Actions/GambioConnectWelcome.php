@@ -25,9 +25,7 @@ class GambioConnectWelcome extends AdminModuleAction
         $pageTitle    = 'Makaira Gambio FAQs';
         $templatePath = __DIR__ . '/../../ui/template/welcome.html';
 
-        $stripeCheckoutUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . ':' . $request->getUri()->getPort() . $request->getUri()->getPath();
-
-        $stripeCheckoutUrl = str_replace('welcome', 'gambio-connect/stripe-checkout', $stripeCheckoutUrl);
+        $stripeCheckoutUrl = DIR_WS_CATALOG . 'admin/makaira/gambio-connect/stripe-checkout';
 
         $data = [
             'welcomeJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.js",
