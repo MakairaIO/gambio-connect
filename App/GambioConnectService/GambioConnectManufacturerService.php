@@ -4,6 +4,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
@@ -43,9 +44,16 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 
                 $this->currentLanguage = $language;
                 $manufacturers = $this->getQuery($language, $makairaExports);
-                
+
+                $documents = [];
+
                 foreach($manufacturers as $manufacturer) {
-                    $this->pushRevision($manufacturer);
+                    $documents[] = $this->pushRevision($manufacturer);
+                }
+                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+                $response = $this->client->push_revision($data);
+                $this->logger->info('Makaira Manufacturer Documents: ' . count($documents) . ' with Status Code ' . $response->getStatusCode());
+                foreach($manufacturers as $manufacturer) {
                     $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
                 }
             }
@@ -56,15 +64,9 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    public function pushRevision(array $manufacturer): void
+    public function pushRevision(array $manufacturer): MakairaEntity
     {
-        $makairaManufactuer = MakairaDataMapper::mapManufacturer($manufacturer);
-        
-        $data = $this->addMakairaDocumentWrapper($makairaManufactuer, $this->currentLanguage);
-        
-        $response = $this->client->push_revision($data);
-        
-        $this->logger->info('Makaira Manufacturer Status for: ' . $manufacturer['manufacturers_id'] . ': ' . $response->getStatusCode());
+        return MakairaDataMapper::mapManufacturer($manufacturer);
     }
     
     public function replace(): void

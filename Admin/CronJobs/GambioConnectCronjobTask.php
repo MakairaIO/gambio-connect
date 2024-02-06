@@ -8,10 +8,10 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProduc
 class GambioConnectCronjobTask extends AbstractCronjobTask
 {
     protected GambioConnectManufacturerService $gambioConnectManufacturerService;
-    protected GambioConnectCategoryService     $gambioConnectCategoryService;
-    protected GambioConnectProductService      $gambioConnectProductService;
-    
-    
+    protected GambioConnectCategoryService $gambioConnectCategoryService;
+    protected GambioConnectProductService $gambioConnectProductService;
+
+
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
@@ -59,6 +59,9 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo('All Exports to PersistenceLayer Successful');
             };
         }
+        return function() {
+            $this->logInfo('GambioConnect Cronjob not Started');
+        };
     }
 
 
@@ -96,6 +99,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
+        return true;
         $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
 
         $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl');
@@ -121,7 +125,9 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 if ($isPaid) {
                     $this->logInfo("Stripe Subscription Status is Paid");
                 }
-                $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+                $installed = (bool)$configurationFinder->get(
+                    'gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED'
+                );
                 if ($installed) {
                     $this->logInfo('Module is Installed');
                 }
@@ -132,9 +138,11 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 return $installed && $active && $isPaid;
             }
             $this->logInfo('No Stripe Subscription ID found');
-        } else if ($stripeOverride && $stripeCheckoutId) {
-            $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
-            return false;
+        } else {
+            if ($stripeCheckoutId) {
+                $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
+                return false;
+            }
         }
 
         return false;

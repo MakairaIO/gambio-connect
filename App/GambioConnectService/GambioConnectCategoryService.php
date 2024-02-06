@@ -5,6 +5,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
@@ -29,17 +30,24 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     
     public function export(): void
     {
-        $languages = $this->languageReadService->getLanguages();
-        
         $makairaExports = $this->getEntitiesForExport('category');
-        
+
+        $languages = $this->languageReadService->getLanguages();
+
         if(!empty($makairaExports)) {
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $categories            = $this->getQuery($language, $makairaExports);
+
+                $documents = [];
                 
                 foreach ($categories as $category) {
-                    $this->pushRevision($category);
+                    $documents[] = $this->pushRevision($category);
+                }
+                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+                $response = $this->client->push_revision($data);
+                $this->logger->info('Makaira Category Documents: ' . count($documents) . ' with Status Code ' . $response->getStatusCode());
+                foreach($categories as $category) {
                     $this->exportIsDone($category['categories_id'], 'category');
                 }
             }
@@ -50,17 +58,11 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     /**
      * @throws Exception
      */
-    public function pushRevision(array $category): void
+    public function pushRevision(array $category): MakairaCategory
     {
         $hierarchy = $this->calculateCategoryDepth($category);
 
-        $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
-        $data            = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
-        
-        $response = $this->client->push_revision($data);
-        
-        $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": "
-                            . $response->getStatusCode());
+        return MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
     }
     
     

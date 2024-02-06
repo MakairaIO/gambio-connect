@@ -59,23 +59,12 @@ class GambioConnectService implements GambioConnectServiceInterface
     }
     
     
-    public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
+    public function addMakairaDocumentWrapper(MakairaEntity $document, Language $language = null): array
     {
-        $data = [
-            'items' => [
-                [
-                    'data' => $document->toArray(),
-                ],
-            ],
-            'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
-            'source_identifier' => 'gambio',
+        return [
+            'data' => $document->toArray(),
+            'language_id' => $language->code()
         ];
-        
-        if($language) {
-            $data['items'][0]['language_id'] = $language->code();
-        }
-        
-        return $data;
     }
     
     public function addMultipleMakairaDocuments(array $documents, ?Language $language = null): array
@@ -86,11 +75,8 @@ class GambioConnectService implements GambioConnectServiceInterface
             'source_identifier' => 'gambio',
         ];
         
-        foreach($documents as $index => $document) {
-            $data['items'][]['data'] = $document->toArray();
-            if($language) {
-                $data['items'][$index]['language_id'] = $language->code();
-            }
+        foreach($documents as $document) {
+            $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
         
         return $data;

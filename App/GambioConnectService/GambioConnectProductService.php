@@ -6,6 +6,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
@@ -57,9 +58,30 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $products = $this->getQuery($language, $makairaChanges);
+
+                $documents = [];
                 
                 foreach ($products as $product) {
-                    $this->pushRevision($product);
+                    $documents[] = $this->pushRevision($product);
+
+                    $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
+
+                    $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
+
+                    foreach($variants as $variant) {
+                        $documents[] = MakairaDataMapper::mapVariant($product,$variant);
+                    }
+
+                    foreach($documents as $document) {
+                        $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
+                            'data' => $document->getId()
+                        ]);
+                    }
+
+                    $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+
+                    $this->client->push_revision($data);
+
                     $this->exportIsDone($product['products_id'], 'product');
                 }
             }
@@ -76,22 +98,9 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->client->switch(['products']);
     }
     
-    public function pushRevision(array $product): void
+    public function pushRevision(array $product): MakairaEntity
     {
-        $documents = [];
-        $documents[] = MakairaDataMapper::mapProduct($product);
-        
-        $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
-        
-        $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
-        
-        foreach($variants as $variant) {
-            $documents[] = MakairaDataMapper::mapVariant($product,$variant);
-        }
-        
-        $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
-        
-        $this->client->push_revision($data);
+        return MakairaDataMapper::mapProduct($product);
     }
     
     public function getQuery(Language $language, array $makairaChanges = []): array
