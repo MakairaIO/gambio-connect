@@ -25,11 +25,14 @@ class GambioConnectWelcome extends AdminModuleAction
         $pageTitle    = 'Makaira Gambio FAQs';
         $templatePath = __DIR__ . '/../../ui/template/welcome.html';
 
+        $stripeActionUrl = xtc_href_link_admin('makaira/gambio-connect/stripe-checkout');
+
         $data = [
             'welcomeJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.js",
             'welcomeCss' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.css",
             'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/logo.svg",
             'packages'  => $this->getPackages(),
+            'stripeActionUrl' => $stripeActionUrl,
             'totalPackages' => [
                 'price' =>  45,
                 'priceId'   =>  '<package_stripe_price>'
