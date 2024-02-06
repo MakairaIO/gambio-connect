@@ -37,7 +37,6 @@ class StripeCheckoutSuccessCallback extends AbstractAction
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
-        $installationService = new MakairaInstallationService();
         $installationService->setShopUrl($request->getUri()->getHost());
         $installationService->setSubdomain($request->getUri()->getUserInfo());
         $installationService->setCallbackUri(HTTP_SERVER . DIR_WS_CATALOG .'shop.php?do=MakairaInstallationService');
