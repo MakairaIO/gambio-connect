@@ -42,10 +42,16 @@ class MakairaCheckoutAction extends AbstractAction
                 $stripeService->addPriceId(StripeService::RECOMMENDATIONS_PRICE_ID);
             }
         }
+
+        $url = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . ':' . $request->getUri()->getPort() . $request->getUri()->getPath();
+
+        $successUrl = str_replace('gambio-connect/stripe-checkout', 'gambio-connect/stripe-checkout-success-callback', $url);
+
+        $cancelUrl = str_replace('gambio-connect/stripe-checkout', 'gambio-connect/stripe-checkout-cancel-callback', $url);
         
-        $stripeService->setSuccessUrl($request->getUri()->getHost() . '/admin/makaira/gambio-connect/stripe-checkout-success-callback');
+        $stripeService->setSuccessUrl($successUrl);
         
-        $stripeService->setCancelUrl($request->getUri()->getHost() . '/admin/makaira/gambio-connect/stripe-checkout-cancel-callback');
+        $stripeService->setCancelUrl($cancelUrl);
         
         $session = $stripeService->createCheckoutSession();
         
