@@ -23,7 +23,8 @@ class MakairaInstallationService
         private string    $email = '',
         private string    $subdomain = '',
         private string    $shopUrl = '',
-        private string    $checkoutSessionId = ''
+        private string    $checkoutSessionId = '',
+        private string    $callbackUri = ''
     ) {
         $this->client = new Client([
                                        'base_uri' => self::URL,
