@@ -82,7 +82,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(StripeCheckoutCancelCallback::class)
             ->addArgument($this->application);
 
-        $this->application->registerShared(GambioConnectOverview::class);
+        $this->application->registerShared(GambioConnectOverview::class)
+            ->addArgument($this->application);
         $this->application->registerShared(GambioConnectDocument::class);
         $this->application->registerShared(GambioConnectWelcome::class);
         $this->application->registerShared(GambioConnectAccount::class);

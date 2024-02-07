@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GXModules\Makaira\GambioConnect\App\Actions;
 
 use Gambio\Admin\Application\Http\AdminModuleAction;
+use Gambio\Core\Application\Application;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 
@@ -15,6 +16,12 @@ use Gambio\Core\Application\Http\Response;
  */
 class GambioConnectOverview extends AdminModuleAction
 {
+    public function __construct(
+        protected Application $application
+    )
+    {
+    }
+
     /**
      * @inheritDoc
      */
@@ -33,7 +40,9 @@ class GambioConnectOverview extends AdminModuleAction
 
 
         $data     = [
-            'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js"
+            'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js",
+            'http_url' => $this->url->base(),
+            'http_admin_url' => $this->url->admin()
         ];
         $template = $this->render($pageTitle, $templatePath, $data);
 
