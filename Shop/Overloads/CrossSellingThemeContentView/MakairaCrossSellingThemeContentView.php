@@ -32,18 +32,12 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
     private function loadCrossSelling() {
         $this->set_content_template('product_info_cross_selling.html');
         $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id']);
-        echo "<pre>";
-        var_dump($requestData);
-        echo "</pre>";
-        return $requestData;
+        return $requestData['items'];
     }
     
     private function loadReverseCrossSelling() {
         $this->set_content_template('product_info_reverse_cross_selling.html');
         $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id']);
-        echo "<pre>";
-        var_dump($requestData);
-        echo "</pre>";
-        return $requestData;
+        return $requestData['items'];
     }
 }
