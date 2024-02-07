@@ -76,7 +76,7 @@ class MakairaInstallationService
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
                                       'shop_url'           => $this->shopUrl,
-                                      'stripe_checkout_id' => $this->checkoutSessionId,
+                                      'checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
                                   ]),
         ]);
