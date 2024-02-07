@@ -42,7 +42,8 @@ class GambioConnectOverview extends AdminModuleAction
         $data     = [
             'overviewJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/overview.js",
             'http_url' => $this->url->base(),
-            'http_admin_url' => $this->url->admin()
+            'http_admin_url' => $this->url->admin(),
+            'subdomain' => str_replace(['http://', '.'], ['','-'], $this->url->base())
         ];
         $template = $this->render($pageTitle, $templatePath, $data);
 
