@@ -69,6 +69,7 @@ class MakairaDataMapper
         $variantDocument->setProduct($product);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
         $variantDocument->setId($variant->id())
+            ->setShop(1)
             ->setParent($product['products_id'])
             ->setLongdesc($product['products_description']['products_description'])
             ->setShortdesc($product['products_description']['products_short_description'])
