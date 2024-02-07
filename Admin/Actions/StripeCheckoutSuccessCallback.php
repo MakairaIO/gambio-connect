@@ -42,7 +42,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
         $installationService->setShopUrl($request->getUri()->getHost());
-        $installationService->setSubdomain(str_replace(['http://', '.'], ['','-'], $this->url->base()));
+        $installationService->setSubdomain(str_replace(['http://', 'https://', '.'], ['', '','-'], $this->url->base()));
         $installationService->setCallbackUri($this->url->base() .'/shop.php?do=MakairaInstallationService');
         $installationServiceResponse = $installationService->callRegistrationService();
 
