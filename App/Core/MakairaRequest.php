@@ -65,14 +65,12 @@ class MakairaRequest
   public function fetchRecommendations(string $productId) {
       $requestBuilder = new RequestBuilder($this->language);
       $body = [
-          'productId' => $productId,
-          'count' => "6",
+          'recommendationId' => 'similar-products',
+          'productId' => [$productId],
+          'count' => 6,
           'constraints' => $requestBuilder->getConstraint(),
-          'boosting' => false,
-          'filter' => '',
-          'fields' => [
-              'products_id'
-          ]
+          'boosting' => [],
+          'filter' => [],
       ];
       $uri = $this->makairaUrl . $this->getEndpoint('recommendation');
       $response = $this->request('POST', $uri, $body);
