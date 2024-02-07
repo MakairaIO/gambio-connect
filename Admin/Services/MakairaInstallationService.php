@@ -27,9 +27,11 @@ class MakairaInstallationService
     ) {
         $this->client = new Client([
                                        'base_uri' => self::URL,
-                                       'headers'  => [
-                                           'Authorization' => 'BASIC ' . base64_encode(self::USERNAME . ' ' . self::PASSWORD),
-                                       ],
+                                       'auth' => [
+                                           self::USERNAME,
+                                           self::PASSWORD,
+                                           'basic'
+                                       ]
                                    ]);
     }
     
