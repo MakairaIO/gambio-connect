@@ -2,6 +2,7 @@
 
 namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 
+use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Application;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
@@ -10,7 +11,7 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\MakairaInstallationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 
-class StripeCheckoutSuccessCallback extends AbstractAction
+class StripeCheckoutSuccessCallback extends AdminModuleAction
 {
     protected ConfigurationService $configurationService;
     
@@ -25,6 +26,9 @@ class StripeCheckoutSuccessCallback extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
+        $pageTitle = 'Makaira Gambio Connect - Successful Checkout';
+        $templatePath = __DIR__ . '/../../ui/template/stripe/success.html';
+
         $stripe = new StripeService();
         
         $checkoutSessionId = $this->configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
@@ -40,8 +44,16 @@ class StripeCheckoutSuccessCallback extends AbstractAction
         $installationService->setShopUrl($request->getUri()->getHost());
         $installationService->setSubdomain(explode('.', $request->getUri()->getHost())[0]);
         $installationService->setCallbackUri($this->url->base() .'/shop.php?do=MakairaInstallationService');
-        $installationService->callRegistrationService();
-        
-        return $response->withJson(['success' => true]);
+        $installationServiceResponse = $installationService->callRegistrationService();
+
+        $responseData = json_decode($installationServiceResponse->getBody()->getContents());
+
+        $data = [
+            'duration' => $responseData->estimate_duration_time
+        ];
+
+        $template = $this->render($pageTitle, $templatePath, $data);
+
+        return $response->write($template);
     }
 }

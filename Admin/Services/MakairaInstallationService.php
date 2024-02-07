@@ -13,7 +13,7 @@ class MakairaInstallationService
     
     private const USERNAME = 'gambio';
     
-    private const PASSWORD = '6hmtyEQEhecyN2oEDBrZ';
+    private const PASSWORD = '73P9gKB7KR8DA8KxNHbm';
     
     private string $source = 'gambio';
     
