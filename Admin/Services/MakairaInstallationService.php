@@ -68,14 +68,17 @@ class MakairaInstallationService
     public function callRegistrationService(): ResponseInterface
     {
         return $this->client->post('/api/register', [
-            'body' => json_encode([
+            'headers'  => [
+                'Authorization' => 'BASIC ' . self::USERNAME . ' ' . self::PASSWORD,
+            ],
+            'body' => [
                                       'source'             => $this->source,
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
                                       'shop_url'           => $this->shopUrl,
                                       'stripe_checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
-                                  ]),
+                                  ],
         ]);
     }
 }
