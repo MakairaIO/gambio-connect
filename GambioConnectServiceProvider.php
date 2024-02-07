@@ -8,8 +8,12 @@ use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
+use Gambio\Core\Application\Application;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
+use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
+use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
@@ -31,6 +35,7 @@ use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\App\Utils\ModuleConfig;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
 use Gambio\Core\Language\Services\LanguageService;
+use Stripe\Checkout\Session;
 
 /**
  * Class GambioConnectServiceProvider
@@ -45,6 +50,9 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function provides(): array
     {
         return [
+            MakairaCheckoutAction::class,
+            StripeCheckoutSuccessCallback::class,
+            StripeCheckoutCancelCallback::class,
             GambioConnectInstaller::class,
             GambioConnectOverview::class,
             GambioConnectDocument::class,
@@ -65,6 +73,15 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
      */
     public function register(): void
     {
+        $this->application->registerShared(MakairaCheckoutAction::class)
+            ->addArgument($this->application);
+
+        $this->application->registerShared(StripeCheckoutSuccessCallback::class)
+            ->addArgument($this->application);
+
+        $this->application->registerShared(StripeCheckoutCancelCallback::class)
+            ->addArgument($this->application);
+
         $this->application->registerShared(GambioConnectOverview::class);
         $this->application->registerShared(GambioConnectDocument::class);
         $this->application->registerShared(GambioConnectWelcome::class);

@@ -12,7 +12,7 @@ use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 class MakairaCheckoutAction extends AbstractAction
 {
     protected ConfigurationService $configurationService;
-    
+
     public function __construct(
         protected Application $application,
     ) {
@@ -43,9 +43,9 @@ class MakairaCheckoutAction extends AbstractAction
             }
         }
 
-        $successUrl = HTTP_SERVER . DIR_WS_CATALOG . 'admin/makaira/gambio-connect/stripe-checkout-success-callback';
+        $successUrl = $this->url->admin() . '/makaira/gambio-connect/stripe-checkout-success-callback';
 
-        $cancelUrl = HTTP_SERVER . DIR_WS_CATALOG . 'admin/makaira/gambio-connect/stripe-checkout-cancel-callback';
+        $cancelUrl = $this->url->admin() . '/makaira/gambio-connect/stripe-checkout-cancel-callback';
         
         $stripeService->setSuccessUrl($successUrl);
         
