@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class MakairaInstallationService
 {
-    private const URL = 'https://registration.makaira.io/api/register';
+    private const URL = 'https://registration.makaira.io/';
     
     //private const URL = 'http://register.makaira.vm/';
     
