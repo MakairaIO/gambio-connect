@@ -71,7 +71,7 @@ class MakairaInstallationService
             'headers'  => [
                 'Authorization' => 'BASIC ' . self::USERNAME . ' ' . self::PASSWORD,
             ],
-            'body' => [
+            'form_params' => [
                                       'source'             => $this->source,
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
