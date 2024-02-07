@@ -37,12 +37,16 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $email = $checkoutSession->customer_details->email;
         
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $email);
+
+        $subdomain = $request->getUri()->getHost() === 'stage.makaira.io'
+            ? 'gambio'
+            : str_replace(['http://', 'https://', '.'], ['', '', '-'], $request->getUri()->getHost());
         
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
         $installationService->setShopUrl($request->getUri()->getHost());
-        $installationService->setSubdomain(str_replace(['http://', 'https://', '.'], ['', '','-'], $this->url->base()));
+        $installationService->setSubdomain(strtolower($subdomain));
         $installationService->setCallbackUri($this->url->base() .'/shop.php?do=MakairaInstallationService');
         $installationServiceResponse = $installationService->callRegistrationService();
 
