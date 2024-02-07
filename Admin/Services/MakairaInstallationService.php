@@ -24,7 +24,8 @@ class MakairaInstallationService
         private string    $subdomain = '',
         private string    $shopUrl = '',
         private string    $checkoutSessionId = '',
-        private string    $callbackUri = ''
+        private string    $callbackUri = '',
+        private array     $options = []
     ) {
         $this->client = new Client([
                                        'base_uri' => self::URL,
@@ -66,6 +67,13 @@ class MakairaInstallationService
         
         return $this;
     }
+
+    public function setOptions(array $options): static
+    {
+        $this->options = $options;
+
+        return $this;
+    }
     
     
     public function callRegistrationService(): ResponseInterface
@@ -78,6 +86,7 @@ class MakairaInstallationService
                                       'shop_url'           => $this->shopUrl,
                                       'checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
+                                      'options'            => $this->options,
                                   ]),
         ]);
     }
