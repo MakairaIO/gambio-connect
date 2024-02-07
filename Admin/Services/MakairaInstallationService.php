@@ -28,7 +28,7 @@ class MakairaInstallationService
         $this->client = new Client([
                                        'base_uri' => self::URL,
                                        'headers'  => [
-                                           'Authorization' => 'BASIC Z2FtYmlvOjczUDlnS0I3S1I4REE4S3hOSGJt',
+                                           'Authorization' => 'BASIC ' . base64_encode(self::USERNAME . ' ' . self::PASSWORD),
                                        ],
                                    ]);
     }
@@ -68,14 +68,14 @@ class MakairaInstallationService
     public function callRegistrationService(): ResponseInterface
     {
         return $this->client->post('/api/register', [
-            'form_params' => [
+            'body' => json_encode([
                                       'source'             => $this->source,
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
                                       'shop_url'           => $this->shopUrl,
                                       'stripe_checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
-                                  ],
+                                  ]),
         ]);
     }
 }
