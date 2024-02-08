@@ -98,7 +98,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 ->add('where', $query->expr()->in('products.products_id', $ids), true);
         }
         
-        $results = $query->fetchAllAssociative();
+        $results = $this->executeQuery($query);
         
         if(empty($makairaChanges)) {
             return $results;
@@ -118,7 +118,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         ->setParameter('languageId', $language->id());
                 }
                 
-                $relationResult = $query->fetchAllAssociative();
+                $relationResult = $this->executeQuery($query);
                 
                 if(count($relationResult) === 1) {
                     $results[$index][$relationTable] = $relationResult[0];

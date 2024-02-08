@@ -97,6 +97,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 ->setParameter('ids', implode(',', array_values($ids)));
         }
         
-        return $query->fetchAllAssociative();
+        return $this->executeQuery($query);
     }
 }

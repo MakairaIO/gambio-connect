@@ -104,18 +104,17 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 ->setParameter('ids', implode(',', array_values($ids)));
         }
         
-        return $query->fetchAllAssociative();
+        return $this->executeQuery($query);
     }
     
     
     private function getSubcategories(int $category_id): array
     {
-        return $this->connection->createQueryBuilder()
+        return $this->executeQuery($this->connection->createQueryBuilder()
             ->select('categories_id')
             ->from('categories')
             ->where('parent_id = :categories_id')
-            ->setParameter('categories_id', $category_id)
-            ->fetchAllAssociative();
+            ->setParameter('categories_id', $category_id));
     }
     
     
@@ -130,12 +129,11 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         
         $depth += 1;
         
-        $parentCategory = $this->connection->createQueryBuilder()
+        $parentCategory = $this->executeQuery($this->connection->createQueryBuilder()
             ->select('categories_id, parent_id')
             ->from('categories')
             ->where('categories_id = :parent_id')
-            ->setParameter('parent_id', $category['parent_id'])
-            ->fetchAssociative();
+            ->setParameter('parent_id', $category['parent_id']));
         
         if (empty($hierarchy)) {
             $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];

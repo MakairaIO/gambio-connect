@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
@@ -48,12 +49,20 @@ class GambioConnectService implements GambioConnectServiceInterface
     
     private function getMakairaChangesForType(string $type): array
     {
-        return $this->connection->createQueryBuilder()
+        return $this->executeQuery($this->connection->createQueryBuilder()
             ->select('gambio_id')
             ->from(ChangesService::TABLE_NAME)
             ->where('type = :type')
-            ->setParameter('type', $type)
-            ->fetchAllAssociative();
+            ->setParameter('type', $type));
+    }
+
+    public function executeQuery(QueryBuilder $queryBuilder): array
+    {
+        if(method_exists($queryBuilder, 'fetchAllAssociative')) {
+            return $queryBuilder->fetchAllAssociative();
+        } else {
+            return $queryBuilder->fetchAll();
+        }
     }
     
     
