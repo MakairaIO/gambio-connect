@@ -46,6 +46,11 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $this->getMakairaChangesForType($type);
     }
 
+    public function executeQuery(QueryBuilder $queryBuilder): array
+    {
+        return $queryBuilder->fetchAllAssociative();
+    }
+
     private function getMakairaChangesForType(string $type): array
     {
         return $this->connection->createQueryBuilder()
