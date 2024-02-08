@@ -58,7 +58,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->from(ChangesService::TABLE_NAME)
             ->where('type = :type')
             ->setParameter('type', $type)
-            ->execute()
+            ->executeQuery()
             ->fetchAllAssociative();
     }
 
