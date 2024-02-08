@@ -51,6 +51,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         $this->logger->debug("Available Query Builder Methods", [
             get_class_methods($queryBuilder)
         ]);
+        return [];
         return $queryBuilder->fetchAllAssociative();
     }
 
