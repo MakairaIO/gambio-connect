@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GXModules\Makaira\GambioConnect\App;
 
 use Psr\Log\LoggerInterface;
+
 use function Gambio\Core\Logging\logger;
 
 /**

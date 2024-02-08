@@ -2,7 +2,6 @@
 
 namespace GXModules\Makaira\GambioConnect\App\Models;
 
-
 class Change
 {
     public function __construct(
@@ -12,8 +11,8 @@ class Change
         private string $created_at,
         private string $comment = "",
         private ?string $consumed_at = null
-    )
-    {}
+    ) {
+    }
 
     public function toArray(): array
     {
