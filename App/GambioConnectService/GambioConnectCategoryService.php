@@ -43,7 +43,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                     try {
                         $this->pushRevision($category);
                         $this->exportIsDone($category['categories_id'], 'category');
-                    }catch(Exception $exception) {
+                    } catch(Exception $exception) {
                         $this->logger->error("Category Export to Makaira Failed", [
                             'id' => $category['categories_id'],
                             'message' => $exception->getMessage()

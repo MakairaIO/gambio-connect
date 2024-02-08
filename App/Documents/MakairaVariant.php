@@ -21,7 +21,7 @@ class MakairaVariant extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-        /* Makaira fields */
+            /* Makaira fields */
             parent::toArray(),
             [
 

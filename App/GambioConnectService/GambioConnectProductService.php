@@ -13,7 +13,6 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-
     public Language $currentLanguage;
 
     public static array $productRelationTables = [
@@ -62,7 +61,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                     try {
                         $this->pushRevision($product);
                         $this->exportIsDone($product['products_id'], 'product');
-                    }catch(\Exception $exception) {
+                    } catch(\Exception $exception) {
                         $this->logger->error("Product Export to Makaira Failed", [
                             'id' => $product['products_id'],
                             'message' => $exception->getMessage()

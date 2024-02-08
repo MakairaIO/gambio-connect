@@ -49,7 +49,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                     try {
                         $this->pushRevision($manufacturer);
                         $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
-                    }catch (Exception $exception) {
+                    } catch (Exception $exception) {
                         $this->logger->error("Manufacturer Export to Makaira Failed", [
                             'id' => $manufacturer['manufacturers_id'],
                             'message' => $exception->getMessage()

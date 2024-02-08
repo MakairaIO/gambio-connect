@@ -11,7 +11,7 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 class StripeCheckoutCancelCallback extends AbstractAction
 {
     protected ConfigurationService $configurationService;
-    
+
     public function __construct(
         protected Application $application,
     ) {

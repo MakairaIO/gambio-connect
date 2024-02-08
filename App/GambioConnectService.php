@@ -29,7 +29,6 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
         //   ProductRepositoryReader $productReadService,
-
     ) {
         // $this->productReadService = $productReadService;
     }

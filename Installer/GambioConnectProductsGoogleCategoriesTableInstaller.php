@@ -7,7 +7,6 @@ use GXModules\Makaira\GambioConnect\Installer\GambioConnectTableInstallerInterfa
 
 class GambioConnectProductsGoogleCategoriesTableInstaller implements GambioConnectTableInstallerInterface
 {
-
     public static function install(Connection $connection): void
     {
         $connection->executeStatement("
@@ -15,13 +14,13 @@ class GambioConnectProductsGoogleCategoriesTableInstaller implements GambioConne
             FOR EACH ROW
             CALL makairaChange(NEW.products_id, 'product')
         ");
-        
+
         $connection->executeStatement("
             CREATE TRIGGER makaira_connect_products_google_categories_update_trigger AFTER UPDATE on products_google_categories
             FOR EACH ROW
             CALL makairaChange(NEW.products_id, 'product')
         ");
-        
+
         $connection->executeStatement("
             CREATE TRIGGER makaira_connect_products_google_categories_delete_trigger AFTER DELETE on products_google_categories
             FOR EACH ROW
@@ -32,9 +31,9 @@ class GambioConnectProductsGoogleCategoriesTableInstaller implements GambioConne
     public static function uninstall(Connection $connection): void
     {
         $connection->executeStatement("DROP TRIGGER IF EXISTS makaira_connect_products_google_categories_create_trigger");
-        
+
         $connection->executeStatement("DROP TRIGGER IF EXISTS makaira_connect_products_google_categories_update_trigger");
-        
+
         $connection->executeStatement("DROP TRIGGER IF EXISTS makaira_connect_products_google_categories_delete_trigger");
     }
 }

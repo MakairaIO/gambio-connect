@@ -129,7 +129,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 return $installed && $active && $isPaid;
             }
             $this->logInfo('No Stripe Subscription ID found');
-        } else if ($stripeOverride && $stripeCheckoutId) {
+        } elseif ($stripeOverride && $stripeCheckoutId) {
             $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
             return false;
         }

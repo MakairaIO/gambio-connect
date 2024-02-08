@@ -18,15 +18,15 @@ use GXModules\Makaira\GambioConnect\App\Actions\SwitchAction;
 
 return static function (RouteCollector $routeCollector) {
     $routeCollector->post('/makaira-installation-service', MakairaInstallationServiceCallback::class);
-    
+
     $routeCollector->get('/admin/makaira/gambio-connect', GambioConnectOverview::class);
     $routeCollector->get('/admin/makaira/welcome', GambioConnectWelcome::class);
     $routeCollector->get('/admin/makaira/faq', GambioConnectFAQ::class);
     $routeCollector->get('/admin/makaira/document', GambioConnectDocument::class);
     $routeCollector->get('/admin/makaira/account', GambioConnectAccount::class);
-    
+
     $routeCollector->post('/admin/makaira/gambio-connect/stripe-checkout', MakairaCheckoutAction::class);
-    
+
     $routeCollector->get('/admin/makaira/gambio-connect/stripe-checkout-success-callback', StripeCheckoutSuccessCallback::class);
     $routeCollector->get('/admin/makaira/gambio-connect/stripe-checkout-cancel-callback', StripeCheckoutCancelCallback::class);
 

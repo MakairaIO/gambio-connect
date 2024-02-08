@@ -18,8 +18,7 @@ class GambioConnectOverview extends AdminModuleAction
 {
     public function __construct(
         protected Application $application
-    )
-    {
+    ) {
     }
 
     /**
