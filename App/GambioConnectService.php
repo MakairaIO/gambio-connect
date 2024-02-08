@@ -48,7 +48,13 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     public function executeQuery(QueryBuilder $queryBuilder): array
     {
+        $this->logger->debug("Query Builder Methods", [
+            get_class_methods($queryBuilder)
+        ]);
         $result = $queryBuilder->execute();
+        $this->logger->debug("Result Methods", [
+            get_class_methods($result)
+        ]);
         return $result->fetchAll();
     }
 
