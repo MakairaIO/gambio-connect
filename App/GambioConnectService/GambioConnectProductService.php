@@ -4,6 +4,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
@@ -98,7 +99,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 ->add('where', $query->expr()->in('products.products_id', $ids), true);
         }
 
-        $results = $query->execute()->fetchAllAssociative();
+        $results = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
         if (empty($makairaChanges)) {
             return $results;
@@ -118,7 +119,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         ->setParameter('languageId', $language->id());
                 }
 
-                $relationResult = $query->execute()->fetchAllAssociative();
+                $relationResult = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
                 if (count($relationResult) === 1) {
                     $results[$index][$relationTable] = $relationResult[0];

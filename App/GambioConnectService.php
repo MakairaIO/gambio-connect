@@ -12,6 +12,7 @@ use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 
 /**
  * Class GambioConnectService
@@ -54,7 +55,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->where('type = :type')
             ->setParameter('type', $type)
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
     public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
