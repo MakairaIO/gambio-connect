@@ -21,19 +21,18 @@ use Doctrine\DBAL\Connection;
 class GambioConnectService implements GambioConnectServiceInterface
 {
     // private ProductRepositoryReader $productReadService;
-    
+
     public function __construct(
         protected MakairaClient               $client,
         protected LanguageReadService         $languageReadService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
         //   ProductRepositoryReader $productReadService,
-    
-    )
-    {
+
+    ) {
         // $this->productReadService = $productReadService;
     }
-    
+
     protected function exportIsDone(int $gambio_id, string $type): void
     {
         $this->connection->delete(ChangesService::TABLE_NAME, [
@@ -41,31 +40,23 @@ class GambioConnectService implements GambioConnectServiceInterface
             'type' => $type
         ]);
     }
-    
-    protected function getEntitiesForExport(string $type) : array
+
+    protected function getEntitiesForExport(string $type): array
     {
         return $this->getMakairaChangesForType($type);
     }
-    
+
     private function getMakairaChangesForType(string $type): array
     {
-        return $this->executeQuery($this->connection->createQueryBuilder()
+        return $this->connection->createQueryBuilder()
             ->select('gambio_id')
             ->from(ChangesService::TABLE_NAME)
             ->where('type = :type')
-            ->setParameter('type', $type));
+            ->setParameter('type', $type)
+            ->execute()
+            ->fetchAllAssociative();
     }
 
-    public function executeQuery(QueryBuilder $queryBuilder): array
-    {
-        if(method_exists($queryBuilder, 'fetchAllAssociative')) {
-            return $queryBuilder->executeQuery()->fetchAllAssociative();
-        } else {
-            return $queryBuilder->executeQuery()->fetchAll();
-        }
-    }
-    
-    
     public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
     {
         $data = [
@@ -77,12 +68,11 @@ class GambioConnectService implements GambioConnectServiceInterface
             'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
-        
-        if($language) {
+
+        if ($language) {
             $data['items'][0]['language_id'] = $language->code();
         }
-        
+
         return $data;
     }
-    
 }
