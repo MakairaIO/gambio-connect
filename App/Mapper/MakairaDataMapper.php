@@ -69,7 +69,7 @@ class MakairaDataMapper
             ->setPrice($data['products_price'])
             ->setIsVariant(false)
             ->setTitle($data['products_description']['products_name'])
-            ->setEan($data['products_item_codes']['code_mpn'])
+            ->setEan($data['products_item_codes']['code_mpn'] ?? '')
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
             ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
