@@ -40,9 +40,10 @@ class MakairaProduct extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
-             /* Makaira fields */
-             ...parent::toArray(),
+        return array_merge(
+            /* Makaira fields */
+            parent::toArray(),
+            [
 
              /* Integer fields */
              'stock' => $this->stock,
@@ -74,7 +75,7 @@ class MakairaProduct extends MakairaEntity
              'mak_boost_norm_rating' => $this->makBoostNormRating,
              'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
              'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
-        ];
+        ]);
     }
 
 

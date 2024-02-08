@@ -20,13 +20,16 @@ class MakairaVariant extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
-             /* Makaira fields */
-             ...parent::toArray(),
+        return array_merge(
+        /* Makaira fields */
+            parent::toArray(),
+            [
 
-             /* Product fields */
 
-        ];
+                /* Product fields */
+
+            ]
+        );
     }
 
 

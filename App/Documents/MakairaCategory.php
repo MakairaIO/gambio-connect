@@ -19,19 +19,22 @@ class MakairaCategory extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
+        return array_merge(
             /* Makaira fields */
-            ...parent::toArray(),
+            parent::toArray(),
+            [
 
-            /* Category fields */
-            'depth' => $this->getDepth(),
-            'sort' => $this->getSort(),
-            'category_title' => $this->getCategoryTitle(),
-            'hierarchy' => $this->getHierarchy(),
-            'url' => $this->getUrl(),
-            'subcategories' => $this->getSubCategories(),
-            'selfLinks' => $this->getSelfLinks(),
-        ];
+
+                /* Category fields */
+                'depth' => $this->getDepth(),
+                'sort' => $this->getSort(),
+                'category_title' => $this->getCategoryTitle(),
+                'hierarchy' => $this->getHierarchy(),
+                'url' => $this->getUrl(),
+                'subcategories' => $this->getSubCategories(),
+                'selfLinks' => $this->getSelfLinks(),
+            ]
+        );
     }
 
 
