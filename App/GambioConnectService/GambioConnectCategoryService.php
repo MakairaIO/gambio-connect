@@ -71,19 +71,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             . $response->getStatusCode());
     }
 
-
-    public function replace(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-
-
-    public function switch(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-
-
     /**
      * @param Language $language
      *
