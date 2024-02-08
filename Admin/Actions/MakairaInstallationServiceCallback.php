@@ -16,27 +16,41 @@ class MakairaInstallationServiceCallback extends AbstractAction
         protected GambioConnectManufacturerService $gambioConnectManufacturerService,
         protected GambioConnectCategoryService $gambioConnectCategoryService,
         protected GambioConnectProductService $gambioConnectProductService
-    ) { }
-   
+    ) {
+    }
+
     /**
      * @inheritDoc
      */
     public function handle(Request $request, Response $response): Response
     {
         $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
-        
+
         $configurationService->save('modules/MakairaGambioConnect/makairaUrl', $request->getParsedBodyParam('url'));
-        
-        $configurationService->save('modules/MakairaGambioConnect/makairaInstance', $request->getParsedBodyParam('instance'));
-        
-        $configurationService->save('modules/MakairaGambioConnect/makairaSecret', $request->getParsedBodyParam('sharedSecret'));
-       
+
+        $configurationService->save(
+            'modules/MakairaGambioConnect/makairaInstance',
+            $request->getParsedBodyParam('instance')
+        );
+
+        $configurationService->save(
+            'modules/MakairaGambioConnect/makairaSecret',
+            $request->getParsedBodyParam('sharedSecret')
+        );
+
         $this->gambioConnectManufacturerService->prepareExport();
-        
+
         $this->gambioConnectCategoryService->prepareExport();
-        
+
         $this->gambioConnectProductService->prepareExport();
-        
-        return $response->withJson(['success' => true]);
+
+        return $response->withJson(
+            [
+                'success' => true,
+                'received' => [
+                    $request->getParsedBody()
+                ]
+            ]
+        );
     }
 }
