@@ -2,6 +2,7 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
@@ -108,7 +109,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 ->setParameter('ids', implode(',', array_values($ids)));
         }
 
-        return $query->execute()->fetchAllAssociative();
+        return $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
 
@@ -120,7 +121,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->where('parent_id = :categories_id')
             ->setParameter('categories_id', $category_id)
             ->execute()
-            ->fetchAllAssociative();
+            ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
 

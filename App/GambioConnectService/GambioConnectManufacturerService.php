@@ -2,6 +2,7 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
@@ -99,6 +100,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 ->setParameter('ids', implode(',', array_values($ids)));
         }
 
-        return $query->execute()->fetchAllAssociative();
+        return $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
     }
 }
