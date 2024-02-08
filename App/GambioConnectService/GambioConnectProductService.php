@@ -59,8 +59,15 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $products = $this->getQuery($language, $makairaChanges);
 
                 foreach ($products as $product) {
-                    $this->pushRevision($product);
-                    $this->exportIsDone($product['products_id'], 'product');
+                    try {
+                        $this->pushRevision($product);
+                        $this->exportIsDone($product['products_id'], 'product');
+                    }catch(\Exception $exception) {
+                        $this->logger->error("Product Export to Makaira Failed", [
+                            'id' => $product['products_id'],
+                            'message' => $exception->getMessage()
+                        ]);
+                    }
                 }
             }
         }

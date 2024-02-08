@@ -40,8 +40,15 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 $categories            = $this->getQuery($language, $makairaExports);
 
                 foreach ($categories as $category) {
-                    $this->pushRevision($category);
-                    $this->exportIsDone($category['categories_id'], 'category');
+                    try {
+                        $this->pushRevision($category);
+                        $this->exportIsDone($category['categories_id'], 'category');
+                    }catch(Exception $exception) {
+                        $this->logger->error("Category Export to Makaira Failed", [
+                            'id' => $category['categories_id'],
+                            'message' => $exception->getMessage()
+                        ]);
+                    }
                 }
             }
         }
