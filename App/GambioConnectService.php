@@ -59,9 +59,9 @@ class GambioConnectService implements GambioConnectServiceInterface
     public function executeQuery(QueryBuilder $queryBuilder): array
     {
         if(method_exists($queryBuilder, 'fetchAllAssociative')) {
-            return $queryBuilder->fetchAllAssociative();
+            return $queryBuilder->executeQuery()->fetchAllAssociative();
         } else {
-            return $queryBuilder->fetchAll();
+            return $queryBuilder->executeQuery()->fetchAll();
         }
     }
     
