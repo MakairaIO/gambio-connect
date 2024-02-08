@@ -26,7 +26,7 @@ class MakairaInstallationServiceController extends HttpViewController
             
             $this->configurationService->save('modules/MakairaGambioConnect/makairaInstance', $this->_getPostData('instance'));
             
-            $this->configurationService->save('modules/MakairaGambioConnect/makairaSecret', $this->_getPostData('secret'));
+            $this->configurationService->save('modules/MakairaGambioConnect/makairaSecret', $this->_getPostData('sharedSecret'));
             
         }
         
