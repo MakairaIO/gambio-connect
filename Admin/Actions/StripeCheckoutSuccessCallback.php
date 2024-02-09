@@ -45,7 +45,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
-        $installationService->setShopUrl(HTTP_SERVER . DIR_WS_CATALOG);
+        $installationService->setShopUrl($this->url->base());
         $installationService->setSubdomain(strtolower($subdomain));
         $installationService->setCallbackUri($this->url->base() .'/shop.php?do=MakairaInstallationService');
         $installationService->setOptions([
