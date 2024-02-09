@@ -31,10 +31,11 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 
     private function mapMakairaResponse(array $items): array
     {
-        $data = [];
+        $preparedData = [];
+
         foreach($items as $item) {
             $fields = $item['fields'];
-            $data[]['PRODUCTS'][$item['id']] = array_merge(
+            $preparedData[] = array_merge(
                 [
                     'products_id' => $item['id'],
                 ],
@@ -52,8 +53,13 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                     'products_vpe_status' => $fields['products_vpe_status'],
                     'sort_order' => $fields['sort_order']
                 ]
-
             );
+        }
+
+        $data = [];
+
+        foreach($preparedData as $preparedDataItem) {
+            $data[]['PRODUCTS'][] = $this->coo_product->buildDataArray($preparedDataItem);
         }
         return $data;
     }
