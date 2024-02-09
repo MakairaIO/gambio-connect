@@ -29,17 +29,17 @@ class MakairaProduct extends MakairaEntity
     private string $mainCategoryUrl = '';
     private string $manufacturerId = '';
     private string $manufacturerTitle = '';
-    
+
     private bool $fsk18 = false;
-    
+
     private int $taxClassId = 0;
-    
+
     private string $gmAltText = '';
-    
+
     private int $productsVpe = 0;
-    
+
     private int $productsVpeStatus = 0;
-    
+
     private float $productsVpeValue = 0;
 
     /* Special makaira fields */
@@ -52,9 +52,10 @@ class MakairaProduct extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
-             /* Makaira fields */
-             ...parent::toArray(),
+        return array_merge(
+            /* Makaira fields */
+            parent::toArray(),
+            [
 
              /* Integer fields */
              'stock' => $this->stock,
@@ -66,6 +67,7 @@ class MakairaProduct extends MakairaEntity
 
              /* Boolean fields */
              'is_variant' => $this->isVariant,
+             'onstock' => $this->getStock() > 0,
              'fsk_18' => $this->fsk18,
 
              /* Array fields */
@@ -92,7 +94,7 @@ class MakairaProduct extends MakairaEntity
              'mak_boost_norm_rating' => $this->makBoostNormRating,
              'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
              'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
-        ];
+        ]);
     }
 
 
@@ -420,91 +422,91 @@ class MakairaProduct extends MakairaEntity
         $this->makBoostNormProfitMargin = $makBoostNormProfitMargin;
         return $this;
     }
-    
-    
+
+
     public function setFsk18(bool $fsk18): static
     {
         $this->fsk18 = $fsk18;
-        
+
         return $this;
     }
-    
-    
+
+
     public function setTaxClassId(int $taxClassId): static
     {
         $this->taxClassId = $taxClassId;
-        
+
         return $this;
     }
-    
-    
+
+
     public function setGmAltText(string $gmAltText): static
     {
         $this->gmAltText = $gmAltText;
-        
+
         return $this;
     }
-    
-    
+
+
     public function setProductsVpe(int $productsVpe): static
     {
         $this->productsVpe = $productsVpe;
-        
+
         return $this;
     }
-    
-    
+
+
     public function setProductsVpeStatus(int $productsVpeStatus): static
     {
         $this->productsVpeStatus = $productsVpeStatus;
-        
+
         return $this;
     }
-    
-    
+
+
     public function setProductsVpeValue(float $productsVpeValue): static
     {
         $this->productsVpeValue = $productsVpeValue;
-        
+
         return $this;
     }
-    
-    
+
+
     public function isFsk18(): bool
     {
         return $this->fsk18;
     }
-    
-    
+
+
     public function getTaxClassId(): int
     {
         return $this->taxClassId;
     }
-    
-    
+
+
     public function getGmAltText(): string
     {
         return $this->gmAltText;
     }
-    
-    
+
+
     public function getProductsVpe(): int
     {
         return $this->productsVpe;
     }
-    
-    
+
+
     public function getProductsVpeStatus(): int
     {
         return $this->productsVpeStatus;
     }
-    
-    
+
+
     public function getProductsVpeValue(): int
     {
         return $this->productsVpeValue;
     }
-    
-    
+
+
 
 }

@@ -20,13 +20,13 @@ class MakairaInstallationServiceController extends HttpViewController
 
     public function actionDefault(): \JsonHttpControllerResponse
     {
-        if($this->configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession')->value() === $this->_getPostData('checkoutSession')) {
+        if($this->configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession')->value() === $this->_getPostData('stripeCheckoutId')) {
             
             $this->configurationService->save('modules/MakairaGambioConnect/makairaUrl', $this->_getPostData('url'));
             
             $this->configurationService->save('modules/MakairaGambioConnect/makairaInstance', $this->_getPostData('instance'));
             
-            $this->configurationService->save('modules/MakairaGambioConnect/makairaSecret', $this->_getPostData('secret'));
+            $this->configurationService->save('modules/MakairaGambioConnect/makairaSecret', $this->_getPostData('sharedSecret'));
             
         }
         

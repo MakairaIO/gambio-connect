@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
@@ -12,6 +13,7 @@ use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 
 /**
  * Class GambioConnectService
@@ -42,12 +44,12 @@ class GambioConnectService implements GambioConnectServiceInterface
             'type' => $type
         ]);
     }
-    
-    protected function getEntitiesForExport(string $type) : array
+
+    protected function getEntitiesForExport(string $type): array
     {
         return $this->getMakairaChangesForType($type);
     }
-    
+
     private function getMakairaChangesForType(string $type): array
     {
         return $this->connection->createQueryBuilder()
@@ -55,18 +57,18 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->from(ChangesService::TABLE_NAME)
             ->where('type = :type')
             ->setParameter('type', $type)
-            ->fetchAllAssociative();
+            ->execute()
+            ->fetchAll(FetchMode::ASSOCIATIVE);
     }
-    
-    
-    public function addMakairaDocumentWrapper(MakairaEntity $document, Language $language = null): array
+
+    public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
     {
         return [
             'data' => $document->toArray(),
             'language_id' => $language->code()
         ];
     }
-    
+
     public function addMultipleMakairaDocuments(array $documents, ?Language $language = null): array
     {
         $data = [
@@ -81,5 +83,14 @@ class GambioConnectService implements GambioConnectServiceInterface
         
         return $data;
     }
-    
+
+    public function replace(): void
+    {
+        $this->client->rebuild(['products']);
+    }
+
+    public function switch(): void
+    {
+        $this->client->switch(['products']);
+    }
 }

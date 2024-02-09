@@ -2,6 +2,7 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
@@ -13,8 +14,8 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 class GambioConnectCategoryService extends GambioConnectService implements GambioConnectEntityInterface
 {
     private Language $currentLanguage;
-    
-    
+
+
     public function prepareExport(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -30,19 +31,31 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     
     public function export(): void
     {
+        $languages = $this->languageReadService->getLanguages();
+
         $makairaExports = $this->getEntitiesForExport('category');
+
+        if (!empty($makairaExports)) {
 
         $languages = $this->languageReadService->getLanguages();
 
-        if(!empty($makairaExports)) {
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $categories            = $this->getQuery($language, $makairaExports);
 
+
                 $documents = [];
-                
+
                 foreach ($categories as $category) {
-                    $documents[] = $this->pushRevision($category);
+                    try {
+                        $documents[] = $this->pushRevision($category);
+                    }catch(Exception $exception) {
+                        $this->logger->error("Category Export to Makaira Failed", [
+                            'id' => $category['categories_id'],
+                            'message' => $exception->getMessage()
+                        ]);
+                    }
+
                 }
                 $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
                 $response = $this->client->push_revision($data);
@@ -64,20 +77,8 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         return MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
     }
-    
-    
-    public function replace(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-    
-    
-    public function switch(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-    
-    
+
+
     /**
      * @param Language $language
      *
@@ -89,24 +90,27 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $query = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('categories')
-            ->leftJoin('categories',
-                       'categories_description',
-                       'categories_description',
-                       'categories.categories_id = categories_description.categories_id')
-            ->leftJoin('categories_description',
-                       'languages',
-                       'languages',
-                       'categories_description.language_id = languages.languages_id')
+            ->leftJoin(
+                'categories',
+                'categories_description',
+                'categories_description',
+                'categories.categories_id = categories_description.categories_id'
+            )
+            ->leftJoin(
+                'categories_description',
+                'languages',
+                'languages',
+                'categories_description.language_id = languages.languages_id'
+            )
             ->where('categories_description.language_id = :languageId')
             ->setParameter('languageId', $language->id());
-        
-        if(!empty($makairaChanges)) {
-            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
-            $query->where('categories.categories_id IN (:ids)')
-                ->setParameter('ids', implode(',', array_values($ids)));
+
+        if (!empty($makairaChanges)) {
+            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
+            $query->add('where', $query->expr()->in('categories.categories_id', array_values($ids)), true);
         }
-        
-        return $query->fetchAllAssociative();
+
+        return array_filter($query->execute()->fetchAll(FetchMode::ASSOCIATIVE), fn(array $category) => $category['language_id'] == $language->id());
     }
     
     
@@ -117,10 +121,11 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->from('categories')
             ->where('parent_id = :categories_id')
             ->setParameter('categories_id', $category_id)
-            ->fetchAllAssociative();
+            ->execute()
+            ->fetchAll(FetchMode::ASSOCIATIVE);
     }
-    
-    
+
+
     private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array
     {
         if (empty($category['parent_id'])) {
@@ -137,6 +142,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->from('categories')
             ->where('categories_id = :parent_id')
             ->setParameter('parent_id', $category['parent_id'])
+            ->execute()
             ->fetchAssociative();
         
         if (empty($hierarchy)) {

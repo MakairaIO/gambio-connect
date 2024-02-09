@@ -9,8 +9,12 @@ use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
+use Gambio\Core\Application\Application;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
+use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
+use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
@@ -20,6 +24,7 @@ use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
+use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
@@ -46,6 +51,9 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
     public function provides(): array
     {
         return [
+            MakairaCheckoutAction::class,
+            StripeCheckoutSuccessCallback::class,
+            StripeCheckoutCancelCallback::class,
             GambioConnectInstaller::class,
             GambioConnectOverview::class,
             GambioConnectDocument::class,
@@ -66,7 +74,17 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
      */
     public function register(): void
     {
-        $this->application->registerShared(GambioConnectOverview::class);
+        $this->application->registerShared(MakairaCheckoutAction::class)
+            ->addArgument($this->application);
+
+        $this->application->registerShared(StripeCheckoutSuccessCallback::class)
+            ->addArgument($this->application);
+
+        $this->application->registerShared(StripeCheckoutCancelCallback::class)
+            ->addArgument($this->application);
+
+        $this->application->registerShared(GambioConnectOverview::class)
+            ->addArgument($this->application);
         $this->application->registerShared(GambioConnectDocument::class);
         $this->application->registerShared(GambioConnectWelcome::class);
         $this->application->registerShared(GambioConnectAccount::class);
@@ -78,9 +96,19 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(GambioConnectProductService::class)
             ->addArgument(GambioConnectManufacturerService::class);
 
+        $this->application->registerShared(ReplaceAction::class)
+            ->addArgument(GambioConnectService::class);
+
         $this->application->registerShared(MakairaLogger::class);
+
         $this->application->registerShared(MakairaClient::class)
             ->addArgument(ConfigurationFinder::class);
+
+        $this->application->registerShared(GambioConnectService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(GambioConnectProductService::class)
             ->addArgument(MakairaClient::class)

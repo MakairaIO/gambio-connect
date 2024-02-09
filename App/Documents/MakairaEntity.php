@@ -16,8 +16,7 @@ class MakairaEntity
 
     private bool $active = true;
     private bool $searchable = true;
-    private bool   $hidden  = false;
-    protected bool $onStock = true;
+    private bool $hidden = false;
 
     private string $pictureUrlMain = '';
 
@@ -31,7 +30,6 @@ class MakairaEntity
             'active' => $this->active,
             'searchable' => $this->searchable,
             'hidden' => $this->hidden,
-            'onStock' => $this->onStock,
             'picture_url_main' => $this->pictureUrlMain,
         ];
     }
@@ -119,21 +117,6 @@ class MakairaEntity
 
         return $this;
     }
-
-
-    public function isOnStock(): bool
-    {
-        return $this->onStock;
-    }
-
-
-    public function setOnStock(bool $onStock): MakairaEntity
-    {
-        $this->onStock = $onStock;
-
-        return $this;
-    }
-
 
     public function getPictureUrlMain(): string
     {

@@ -53,7 +53,7 @@ class StripeService
     
     public function setSuccessUrl(string $successUrl): static
     {
-        $this->successUrl = 'http://' . $successUrl;
+        $this->successUrl = $successUrl;
         
         return $this;
     }
@@ -61,7 +61,7 @@ class StripeService
     
     public function setCancelUrl(string $cancelUrl): static
     {
-        $this->cancelUrl = 'http://' . $cancelUrl;
+        $this->cancelUrl = $cancelUrl;
         
         return $this;
     }

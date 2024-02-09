@@ -20,21 +20,22 @@ class MakairaManufacturer extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
-            /* MAKAIRA fields */
-            ...parent::toArray(),
-
-            /* Manufacturer fields */
-            'manufacturer_title' => $this->manufacturerTitle,
-            'meta_title' => $this->metaTitle,
-            'meta_description' => $this->metaDescription,
-            'meta_keywords' => $this->metaKeywords,
-            'remote_url' => $this->remoteUrl,
-            'is_url_clicked' => $this->isUrlClicked,
-            'created_at' => $this->createdAt,
-            'updated_at' => $this->updatedAt,
-            'last_clicked_at' => $this->lastClickedAt,
-        ];
+        return array_merge(
+        /* MAKAIRA fields */
+            parent::toArray(),
+            [
+                /* Manufacturer fields */
+                'manufacturer_title' => $this->manufacturerTitle,
+                'meta_title' => $this->metaTitle,
+                'meta_description' => $this->metaDescription,
+                'meta_keywords' => $this->metaKeywords,
+                'remote_url' => $this->remoteUrl,
+                'is_url_clicked' => $this->isUrlClicked,
+                'created_at' => $this->createdAt,
+                'updated_at' => $this->updatedAt,
+                'last_clicked_at' => $this->lastClickedAt,
+            ]
+        );
     }
 
 

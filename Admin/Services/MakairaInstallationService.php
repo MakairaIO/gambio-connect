@@ -7,13 +7,13 @@ use Psr\Http\Message\ResponseInterface;
 
 class MakairaInstallationService
 {
-    //private const URL = 'http://register.makaira.vm/api/register';
+    private const URL = 'https://registration.makaira.io/';
     
-    private const URL = 'http://register.makaira.vm/';
+    //private const URL = 'http://register.makaira.vm/';
     
     private const USERNAME = 'gambio';
     
-    private const PASSWORD = '6hmtyEQEhecyN2oEDBrZ';
+    private const PASSWORD = '73P9gKB7KR8DA8KxNHbm';
     
     private string $source = 'gambio';
     
@@ -23,13 +23,17 @@ class MakairaInstallationService
         private string    $email = '',
         private string    $subdomain = '',
         private string    $shopUrl = '',
-        private string    $checkoutSessionId = ''
+        private string    $checkoutSessionId = '',
+        private string    $callbackUri = '',
+        private array     $options = []
     ) {
         $this->client = new Client([
                                        'base_uri' => self::URL,
-                                       'headers'  => [
-                                           'Authorization' => 'BASIC ' . self::USERNAME . ' ' . self::PASSWORD,
-                                       ],
+                                       'auth' => [
+                                           self::USERNAME,
+                                           self::PASSWORD,
+                                           'basic'
+                                       ]
                                    ]);
     }
     
@@ -63,6 +67,13 @@ class MakairaInstallationService
         
         return $this;
     }
+
+    public function setOptions(array $options): static
+    {
+        $this->options = $options;
+
+        return $this;
+    }
     
     
     public function callRegistrationService(): ResponseInterface
@@ -73,8 +84,9 @@ class MakairaInstallationService
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
                                       'shop_url'           => $this->shopUrl,
-                                      'stripe_checkout_id' => $this->checkoutSessionId,
+                                      'checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
+                                      'options'            => $this->options,
                                   ]),
         ]);
     }
