@@ -135,7 +135,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->where('categories_id = :parent_id')
             ->setParameter('parent_id', $category['parent_id'])
             ->execute()
-            ->fetchAssociative();
+            ->fetchAll(FetchMode::ASSOCIATIVE);
 
         if (empty($hierarchy)) {
             $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
