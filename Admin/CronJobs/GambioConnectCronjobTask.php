@@ -56,6 +56,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo('All Exports to PersistenceLayer Successful');
             };
         }
+        return function() {};
     }
 
 
