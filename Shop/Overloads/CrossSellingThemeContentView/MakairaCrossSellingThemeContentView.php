@@ -59,7 +59,7 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
         $data = [];
 
         foreach($preparedData as $preparedDataItem) {
-            $data[]['PRODUCTS'][] = $this->coo_product->buildDataArray($preparedDataItem);
+            $data[0]['PRODUCTS'][] = $this->coo_product->buildDataArray($preparedDataItem);
         }
         return $data;
     }
