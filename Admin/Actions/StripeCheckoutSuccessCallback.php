@@ -30,17 +30,24 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $templatePath = __DIR__ . '/../../ui/template/stripe/success.html';
 
         $stripe = new StripeService();
-        
+
         $checkoutSessionId = $this->configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
         $checkoutSession = $stripe->getCheckoutSession($checkoutSessionId);
-        
+
         $email = $checkoutSession->customer_details->email;
-        
+
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $email);
 
         $subdomain = $request->getUri()->getHost() === 'stage.makaira.io'
             ? 'gambio'
             : str_replace(['http://', 'https://', '.'], ['', '', '-'], $request->getUri()->getHost());
+
+        $data = [
+            'email' => $email,
+            'shop_url' => $this->url->base(),
+            'subdomain' => strtolower($subdomain),
+            'instance_name' => strtolower($subdomain)
+        ];
         
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
@@ -55,9 +62,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
 
         $responseData = json_decode($installationServiceResponse->getBody()->getContents());
 
-        $data = [
-            'duration' => $responseData->estimate_duration_time
-        ];
+        $data['duration'] = $responseData->estimate_duration_time;
 
         $template = $this->render($pageTitle, $templatePath, $data);
 
