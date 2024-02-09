@@ -71,6 +71,18 @@ class MakairaRequest
           'constraints' => $requestBuilder->getConstraint(),
           'boosting' => [],
           'filter' => [],
+          'fields' => [
+              'gm_alt_text',
+              'title',
+              'longdesc',
+              'shortdesc',
+              'picture_url_main',
+              'fsk_18',
+              'price',
+              'products_vpe',
+              'products_vpe_status',
+              'products_vpe_value'
+          ]
       ];
       $uri = $this->makairaUrl . $this->getEndpoint('recommendation');
       $response = $this->request('POST', $uri, $body);

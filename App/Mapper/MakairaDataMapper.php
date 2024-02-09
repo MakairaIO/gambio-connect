@@ -104,8 +104,8 @@ class MakairaDataMapper
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
             ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
-    
-            ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
+            ->setSortOrder($data['products_xsell']['sort_order'] ?? 0)
+            ->setTaxClassId($data['products_tax_class_id'])
             ->setFsk18($data['fsk18'] ?? false)
             ->setTaxClassId($data['products_tax_class_id'])
             ->setGmAltText($data['products_description']['gm_alt_text'] ?? '')

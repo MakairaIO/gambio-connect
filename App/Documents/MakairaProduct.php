@@ -30,6 +30,8 @@ class MakairaProduct extends MakairaEntity
     private string $manufacturerId = '';
     private string $manufacturerTitle = '';
 
+    private int $sortOrder = 0;
+
     private bool $fsk18 = false;
 
     private int $taxClassId = 0;
@@ -505,6 +507,18 @@ class MakairaProduct extends MakairaEntity
     public function getProductsVpeValue(): int
     {
         return $this->productsVpeValue;
+    }
+
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): static
+    {
+        $this->sortOrder = $sortOrder;
+
+        return $this;
     }
 
 
