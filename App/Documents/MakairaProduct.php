@@ -51,6 +51,7 @@ class MakairaProduct extends MakairaEntity
 
              /* Boolean fields */
              'is_variant' => $this->isVariant,
+             'onstock' => $this->stock > 0,
 
              /* Array fields */
              'attributes' => $this->attributes,
