@@ -45,7 +45,7 @@ class MakairaCheckoutAction extends AbstractAction
 
         $successUrl = $this->url->admin() . '/makaira/gambio-connect/stripe-checkout-success-callback';
 
-        $cancelUrl = $this->url->admin() . '/makaira/gambio-connect/stripe-checkout-cancel-callback';
+        $cancelUrl = $this->url->admin() . '/makaira/welcome';
         
         $stripeService->setSuccessUrl($successUrl);
         
