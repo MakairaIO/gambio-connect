@@ -23,6 +23,7 @@ use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
+use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
@@ -95,9 +96,19 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(GambioConnectProductService::class)
             ->addArgument(GambioConnectManufacturerService::class);
 
+        $this->application->registerShared(ReplaceAction::class)
+            ->addArgument(GambioConnectService::class);
+
         $this->application->registerShared(MakairaLogger::class);
+
         $this->application->registerShared(MakairaClient::class)
             ->addArgument(ConfigurationFinder::class);
+
+        $this->application->registerShared(GambioConnectService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(GambioConnectProductService::class)
             ->addArgument(MakairaClient::class)

@@ -72,16 +72,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         }
     }
 
-    public function replace(): void
-    {
-        $this->client->rebuild(['products']);
-    }
-
-    public function switch(): void
-    {
-        $this->client->switch(['products']);
-    }
-
     public function pushRevision(array $product): void
     {
         $makairaProduct = MakairaDataMapper::mapProduct($product);

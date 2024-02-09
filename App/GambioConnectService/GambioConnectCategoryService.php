@@ -71,19 +71,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             . $response->getStatusCode());
     }
 
-
-    public function replace(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-
-
-    public function switch(): void
-    {
-        $this->client->rebuild(['category']);
-    }
-
-
     /**
      * @param Language $language
      *
@@ -112,11 +99,10 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->where('categories.categories_id IN (:ids)')
-                ->setParameter('ids', implode(',', array_values($ids)));
+            $query->add('where', $query->expr()->in('categories.categories_id', array_values($ids)), true);
         }
 
-        return $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
+        return array_filter($query->execute()->fetchAll(FetchMode::ASSOCIATIVE), fn(array $category) => $category['language_id'] == $language->id());
     }
 
 

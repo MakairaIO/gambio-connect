@@ -56,6 +56,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo('All Exports to PersistenceLayer Successful');
             };
         }
+        return function() {};
     }
 
 
@@ -108,30 +109,28 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
         $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession');
         $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride');
-        if (!$stripeOverride) {
-            $this->logInfo('Stripe Override is not active');
-            if ($stripeCheckoutId) {
-                $this->logInfo('Stripe Subscription ID found');
-                $stripe = new StripeService();
-                $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
-                $isPaid = $checkoutSession->payment_status === "paid";
-                if ($isPaid) {
-                    $this->logInfo("Stripe Subscription Status is Paid");
-                }
-                $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
-                if ($installed) {
-                    $this->logInfo('Module is Installed');
-                }
-                $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
-                if ($active) {
-                    $this->logInfo('Module is Active');
-                }
-                return $installed && $active && $isPaid;
+        if($stripeCheckoutId) {
+            $this->logInfo('Stripe Subscription ID found');
+            $stripe = new StripeService();
+            $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+            $isPaid = $checkoutSession->payment_status === "paid";
+            if ($isPaid) {
+                $this->logInfo("Stripe Subscription Status is Paid");
             }
+            $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+            if ($installed) {
+                $this->logInfo('Module is Installed');
+            }
+            $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
+            if ($active) {
+                $this->logInfo('Module is Active');
+            }
+            return $installed && $active && $isPaid;
+        }
+        if ($stripeOverride) {
+            $this->logInfo('Stripe Override is not active');
             $this->logInfo('No Stripe Subscription ID found');
-        } elseif ($stripeOverride && $stripeCheckoutId) {
-            $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
-            return false;
+            return true;
         }
 
         return false;

@@ -75,4 +75,14 @@ class GambioConnectService implements GambioConnectServiceInterface
 
         return $data;
     }
+
+    public function replace(): void
+    {
+        $this->client->rebuild(['products']);
+    }
+
+    public function switch(): void
+    {
+        $this->client->switch(['products']);
+    }
 }
