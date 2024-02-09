@@ -8,6 +8,7 @@ use Doctrine\DBAL\Connection;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
 use Gambio\Core\Application\Application;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
@@ -36,7 +37,6 @@ use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\App\Utils\ModuleConfig;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
 use Gambio\Core\Language\Services\LanguageService;
-use Stripe\Checkout\Session;
 
 /**
  * Class GambioConnectServiceProvider
@@ -114,19 +114,22 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ProductVariantsRepository::class);
 
         $this->application->registerShared(GambioConnectCategoryService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ProductVariantsRepository::class);
 
         $this->application->registerShared(GambioConnectManufacturerService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ProductVariantsRepository::class);
 
         $this->application->registerShared(ChangesService::class)
             ->addArgument(Connection::class);

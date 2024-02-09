@@ -15,6 +15,7 @@ class RequestBuilder
     $constraints = [
       'query.shop_id'   =>  "1",
       'query.use_stock'   =>  true,
+        'query.original_keys' => true,
       'oi.user.agent'   =>  $this->getUserAgent(),
       'oi.user.ip'    =>  $this->getIpAddress(),
       'oi.user.timezone'    =>  $this->getTimeZone(),
@@ -23,10 +24,12 @@ class RequestBuilder
 
     if ($this->language) {
       $constraints['query.language'] = $this->language;
+      $constraints['query.group'] = strtoupper($this->language);
     }
 
     if ($additionalConstraints?->language) {
       $constraints['query.language'] = $additionalConstraints->language;
+      $constraints['query.group'] = strtoupper($additionalConstraints->language);
     }
 
     return $constraints;

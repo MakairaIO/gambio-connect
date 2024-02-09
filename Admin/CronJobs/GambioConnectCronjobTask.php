@@ -21,21 +21,24 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
             );
 
             $this->gambioConnectCategoryService = new GambioConnectCategoryService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
             );
 
             $this->gambioConnectProductService = new GambioConnectProductService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
             );
 
             return function () {
