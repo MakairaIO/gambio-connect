@@ -58,7 +58,13 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $installationService->setOptions([
             'instance_name' => strtolower($subdomain)
         ]);
-        $installationServiceResponse = $installationService->callRegistrationService();
+        try {
+            $installationServiceResponse = $installationService->callRegistrationService();
+        }catch(\Exception $exception) {
+            $data['duration'] = 'Error';
+            $template = $this->render($pageTitle, $templatePath, $data);
+            return $response->write($template);
+        }
 
         $responseData = json_decode($installationServiceResponse->getBody()->getContents());
 
