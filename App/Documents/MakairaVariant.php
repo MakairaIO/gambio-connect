@@ -169,6 +169,12 @@ class MakairaVariant extends MakairaEntity
     {
         return $this->onStock;
     }
+    
+    public function setOnstock(bool $onStock): static
+    {
+        $this->onStock = $onStock;
+        return $this;
+    }
 
 
     public function getPictureUrlMain(): string

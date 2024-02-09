@@ -78,7 +78,7 @@ class MakairaDataMapper
             ->setEan($product['products_item_codes']['products_mpn'] ?? '')
             ->setIsVariant(true)
             ->setStock($variant->stock())
-            ->setOnStock($variant->stock() > 1)
+            ->setOnstock($variant->stock() > 1)
             ->setMetaDescription($product['products_description']['products_meta_description'])
             ->setMetaKeywords($product['products_description']['products_meta_keywords'])
             ->setMaincategory($productDocument->getMainCategory())
