@@ -15,14 +15,13 @@ use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
+use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectAccount;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectOverview;
 use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
@@ -34,9 +33,14 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufa
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
-use GXModules\Makaira\GambioConnect\App\Utils\ModuleConfig;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
 use Gambio\Core\Language\Services\LanguageService;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
+use Stripe\Checkout\Session;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 
 /**
  * Class GambioConnectServiceProvider
@@ -55,7 +59,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             StripeCheckoutSuccessCallback::class,
             StripeCheckoutCancelCallback::class,
             GambioConnectInstaller::class,
-            GambioConnectOverview::class,
+            GambioConnectEntry::class,
+            GambioConnectManualSetup::class,
             GambioConnectDocument::class,
             GambioConnectWelcome::class,
             GambioConnectAccount::class,
@@ -64,7 +69,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             VariantUpdateEventListener::class,
             LanguageService::class,
             MakairaRequest::class,
-            ModuleConfig::class
+            ModuleConfigService::class,
+            ModuleStatusService::class
         ];
     }
 
@@ -83,11 +89,17 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(StripeCheckoutCancelCallback::class)
             ->addArgument($this->application);
 
-        $this->application->registerShared(GambioConnectOverview::class)
-            ->addArgument($this->application);
+        $this->application->registerShared(GambioConnectEntry::class)
+            ->addArgument(ModuleStatusService::class);
+
+        $this->application->registerShared(GambioConnectManualSetup::class)
+            ->addArgument(ModuleConfigService::class);
+
         $this->application->registerShared(GambioConnectDocument::class);
-        $this->application->registerShared(GambioConnectWelcome::class);
-        $this->application->registerShared(GambioConnectAccount::class);
+        $this->application->registerShared(GambioConnectWelcome::class)
+            ->addArgument(ModuleStatusService::class);
+        $this->application->registerShared(GambioConnectAccount::class)
+            ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(GambioConnectFAQ::class);
 
 
@@ -143,8 +155,11 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectInstaller::class)
             ->addArgument(Connection::class);
 
-        $this->application->registerShared(ModuleConfig::class)
-            ->addArgument(ConfigurationFinder::class);
+        $this->application->registerShared(ModuleConfigService::class)
+            ->addArgument(ConfigurationService::class);
+
+        $this->application->registerShared(ModuleStatusService::class)
+            ->addArgument(ModuleConfigService::class);
     }
 
     public function boot(): void
