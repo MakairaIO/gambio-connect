@@ -3,6 +3,7 @@
 namespace GXModules\Makaira\GambioConnect\Service;
 
 use Gambio\Admin\Modules\Language\Model\Language;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 
 interface GambioConnectEntityInterface
 {
@@ -10,7 +11,7 @@ interface GambioConnectEntityInterface
     
     public function prepareExport(): void;
     
-    public function pushRevision(array $entity): void;
+    public function pushRevision(array $entity): MakairaEntity;
     
     public function getQuery(Language $language, array $makairaChanges = []): array;
 }

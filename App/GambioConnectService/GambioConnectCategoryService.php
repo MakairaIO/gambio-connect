@@ -6,6 +6,7 @@ use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
@@ -27,7 +28,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             }
         }
     }
-
+    
     public function export(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -35,41 +36,48 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $makairaExports = $this->getEntitiesForExport('category');
 
         if (!empty($makairaExports)) {
+
+        $languages = $this->languageReadService->getLanguages();
+
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $categories            = $this->getQuery($language, $makairaExports);
 
+
+                $documents = [];
+
                 foreach ($categories as $category) {
                     try {
-                        $this->pushRevision($category);
-                        $this->exportIsDone($category['categories_id'], 'category');
+                        $documents[] = $this->pushRevision($category);
                     }catch(Exception $exception) {
                         $this->logger->error("Category Export to Makaira Failed", [
                             'id' => $category['categories_id'],
                             'message' => $exception->getMessage()
                         ]);
                     }
+
+                }
+                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+                $response = $this->client->push_revision($data);
+                $this->logger->info('Makaira Category Documents: ' . count($documents) . ' with Status Code ' . $response->getStatusCode());
+                foreach($categories as $category) {
+                    $this->exportIsDone($category['categories_id'], 'category');
                 }
             }
         }
     }
-
-
+    
+    
     /**
      * @throws Exception
      */
-    public function pushRevision(array $category): void
+    public function pushRevision(array $category): MakairaCategory
     {
         $hierarchy = $this->calculateCategoryDepth($category);
 
-        $makairaCategory = MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
-        $data            = $this->addMakairaDocumentWrapper($makairaCategory, $this->currentLanguage);
-
-        $response = $this->client->push_revision($data);
-
-        $this->logger->info("Makaira Categories Status for " . $category['categories_id'] . ": "
-            . $response->getStatusCode());
+        return MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
     }
+
 
     /**
      * @param Language $language
@@ -104,8 +112,8 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         return array_filter($query->execute()->fetchAll(FetchMode::ASSOCIATIVE), fn(array $category) => $category['language_id'] == $language->id());
     }
-
-
+    
+    
     private function getSubcategories(int $category_id): array
     {
         return $this->connection->createQueryBuilder()
@@ -126,9 +134,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 'hierarchy' => empty($hierarchy) ? $category['categories_id'] : $hierarchy,
             ];
         }
-
+        
         $depth += 1;
-
+        
         $parentCategory = $this->connection->createQueryBuilder()
             ->select('categories_id, parent_id')
             ->from('categories')
@@ -136,13 +144,12 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->setParameter('parent_id', $category['parent_id'])
             ->execute()
             ->fetchAll(FetchMode::ASSOCIATIVE);
-
         if (empty($hierarchy)) {
             $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
         } else {
             $hierarchy = $parentCategory['categories_id'] . '//' . $hierarchy;
         }
-
+        
         return $this->calculateCategoryDepth($parentCategory, $depth, $hierarchy);
     }
 }

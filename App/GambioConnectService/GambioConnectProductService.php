@@ -6,6 +6,8 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
@@ -13,9 +15,9 @@ use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-
+    
     public Language $currentLanguage;
-
+    
     public static array $productRelationTables = [
         'products_attributes',
         'products_content',
@@ -33,7 +35,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         'products_to_categories',
         'products_xsell'
     ];
-
+    
     public function prepareExport(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -46,7 +48,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             }
         }
     }
-
+    
     public function export(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -58,32 +60,48 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $this->currentLanguage = $language;
                 $products = $this->getQuery($language, $makairaChanges);
 
+                $documents = [];
+
                 foreach ($products as $product) {
                     try {
-                        $this->pushRevision($product);
-                        $this->exportIsDone($product['products_id'], 'product');
+                    $documents[] = $this->pushRevision($product);
+
+                    $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
+
+                    $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
+
+                    foreach($variants as $variant) {
+                        $documents[] = MakairaDataMapper::mapVariant($product,$variant);
+                    }
+
+                    foreach($documents as $document) {
+                        $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
+                            'data' => $document->getId()
+                        ]);
+                    }
+
                     }catch(\Exception $exception) {
                         $this->logger->error("Product Export to Makaira Failed", [
                             'id' => $product['products_id'],
                             'message' => $exception->getMessage()
                         ]);
                     }
+
+                    $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+
+                    $this->client->push_revision($data);
+
+                    $this->exportIsDone($product['products_id'], 'product');
                 }
             }
         }
     }
-
-    public function pushRevision(array $product): void
+    
+    public function pushRevision(array $product): MakairaEntity
     {
-        $makairaProduct = MakairaDataMapper::mapProduct($product);
-
-        $data = $this->addMakairaDocumentWrapper($makairaProduct, $this->currentLanguage);
-
-        $response = $this->client->push_revision($data);
-
-        $this->logger->info('Makaira Product Status for: ' . $product['products_id'] . ': ' . $response->getStatusCode());
+        return MakairaDataMapper::mapProduct($product);
     }
-
+    
     public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()

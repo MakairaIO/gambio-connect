@@ -46,7 +46,7 @@ class MakairaRequest
   }
 
   public function fetchAutoSuggest(string $searchPhrase) {
-    $requestBuilder = new RequestBuilder('de');
+    $requestBuilder = new RequestBuilder($this->language);
     $body = [
       'searchPhrase' => $searchPhrase,
       'isSearch' => true,
@@ -60,6 +60,33 @@ class MakairaRequest
     $uri = $this->makairaUrl . $this->getEndpoint('search');
     $response = $this->request('POST', $uri, $body);
     return $response;
+  }
+  
+  public function fetchRecommendations(string $productId) {
+      $requestBuilder = new RequestBuilder($this->language);
+      $body = [
+          'recommendationId' => 'similar-products',
+          'productId' => [$productId],
+          'count' => 6,
+          'constraints' => $requestBuilder->getConstraint(),
+          'boosting' => [],
+          'filter' => [],
+          'fields' => [
+              'gm_alt_text',
+              'title',
+              'longdesc',
+              'shortdesc',
+              'picture_url_main',
+              'fsk_18',
+              'price',
+              'products_vpe',
+              'products_vpe_status',
+              'products_vpe_value'
+          ]
+      ];
+      $uri = $this->makairaUrl . $this->getEndpoint('recommendation');
+      $response = $this->request('POST', $uri, $body);
+      return $response;
   }
 
   public function getPageComponents($pageData) {
@@ -90,7 +117,7 @@ class MakairaRequest
         $options['json'] = $body;
       }
       $response = $this->client->request($method, $url, $options);
-      $body = $response->getBody()->getContents();;
+      $body = $response->getBody()->getContents();
       return json_decode($body, true);
     } catch (ServerException $e) {
       throw new \Exception('Request failed: Response: ' . $url . json_encode($body) . $e->getMessage());

@@ -4,10 +4,15 @@ namespace GXModules\Makaira\GambioConnect\App\Mapper;
 
 use DateTime;
 use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
+use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaVariant;
 
 class MakairaDataMapper
 {
@@ -57,12 +62,38 @@ class MakairaDataMapper
         return $transfer;
     }
     
+    public static function mapVariant(array $product, ProductVariant $variant): MakairaVariant
+    {
+        $productDocument = self::mapProduct($product);
+        $variantDocument = new MakairaVariant();
+        $variantDocument->setProduct($product);
+        $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
+        $variantDocument->setId($variant->id())
+            ->setShop(1)
+            ->setParent($product['products_id'])
+            ->setLongdesc($product['products_description']['products_description'])
+            ->setShortdesc($product['products_description']['products_short_description'])
+            ->setPrice((float)$product['products_price'])
+            ->setTitle($product['products_description']['products_name'])
+            ->setEan($product['products_item_codes']['products_mpn'] ?? '')
+            ->setIsVariant(true)
+            ->setStock($variant->stock())
+            ->setOnstock($variant->stock() > 1)
+            ->setMetaDescription($product['products_description']['products_meta_description'])
+            ->setMetaKeywords($product['products_description']['products_meta_keywords'])
+            ->setMaincategory($productDocument->getMainCategory())
+            ->setMaincategoryurl($productDocument->getMainCategoryUrl())
+            ->setPictureUrlMain($productDocument->getPictureUrlMain());
+        
+        return $variantDocument;
+    }
+    
     public static function mapProduct(array $data): MakairaProduct
     {
         $transfer = new MakairaProduct();
     
         $stock = 1;
-    
+        
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
@@ -73,7 +104,14 @@ class MakairaDataMapper
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
             ->setUrl('?'.xtc_product_link($data['products_id'], $data['products_description']['products_name']))
-    
+            ->setSortOrder($data['products_xsell']['sort_order'] ?? 0)
+            ->setTaxClassId($data['products_tax_class_id'])
+            ->setFsk18($data['fsk18'] ?? false)
+            ->setTaxClassId($data['products_tax_class_id'])
+            ->setGmAltText($data['products_description']['gm_alt_text'] ?? '')
+            ->setProductsVpe($data['products_vpe'])
+            ->setProductsVpeStatus($data['products_vpe_status'])
+            ->setProductsVpeValue($data['products_vpe_value'])
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
         
         return $transfer;
