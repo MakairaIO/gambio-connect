@@ -1,35 +1,55 @@
 [
-    {
-        "id": "makaira_gambio-connect",
-        "sort": 3,
-        "class": "fa fa-hand-sparkles",
+  {
+    "id": "makaira_gambio-connect",
+    "sort": 3,
+    "class": "fa fa-hand-sparkles",
+    "title": "general.title",
+    "if": {
+      "filter": "configActive",
+      "args": ["gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED"]
+    },
+    "items": [
+      {
+        "sort": 10,
+        "link": "makaira/welcome",
+        "title": "general.welcome"
+      },
+      {
+        "sort": 20,
+        "link": "makaira/gambio-connect",
         "title": "Makaira Gambio Connect",
-        "items": [
-            {
-                "sort": 10,
-                "link": "makaira/welcome",
-                "title": "Welcome"
-            },
-            {
-                "sort": 20,
-                "link": "makaira/gambio-connect",
-                "title": "Makaira Gambio Connect"
-            },
-            {
-                "sort": 30,
-                "link": "makaira/account",
-                "title": "My Account"
-            },
-            {
-                "sort": 40,
-                "link": "makaira/document",
-                "title": "Documentation"
-            },
-            {
-                "sort": 50,
-                "link": "makaira/faq",
-                "title": "FAQs"
-            }
-        ]
-    }
+        "if": {
+          "filter": "configActive",
+          "args": ["modules/MakairaGambioConnect/active"]
+        }
+      },
+      {
+        "sort": 30,
+        "link": "makaira/account",
+        "title": "general.my_account",
+        "if": {
+          "filter": "configActive",
+          "args": ["modules/MakairaGambioConnect/active"]
+        }
+      },
+      {
+        "sort": 40,
+        "link": "makaira/document",
+        "title": "general.document",
+        "if": {
+          "filter": "configActive",
+          "args": ["modules/MakairaGambioConnect/active"]
+        }
+      },
+      {
+        "sort": 50,
+        "link": "makaira/faq",
+        "title": "general.faq",
+        "if": {
+          "filter": "configActive",
+          "args": ["modules/MakairaGambioConnect/active"]
+        }
+      }
+    ]
+  }
 ]

@@ -1,0 +1,16 @@
+{extends file="layout.html"} {block name="content"} {load_language_text
+section="general"}
+
+<div class="d-flex flex-row align-items-center">
+    <div class="p-2">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <div class="p-2">
+        <p>{$txt.in_setup_description}</p>
+    </div>
+</div>
+
+
+{/block}

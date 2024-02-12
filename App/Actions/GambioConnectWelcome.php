@@ -7,6 +7,7 @@ namespace GXModules\Makaira\GambioConnect\App\Actions;
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use Stripe\Stripe;
 
@@ -17,11 +18,21 @@ use Stripe\Stripe;
  */
 class GambioConnectWelcome extends AdminModuleAction
 {
+
+    public function __construct(protected ModuleStatusService $moduleStatusService)
+    {
+    }
+
     /**
      * @inheritDoc
      */
     public function handle(Request $request, Response $response): Response
     {
+
+        if ($this->moduleStatusService->isInSetup() || $this->moduleStatusService->isSetUp()) {
+            return $response->withRedirect($this->url->admin() . '/makaira/account', 302);
+        }
+
         $pageTitle    = 'Makaira Gambio FAQs';
         $templatePath = __DIR__ . '/../../ui/template/welcome.html';
 

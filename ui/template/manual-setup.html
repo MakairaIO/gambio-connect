@@ -1,0 +1,50 @@
+{extends file="layout.html"} {block name="content"} {load_language_text
+section="general"}
+
+<p>{$txt.manual_setup_description}</p>
+
+<form class="w-50" action="/admin/makaira/manual-setup" method="post">
+  <div class="row mb-3">
+    <label for="makairaUrl" class="col-sm-4 col-form-label">{$txt.makaira_url}</label>
+    <div class="col-sm-8">
+      <input class="
+          form-control
+          {if
+          isset($validationErrors)
+          &&
+          in_array('makairaUrl',
+          $validationErrors)}is-invalid{/if}
+        " type="text" id="makairaUrl" name="makairaUrl" value="{$makairaUrl}" required />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="makairaInstance" class="col-sm-4 col-form-label">{$txt.makaira_instance}</label>
+    <div class="col-sm-8">
+      <input class="
+          form-control
+          {if
+          isset($validationErrors)
+          &&
+          in_array('makairaInstance',
+          $validationErrors)}is-invalid{/if}
+        " type="text" id="makairaInstance" name="makairaInstance" value="{$makairaInstance}" required />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="makairaSecret" class="col-sm-4 col-form-label">{$txt.makaira_secret}</label>
+    <div class="col-sm-8">
+      <input class="
+          form-control
+          {if
+          isset($validationErrors)
+          &&
+          in_array('makairaSecret',
+          $validationErrors)}is-invalid{/if}
+        " type="password" id="makairaSecret" name="makairaSecret" value="{$makairaSecret}" required />
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">{$txt.save}</button>
+</form>
+
+{if isset($notification)} {include file="./components/notification.html"
+notification=$notification } {/if} {/block}
