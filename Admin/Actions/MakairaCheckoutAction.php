@@ -32,7 +32,7 @@ class MakairaCheckoutAction extends AbstractAction
         if($request->getParsedBodyParam(StripeService::BUNDLE_PRICE_ID) === "on") {
             $stripeService->addPriceId(StripeService::BUNDLE_PRICE_ID);
         } else {
-            if($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID)) {
+            if($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID) === "on") {
                 $stripeService->addPriceId(StripeService::SEARCH_PRICE_ID);
             }
             if ($request->getParsedBodyParam(StripeService::ADS_PRICE_ID) === "on") {
