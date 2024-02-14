@@ -4,12 +4,15 @@ use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
 class GambioConnectCronjobTask extends AbstractCronjobTask
 {
     protected GambioConnectManufacturerService $gambioConnectManufacturerService;
-    protected GambioConnectCategoryService     $gambioConnectCategoryService;
-    protected GambioConnectProductService      $gambioConnectProductService;
+    protected GambioConnectCategoryService $gambioConnectCategoryService;
+    protected GambioConnectProductService $gambioConnectProductService;
+
+    protected GambioConnectPublicFieldsService $gambioConnectPublicFieldsService;
 
 
     public function getCallback($cronjobStartAsMicrotime): \Closure
@@ -41,6 +44,14 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $dependencies['productVariantsRepository']
             );
 
+            $this->gambioConnectPublicFieldsService = new GambioConnectPublicFieldsService(
+                $dependencies['MakairaClient'],
+                $dependencies['LanguageReadService'],
+                $dependencies['Connection'],
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
+            );
+
             return function () {
                 $this->logInfo('GambioConnect Cronjob Started');
 
@@ -57,9 +68,20 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->gambioConnectProductService->export();
 
                 $this->logInfo('All Exports to PersistenceLayer Successful');
+
+                if(!$this->checkPublicFieldsSetup()) {
+                    $this->logInfo('Makaira Public Fields Setup Has Started');
+
+                    $this->gambioConnectPublicFieldsService->setUpPublicFields();
+
+                    $this->logInfo('Makaira Public Fields has been setup');
+
+                    $this->completePublicFieldsSetup();
+                }
             };
         }
-        return function() {};
+        return function () {
+        };
     }
 
 
@@ -112,7 +134,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
         $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession');
         $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride');
-        if($stripeCheckoutId) {
+        if ($stripeCheckoutId) {
             $this->logInfo('Stripe Subscription ID found');
             $stripe = new StripeService();
             $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
@@ -120,7 +142,9 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
             if ($isPaid) {
                 $this->logInfo("Stripe Subscription Status is Paid");
             }
-            $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
+            $installed = (bool)$configurationFinder->get(
+                'gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED'
+            );
             if ($installed) {
                 $this->logInfo('Module is Installed');
             }
@@ -137,5 +161,19 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
         }
 
         return false;
+    }
+
+    protected function checkPublicFieldsSetup(): bool
+    {
+        $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
+
+        return $configurationFinder->get('modules/MakairaGambioConnect/publicFieldsSetupDone', false);
+    }
+
+    private function completePublicFieldsSetup(): void
+    {
+        $configurationService = $this->dependencies->getDependencies()['ConfigurationService'];
+
+        $configurationService->save('modules/MakairaGambioConnect/publicFieldsSetupDone', true);
     }
 }
