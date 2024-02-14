@@ -84,9 +84,12 @@ class MakairaInstallationService
                                       'subdomain'          => $this->subdomain,
                                       'email'              => $this->email,
                                       'shop_url'           => $this->shopUrl,
-                                      'checkout_id' => $this->checkoutSessionId,
                                       'callback_url'       => $this->callbackUri,
                                       'options'            => $this->options,
+                                      'payment'            => [
+                                          'provider'       => 'stripe',
+                                          'checkout_id'    => $this->checkoutSessionId
+                                      ]
                                   ]),
         ]);
     }
