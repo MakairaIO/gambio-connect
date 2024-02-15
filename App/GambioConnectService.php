@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-use Gambio\Admin\Modules\Language\App\LanguageReadService;
-use Gambio\Admin\Modules\Language\Model\Language;
-use Gambio\Admin\Modules\Product\Submodules\AdditionalOption\App\AdditionalOptionReadService;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
-use GXModules\Makaira\GambioConnect\Service\GambioConnectService as GambioConnectServiceInterface;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Gambio\Admin\Modules\Language\App\LanguageReadService;
+use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
+use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
 
 /**
  * Class GambioConnectService
