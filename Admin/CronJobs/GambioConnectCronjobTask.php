@@ -165,15 +165,13 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function checkPublicFieldsSetup(): bool
     {
-        $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
-
-        return $configurationFinder->get('modules/MakairaGambioConnect/publicFieldsSetupDone', false);
+        $moduleConfigService = $this->dependencies->getDependencies()['ModuleConfigService'];
+        return $moduleConfigService->isPublicFieldsSetupDone();
     }
 
     private function completePublicFieldsSetup(): void
     {
-        $configurationService = $this->dependencies->getDependencies()['ConfigurationService'];
-
-        $configurationService->save('modules/MakairaGambioConnect/publicFieldsSetupDone', true);
+        $moduleConfigService = $this->dependencies->getDependencies()['ModuleConfigService'];
+        $moduleConfigService->setPublicFieldsSetupDone();
     }
 }
