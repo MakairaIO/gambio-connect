@@ -135,7 +135,8 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
         $stripeCheckoutId = $this->moduleConfigService->getStripeCheckoutId();
         $stripeOverride = $this->moduleConfigService->isStripeOverrideActive();
-        if ($stripeCheckoutId) {
+
+      if ($stripeCheckoutId) {
             $this->logInfo('Stripe Subscription ID found');
             $stripe = new StripeService();
             $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
@@ -144,6 +145,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo("Stripe Subscription Status is Paid");
             }
             $installed = $this->moduleConfigService->getIsInstalled();
+            
             if ($installed) {
                 $this->logInfo('Module is Installed');
             }
