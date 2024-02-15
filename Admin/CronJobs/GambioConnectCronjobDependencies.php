@@ -1,6 +1,6 @@
 <?php
 
-use \Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
@@ -14,6 +14,7 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
     public function getDependencies()
     {
         $configurationFinder = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationFinder::class);
+        $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
         $makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($configurationFinder);
         $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
         $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Language\Services\LanguageReadService::class);
@@ -25,6 +26,7 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
             'Connection' => $connection,
             'MakairaLogger' => $makairaLogger,
             'ConfigurationFinder' => $configurationFinder,
+            'ConfigurationService' => $configurationService,
             'productVariantsRepository' => $productVariantsRepository,
             'active' => $this->storage->get('GambioConnect', 'active')
         ];

@@ -10,6 +10,90 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 
 class MakairaProduct extends MakairaEntity
 {
+    public const FIELD_TYPE = 'type';
+
+    public const FIELD_ID = 'id';
+
+    public const FIELD_PARENT = 'parent';
+
+    public const FIELD_SHOP = 'shop';
+
+    public const FIELD_EAN = 'ean';
+
+    public const FIELD_ACTIVETO = 'activeto';
+
+    public const FIELD_ACTIVEFROM = 'activefrom';
+
+    public const FIELD_IS_VARIANT = 'is_Variant';
+
+    public const FIELD_ACTIVE = 'active';
+
+    public const FIELD_SORT = 'sort';
+
+    public const FIELD_STOCK = 'stock';
+
+    public const FIELD_ONSTOCK = 'onstock';
+
+    public const FIELD_PICTURE_URL_MAIN = 'picture_url_main';
+
+    public const FIELD_TITLE = 'title';
+
+    public const FIELD_SHORTDESC = 'shortdesc';
+
+    public const FIELD_LONGDESC = 'longdesc';
+
+    public const FIELD_PRICE = 'price';
+
+    public const FIELD_SOLDAMOUNT = 'soldamount';
+
+    public const FIELD_SEARCHABLE = 'searchable';
+
+    public const FIELD_SEARCHKEYS = 'searchkeys';
+
+    public const FIELD_URL = 'url';
+
+    public const FIELD_MAINCATEGORY = 'maincategory';
+
+    public const FIELD_MAINCATEGORYURL = 'maincategoryurl';
+
+    public const FIELD_CATEGORY = 'category';
+
+    public const FIELD_ATTRIBUTES = 'attributes';
+
+    public const FIELD_MANUFACTUERID = 'manufacturerid';
+
+    public const FIELD_MANUFACTURER_TITLE = 'manufacturer_title';
+
+    public const FIELDS = [
+        self::FIELD_ID,
+        self::FIELD_TYPE,
+        self::FIELD_PARENT,
+        self::FIELD_SHOP,
+        self::FIELD_EAN,
+        self::FIELD_ACTIVETO,
+        self::FIELD_ACTIVEFROM,
+        self::FIELD_IS_VARIANT,
+        self::FIELD_ACTIVE,
+        self::FIELD_SORT,
+        self::FIELD_STOCK,
+        self::FIELD_ONSTOCK,
+        self::FIELD_PICTURE_URL_MAIN,
+        self::FIELD_TITLE,
+        self::FIELD_SHORTDESC,
+        self::FIELD_LONGDESC,
+        self::FIELD_PRICE,
+        self::FIELD_SOLDAMOUNT,
+        self::FIELD_SEARCHABLE,
+        self::FIELD_SEARCHKEYS,
+        self::FIELD_CATEGORY,
+        self::FIELD_ATTRIBUTES,
+        self::FIELD_MANUFACTUERID,
+        self::FIELD_MANUFACTURER_TITLE,
+        self::FIELD_URL,
+        self::FIELD_MAINCATEGORY,
+        self::FIELD_MAINCATEGORYURL
+    ];
+
     private int $stock = 0;
     private float $price = 0.0;
 

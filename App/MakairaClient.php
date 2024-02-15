@@ -34,7 +34,7 @@ class MakairaClient
         //  dump($this->options->get('makairaInstance'));
 
         $this->client = new Client([
-            'base_uri' => rtrim($this->makairaUrl, "/") . '/persistence/', // we trim the url to make sure we have no double slashes
+            'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
             'headers' => [
                 'X-Makaira-Instance' => $this->makairaInstance,
                 'Accept' => 'application/json',
@@ -58,10 +58,11 @@ class MakairaClient
         return [
             'X-Makaira-Nonce' => $this->nonce,
             'X-Makaira-Hash' => $this->get_hash($body),
+            'content-type' => 'application/json'
         ];
     }
 
-    public function do_request($method, $url, $body)
+    public function do_request($method, $url, $body = '')
     {
         try {
             return $this->client->request($method, $url, [
@@ -75,7 +76,7 @@ class MakairaClient
 
     public function push_revision(array $document)
     {
-        return $this->do_request('PUT', 'revisions', $document);
+        return $this->do_request('PUT', 'persistence/revisions', $document);
     }
 
     public function rebuild(array $types)
@@ -84,7 +85,7 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'revisions/rebuild', $body);
+        return $this->do_request('POST', 'persistence/revisions/rebuild', $body);
     }
 
     public function switch(array $types)
@@ -93,6 +94,30 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'revisions/switch', $body);
+        return $this->do_request('POST', 'persistence/revisions/switch', $body);
+    }
+
+    public function getPublicFields(): \Psr\Http\Message\ResponseInterface
+    {
+        $query = [
+            '_start' => 0,
+            '_end' => 100,
+            '_sort' => 'changed',
+            '_order' => 'DESC'
+        ];
+        return $this->do_request('GET', 'publicfield?' . implode('&', $query));
+    }
+
+    public function setPublicField(string $field): \Psr\Http\Message\ResponseInterface
+    {
+        return $this->do_request('POST', 'publicfield', [
+            'field' => $field,
+            'fieldName' => $field,
+            'fieldId' => 'new',
+            'fieldType' => 'field',
+            'onDetailPage' => true,
+            'onLandingPage' => true,
+            'onListingPage' => true,
+        ]);
     }
 }

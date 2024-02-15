@@ -31,6 +31,7 @@ use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListene
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
@@ -137,6 +138,13 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(ProductVariantsRepository::class);
 
         $this->application->registerShared(GambioConnectManufacturerService::class)
+            ->addArgument(MakairaClient::class)
+            ->addArgument(LanguageReadService::class)
+            ->addArgument(Connection::class)
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(ProductVariantsRepository::class);
+
+        $this->application->registerShared(GambioConnectPublicFieldsService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageReadService::class)
             ->addArgument(Connection::class)
