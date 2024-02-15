@@ -110,6 +110,16 @@ class ModuleConfigService
       $this->configurationService->save(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
   }
 
+  public function getStripeCheckoutId(): string|null
+  {
+      return $this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
+  }
+
+  public function isStripeOverrideActive(): bool
+  {
+      return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
+  }
+
   private function getConfigValue(string $key): string
   {
     return $this->configurationService->find(self::CONFIG_PREFIX . $key)?->value() ?? '';

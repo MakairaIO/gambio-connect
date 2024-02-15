@@ -1,5 +1,6 @@
 <?php
 
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
@@ -14,10 +15,14 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected GambioConnectPublicFieldsService $gambioConnectPublicFieldsService;
 
+    protected ModuleConfigService $moduleConfigService;
+
 
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
+
+        $this->moduleConfigService = $dependencies['ModuleConfigService'];
 
         if ($this->moduleIsInstalledAndActive()) {
             $this->gambioConnectManufacturerService = new GambioConnectManufacturerService(
@@ -119,21 +124,17 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
-        $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
-
-        $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl');
-
-        $makairaSecret = $configurationFinder->get('modules/MakairaGambioConnect/makairaSecret');
-
-        $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance');
+        $makairaUrl = $this->moduleConfigService->getMakairaUrl();
+        $makairaSecret = $this->moduleConfigService->getMakairaSecret();
+        $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
         if (!$makairaUrl || !$makairaInstance || !$makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
             return false;
         }
 
-        $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession');
-        $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride');
+        $stripeCheckoutId = $this->moduleConfigService->getStripeCheckoutId();
+        $stripeOverride = $this->moduleConfigService->isStripeOverrideActive();
         if ($stripeCheckoutId) {
             $this->logInfo('Stripe Subscription ID found');
             $stripe = new StripeService();
@@ -142,13 +143,11 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
             if ($isPaid) {
                 $this->logInfo("Stripe Subscription Status is Paid");
             }
-            $installed = (bool)$configurationFinder->get(
-                'gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED'
-            );
+            $installed = $this->moduleConfigService->getIsInstalled();
             if ($installed) {
                 $this->logInfo('Module is Installed');
             }
-            $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
+            $active = $this->moduleConfigService->getIsActive();
             if ($active) {
                 $this->logInfo('Module is Active');
             }
@@ -165,13 +164,11 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function checkPublicFieldsSetup(): bool
     {
-        $moduleConfigService = $this->dependencies->getDependencies()['ModuleConfigService'];
-        return $moduleConfigService->isPublicFieldsSetupDone();
+        return $this->moduleConfigService->isPublicFieldsSetupDone();
     }
 
     private function completePublicFieldsSetup(): void
     {
-        $moduleConfigService = $this->dependencies->getDependencies()['ModuleConfigService'];
-        $moduleConfigService->setPublicFieldsSetupDone();
+        $this->moduleConfigService->setPublicFieldsSetupDone();
     }
 }
