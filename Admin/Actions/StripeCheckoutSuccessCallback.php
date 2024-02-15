@@ -27,7 +27,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
     public function handle(Request $request, Response $response): Response
     {
         $pageTitle = 'Makaira Gambio Connect - Successful Checkout';
-        $templatePath = __DIR__ . '/../../ui/template/stripe/success.html';
+        $templatePath = __DIR__ . '/../ui/template/stripe/success.html';
 
         $stripe = new StripeService();
 

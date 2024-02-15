@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\GambioConnect\App\Actions;
+namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
-use Stripe\Stripe;
 
 /**
  * Class GambioConnectWelcome
@@ -34,14 +33,14 @@ class GambioConnectWelcome extends AdminModuleAction
         }
 
         $pageTitle    = 'Makaira Gambio FAQs';
-        $templatePath = __DIR__ . '/../../ui/template/welcome.html';
+        $templatePath = __DIR__ . '/../ui/template/welcome.html';
 
         $stripeCheckoutUrl = HTTP_SERVER . DIR_WS_CATALOG . 'admin/makaira/gambio-connect/stripe-checkout';
 
         $data = [
-            'welcomeJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.js",
-            'welcomeCss' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/welcome.css",
-            'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/logo.svg",
+            'welcomeJs' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/welcome.js",
+            'welcomeCss' => "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/welcome.css",
+            'logo'       => "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/logo.svg",
             'packages'  => $this->getPackages(),
             'stripeCheckoutUrl' => $stripeCheckoutUrl,
             'totalPackages' => [
@@ -61,12 +60,12 @@ class GambioConnectWelcome extends AdminModuleAction
                 'features'  => [],
             ],
             'companies' =>  [
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/hark.png",
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/fielmann.png",
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/ludwing_von_kapff.svg",
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/geliebteszuhause.png",
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/wallart.svg",
-                "{$this->url->base()}/GXModules/Makaira/GambioConnect/ui/assets/pets_premium.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/hark.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/fielmann.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/ludwing_von_kapff.svg",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/geliebteszuhause.png",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/wallart.svg",
+                "{$this->url->base()}/GXModules/Makaira/GambioConnect/Admin/ui/assets/pets_premium.png",
             ]
         ];
         $template = $this->render($pageTitle, $templatePath, $data);

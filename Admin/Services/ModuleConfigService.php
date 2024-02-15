@@ -115,6 +115,15 @@ class ModuleConfigService
       return $this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
   }
 
+  public function setStripeCheckoutId(string|null $checkoutId = null): void
+  {
+      if(!$checkoutId) {
+          $this->configurationService->delete(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
+      } else {
+          $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
+      }
+  }
+
   public function isStripeOverrideActive(): bool
   {
       return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();

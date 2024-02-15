@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\GambioConnect\App\Actions;
+namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 
 /**
- * Class GambioConnectDocument
+ * Class GambioConnectFAQ
  *
  * @package GXModules\Makaira\GambioConnect\App\Actions
  */
-class GambioConnectDocument extends AdminModuleAction
+class GambioConnectFAQ extends AdminModuleAction
 {
     /**
      * @inheritDoc
      */
     public function handle(Request $request, Response $response): Response
     {
-        $pageTitle    = 'Makaira Gambio Documentation';
-        $templatePath = __DIR__ . '/../../ui/template/document.html';
+        $pageTitle    = 'Makaira Gambio FAQs';
+        $templatePath = __DIR__ . '/../ui/template/faq.html';
 
         // $gxCoreLoader = \MainFactory::create(
         //     'GXCoreLoader',

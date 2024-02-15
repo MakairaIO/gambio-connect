@@ -7,15 +7,16 @@ use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 use Gambio\Core\Configuration\Services\ConfigurationService;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 
 class StripeCheckoutCancelCallback extends AbstractAction
 {
-    protected ConfigurationService $configurationService;
+    protected ModuleConfigService $moduleConfigService;
     
     public function __construct(
         protected Application $application,
     ) {
-        $this->configurationService = $this->application->get(ConfigurationService::class);
+        $this->moduleConfigService = $this->application->get(ModuleConfigService::class);
     }
 
     /**
@@ -23,7 +24,7 @@ class StripeCheckoutCancelCallback extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        $this->configurationService->delete('modules/MakairaGambioConnect/stripeCheckoutSession');
+        $this->moduleConfigService->setStripeCheckoutId();
 
         return $response->withJson(['success' => true]);
     }

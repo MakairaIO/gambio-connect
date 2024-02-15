@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 use Gambio\Core\Application\Routing\RouteCollector;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaInstallationServiceCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\Actions\SwitchAction;
 
