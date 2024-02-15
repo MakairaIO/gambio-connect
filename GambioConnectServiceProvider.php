@@ -9,20 +9,25 @@ use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
-use Gambio\Core\Application\Application;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use Gambio\Core\Configuration\Services\ConfigurationService;
+use Gambio\Core\Language\Services\LanguageService;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectDocument;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectFAQ;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
+use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
-use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
 use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectDocument;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectFAQ;
-use GXModules\Makaira\GambioConnect\App\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
@@ -34,14 +39,7 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProduc
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
-use GXModules\Makaira\GambioConnect\Service\GambioConnectService;
-use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
-use Stripe\Checkout\Session;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
-use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
+use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService;
 
 /**
  * Class GambioConnectServiceProvider

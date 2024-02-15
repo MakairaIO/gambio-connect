@@ -3,29 +3,29 @@
 namespace GXModules\Makaira\GambioConnect;
 
 use CI_DB_query_builder;
-use Doctrine\DBAL\Connection;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesDescriptionTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesFilterTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectCategoriesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersInfoTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectManufacturersTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsAttributesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsContentTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsDescriptionTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsGoogleCategoriesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsGraduatedPricesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsHermesoptionsTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsImagesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesAdminSelectTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesCombisDefaultTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesCombisTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsPropertiesIndexTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsQuantityUnitTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsItemCodesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsToCategoriesTableInstaller;
-use GXModules\Makaira\GambioConnect\Installer\GambioConnectProductsXsellTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectCategoriesDescriptionTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectCategoriesFilterTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectCategoriesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectManufacturersInfoTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectManufacturersTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsAttributesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsContentTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsDescriptionTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsGoogleCategoriesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsGraduatedPricesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsHermesoptionsTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsImagesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsItemCodesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsPropertiesAdminSelectTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsPropertiesCombisDefaultTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsPropertiesCombisTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsPropertiesIndexTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsQuantityUnitTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsToCategoriesTableInstaller;
+use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsXsellTableInstaller;
 
 class GambioConnectInstaller
 {
@@ -149,5 +149,9 @@ class GambioConnectInstaller
         GambioConnectCategoriesDescriptionTableInstaller::uninstall($db);
 
         GambioConnectCategoriesFilterTableInstaller::uninstall($db);
+
+        foreach(ModuleConfigService::getModuleConfigKeys() as $key) {
+            $db->query("DELETE FROM gx_configurations where `key` = '$key'");
+        }
     }
 }

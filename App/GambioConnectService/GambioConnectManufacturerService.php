@@ -6,10 +6,9 @@ use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
+use GXModules\Makaira\GambioConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectManufacturerService extends GambioConnectService implements GambioConnectEntityInterface
 {
