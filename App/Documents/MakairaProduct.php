@@ -180,7 +180,8 @@ class MakairaProduct extends MakairaEntity
              'mak_boost_norm_rating' => $this->makBoostNormRating,
              'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
              'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
-        ]);
+        ]
+        );
     }
 
 

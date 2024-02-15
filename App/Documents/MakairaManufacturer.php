@@ -21,7 +21,7 @@ class MakairaManufacturer extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-        /* MAKAIRA fields */
+            /* MAKAIRA fields */
             parent::toArray(),
             [
                 /* Manufacturer fields */

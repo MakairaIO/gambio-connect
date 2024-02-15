@@ -50,7 +50,8 @@ class MakairaVariant extends MakairaEntity
     private array $options = [];
     private string $now;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->now = (new DateTime())->format('Y-m-d H:i:s');
     }
 
@@ -65,7 +66,7 @@ class MakairaVariant extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-        /* Makaira fields */
+            /* Makaira fields */
             parent::toArray(),
             [
 
@@ -87,7 +88,8 @@ class MakairaVariant extends MakairaEntity
              'price' => $this->getPrice(),
              'meta_keywords' => $this->getMetaKeywords(),
              'meta_description' => $this->getMetaDescription()
-        ]);
+        ]
+        );
     }
 
 
@@ -169,7 +171,7 @@ class MakairaVariant extends MakairaEntity
     {
         return $this->onStock;
     }
-    
+
     public function setOnstock(bool $onStock): static
     {
         $this->onStock = $onStock;

@@ -20,7 +20,7 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService as GambioCo
 class GambioConnectService implements GambioConnectServiceInterface
 {
     // private ProductRepositoryReader $productReadService;
-    
+
     public function __construct(
         protected MakairaClient               $client,
         protected LanguageReadService         $languageReadService,
@@ -28,12 +28,10 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected MakairaLogger               $logger,
         protected ProductVariantsRepository $productVariantsRepository,
         //   ProductRepositoryReader $productReadService,
-    
-    )
-    {
+    ) {
         // $this->productReadService = $productReadService;
     }
-    
+
     protected function exportIsDone(int $gambio_id, string $type): void
     {
         $this->connection->delete(ChangesService::TABLE_NAME, [
@@ -73,11 +71,11 @@ class GambioConnectService implements GambioConnectServiceInterface
             'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
-        
+
         foreach($documents as $document) {
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
-        
+
         return $data;
     }
 

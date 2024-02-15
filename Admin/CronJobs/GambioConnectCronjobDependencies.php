@@ -7,7 +7,6 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProduc
 
 class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
 {
-    
     /**
      * @inheritDoc
      */

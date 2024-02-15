@@ -16,7 +16,6 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
  */
 class GambioConnectAccount extends AdminModuleAction
 {
-
     private $templatePath = __DIR__ . '/../ui/template/account.html';
     private $templatePathInSetup = __DIR__ . '/../ui/template/in-setup.html';
 

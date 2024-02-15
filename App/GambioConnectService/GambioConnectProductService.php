@@ -12,9 +12,8 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    
     public Language $currentLanguage;
-    
+
     public static array $productRelationTables = [
         'products_attributes',
         'products_content',
@@ -32,7 +31,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         'products_to_categories',
         'products_xsell'
     ];
-    
+
     public function prepareExport(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -45,7 +44,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             }
         }
     }
-    
+
     public function export(): void
     {
         $languages = $this->languageReadService->getLanguages();
@@ -61,23 +60,23 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
                 foreach ($products as $product) {
                     try {
-                    $documents[] = $this->pushRevision($product);
+                        $documents[] = $this->pushRevision($product);
 
-                    $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
+                        $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
 
-                    $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
+                        $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
 
-                    foreach($variants as $variant) {
-                        $documents[] = MakairaDataMapper::mapVariant($product,$variant);
-                    }
+                        foreach($variants as $variant) {
+                            $documents[] = MakairaDataMapper::mapVariant($product, $variant);
+                        }
 
-                    foreach($documents as $document) {
-                        $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
-                            'data' => $document->getId()
-                        ]);
-                    }
+                        foreach($documents as $document) {
+                            $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
+                                'data' => $document->getId()
+                            ]);
+                        }
 
-                    }catch(\Exception $exception) {
+                    } catch(\Exception $exception) {
                         $this->logger->error("Product Export to Makaira Failed", [
                             'id' => $product['products_id'],
                             'message' => $exception->getMessage()
@@ -93,12 +92,12 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             }
         }
     }
-    
+
     public function pushRevision(array $product): MakairaEntity
     {
         return MakairaDataMapper::mapProduct($product);
     }
-    
+
     public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()

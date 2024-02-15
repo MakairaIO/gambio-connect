@@ -17,7 +17,6 @@ use Respect\Validation\Validator as v;
  */
 class GambioConnectManualSetup extends AdminModuleAction
 {
-
     private $templatePath = __DIR__ . '/../ui/template/manual-setup.html';
     private $title = 'manual_setup';
 

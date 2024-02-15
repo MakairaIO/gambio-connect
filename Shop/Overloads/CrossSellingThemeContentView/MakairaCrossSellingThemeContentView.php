@@ -4,22 +4,22 @@ use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
 
 class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 {
-    
     private $configurationStorage;
-    
+
     private $makairaRequest;
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-        
+
         $this->configurationStorage = MainFactory::create('GXModuleConfigurationStorage', 'Makaira/GambioConnect');
-        
+
         $makairaUrl = $this->configurationStorage->get('makairaUrl');
         $makairaInstance = $this->configurationStorage->get('makairaInstance');
-        
+
         $this->makairaRequest = new MakairaRequest($makairaUrl, $makairaInstance, $_SESSION['language_code'] ?? 'de');
     }
-    
-    
+
+
     protected function get_data()
     {
         return match ($this->type) {
@@ -63,14 +63,14 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
         }
         return $data;
     }
-    
+
     private function loadCrossSelling(): array
     {
         $this->set_content_template('product_info_cross_selling.html');
         $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id']);
         return $this->mapMakairaResponse($requestData['items']);
     }
-    
+
     private function loadReverseCrossSelling(): array
     {
         $this->set_content_template('product_info_reverse_cross_selling.html');

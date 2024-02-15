@@ -12,7 +12,7 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 class StripeCheckoutCancelCallback extends AbstractAction
 {
     protected ModuleConfigService $moduleConfigService;
-    
+
     public function __construct(
         protected Application $application,
     ) {

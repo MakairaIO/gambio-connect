@@ -6,7 +6,6 @@ use CI_DB_query_builder;
 
 class GambioConnectProductsItemCodesTableInstaller implements GambioConnectTableInstallerInterface
 {
-
     public static function install(CI_DB_query_builder $db): void
     {
         $db->query("
