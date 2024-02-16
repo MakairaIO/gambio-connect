@@ -7,8 +7,11 @@ namespace GXModules\Makaira\GambioConnect\App;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\App\LanguageReadService;
+use Gambio\Admin\Modules\Language\Model\Collections\Languages;
 use Gambio\Admin\Modules\Language\Model\Language;
+use Gambio\Admin\Modules\Language\Services\LanguageRepository;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
+use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
 
@@ -23,13 +26,18 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     public function __construct(
         protected MakairaClient               $client,
-        protected LanguageReadService         $languageReadService,
+        protected LanguageService         $languageService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
         protected ProductVariantsRepository $productVariantsRepository,
         //   ProductRepositoryReader $productReadService,
     ) {
         // $this->productReadService = $productReadService;
+    }
+
+    protected function getLanguages(): Languages
+    {
+        return $this->languageService->getAvailableLanguages();
     }
 
     protected function exportIsDone(int $gambio_id, string $type): void

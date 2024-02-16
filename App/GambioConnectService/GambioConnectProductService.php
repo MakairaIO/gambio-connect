@@ -34,7 +34,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
     public function prepareExport(): void
     {
-        $languages = $this->languageReadService->getLanguages();
+        $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
             $products = $this->getQuery($language);
@@ -47,7 +47,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
     public function export(): void
     {
-        $languages = $this->languageReadService->getLanguages();
+        $languages = $this->getLanguages();
 
         $makairaChanges = $this->getEntitiesForExport('product');
 
