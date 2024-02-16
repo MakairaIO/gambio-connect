@@ -124,6 +124,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
+
         $makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
