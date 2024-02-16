@@ -113,7 +113,7 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(MakairaLogger::class);
 
         $this->application->registerShared(MakairaClient::class)
-            ->addArgument(ConfigurationFinder::class);
+            ->addArgument(ConfigurationService::class);
 
         $this->application->registerShared(GambioConnectService::class)
             ->addArgument(MakairaClient::class)
