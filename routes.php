@@ -18,8 +18,6 @@ use GXModules\Makaira\GambioConnect\App\Actions\ReplaceAction;
 use GXModules\Makaira\GambioConnect\App\Actions\SwitchAction;
 
 return static function (RouteCollector $routeCollector) {
-    $routeCollector->post('/makaira-installation-service', MakairaInstallationServiceCallback::class);
-
     $routeCollector->get('/admin/makaira/gambio-connect', GambioConnectEntry::class);
     $routeCollector->get('/admin/makaira/welcome', GambioConnectWelcome::class);
     $routeCollector->get('/admin/makaira/manual-setup', GambioConnectManualSetup::class);

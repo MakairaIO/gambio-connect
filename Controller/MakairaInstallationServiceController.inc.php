@@ -1,7 +1,5 @@
 <?php
 
-namespace GXModules\Makaira\GambioConnect\Shop\Controllers;
-
 use ContentViewInterface;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use HttpContextReaderInterface;
@@ -41,8 +39,8 @@ class MakairaInstallationServiceController extends HttpViewController
                 'modules/MakairaGambioConnect/makairaSecret',
                 $this->_getPostData('sharedSecret')
             );
+            return new \JsonHttpControllerResponse(['success' => true]);
         }
-
-        return new \JsonHttpControllerResponse(['success' => true]);
+        return new \JsonHttpControllerResponse(['success' => false]);
     }
 }
