@@ -98,9 +98,11 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectWelcome::class)
             ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(GambioConnectAccount::class)
-            ->addArgument(ModuleStatusService::class);
-        $this->application->registerShared(GambioConnectFAQ::class);
+            ->addArgument(ModuleStatusService::class)
+            ->addArgument(ModuleConfigService::class)
+            ->addArgument(ChangesService::class);
 
+        $this->application->registerShared(GambioConnectFAQ::class);
 
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)

@@ -23,5 +23,18 @@ $t_language_text_section_content_array = [
     'invalid' => 'Some settings were not saved. Invalid input.',
     'account' => 'Account',
     'in_setup_description' => 'Makaira is being set up. This process may take a few minutes. Thank you for your patience.',
+    'goto_makaira' => 'To Makaira',
+    'reco_title' => 'Makaira Recommendations',
+    'reco_cross_selling_description' => 'Here you can configure which Makaira Recommendations you want to use. Find the ID in your Makaira dashboard.',
+    'goto_makaira_recos' => 'Go to Makaira Recommendations',
+    'reco_cross_selling' => 'Cross Selling Recommendations ID',
+    'reco_reverse_cross_selling' => 'Reverse Cross Selling Recommendations ID',
+    'corn_status' => 'Cronjob Status',
+    'corn_status_1' => 'active',
+    'corn_status_0' => 'inactive',
+    'queue_length' => 'Queue Length',
+    'last_sync' => 'Last Sync',
+    'account_title' => 'Account',
+
 
 ];

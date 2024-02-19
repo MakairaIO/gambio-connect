@@ -27,6 +27,7 @@ return static function (RouteCollector $routeCollector) {
     $routeCollector->get('/admin/makaira/faq', GambioConnectFAQ::class);
     $routeCollector->get('/admin/makaira/document', GambioConnectDocument::class);
     $routeCollector->get('/admin/makaira/account', GambioConnectAccount::class);
+    $routeCollector->post('/admin/makaira/account', GambioConnectAccount::class);
 
     $routeCollector->post('/admin/makaira/gambio-connect/stripe-checkout', MakairaCheckoutAction::class);
 

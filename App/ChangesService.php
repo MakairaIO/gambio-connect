@@ -82,4 +82,12 @@ class ChangesService
     {
         $this->connection->delete(self::TABLE_NAME, ['id' => $id]);
     }
+
+    public function getQueueLength(): int
+    {
+        $sqlSelect = 'SELECT count(id) FROM ' . self::TABLE_NAME;
+        $queueLength = $this->connection->fetchOne($sqlSelect);
+
+        return (int) $queueLength;
+    }
 }

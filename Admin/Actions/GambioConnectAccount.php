@@ -7,7 +7,11 @@ namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
+use GXModules\Makaira\GambioConnect\App\ChangesService;
+use Respect\Validation\Validator as v;
+
 
 /**s
  * Class GambioConnectAccount
@@ -18,10 +22,13 @@ class GambioConnectAccount extends AdminModuleAction
 {
     private $templatePath = __DIR__ . '/../ui/template/account.html';
     private $templatePathInSetup = __DIR__ . '/../ui/template/in-setup.html';
+    private $title = 'account';
 
-
-    public function __construct(protected ModuleStatusService $moduleStatusService)
-    {
+    public function __construct(
+        protected ModuleStatusService $moduleStatusService,
+        protected ModuleConfigService $moduleConfigService,
+        protected ChangesService $changesService,
+    ) {
     }
 
     /**
@@ -36,9 +43,16 @@ class GambioConnectAccount extends AdminModuleAction
                 $this->templatePathInSetup,
                 []
             );
-
             return $response->write($template);
         }
+
+
+
+        if ($request->isPost()) {
+            return $this->handlePost($request, $response);
+        }
+
+        return $this->handleGet($request, $response);
 
 
 
@@ -49,5 +63,69 @@ class GambioConnectAccount extends AdminModuleAction
         );
 
         return $response->write($template);
+    }
+
+    private function getData(): array
+    {
+        return [
+            'status' => $this->moduleConfigService->getStatus(),
+            'makairaLink' => rtrim($this->moduleConfigService->getMakairaUrl(), "/") . '/' . 'admin/' .  $this->moduleConfigService->getMakairaInstance(),
+            'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),
+            'makairaInstance'  => $this->moduleConfigService->getMakairaInstance(),
+            'cornStatus' => (bool)$this->moduleConfigService->getCronjobStatus() ? $this->translate('corn_status_1', 'general') : $this->translate('corn_status_0', 'general'),
+            'queueLength' => $this->changesService->getQueueLength(),
+            'lastSync' => 'test',
+            'recoCrossSelling' =>  $this->moduleConfigService->getRecoCrossSelling(),
+            'recoReversCrossSelling' => $this->moduleConfigService->getRecoReverseCrossSelling(),
+        ];
+    }
+    private function handleGet(Request $request, Response $response): Response
+    {
+
+        $template = $this->render(
+            $this->translate($this->title, 'general'),
+            $this->templatePath,
+            $this->getData()
+        );
+
+        return $response->write($template);
+    }
+
+    private function handlePost(Request $request, Response $response): Response
+    {
+
+        $invalid = [];
+        $requestData = $request->getParsedBody();
+
+        $recoCrossSelling = htmlspecialchars($requestData['recoCrossSelling']);
+        v::stringType()->validate($recoCrossSelling) ? $this->moduleConfigService->setRecoCrossSelling($recoCrossSelling) : $invalid[] = 'makairaInstance';
+
+        $recoReversCrossSelling = htmlspecialchars($requestData['recoReversCrossSelling']);
+        v::stringType()->validate($recoReversCrossSelling) ? $this->moduleConfigService->setRecoReverseCrossSelling($recoReversCrossSelling) : $invalid[] = 'recoReversCrossSelling';
+
+
+        $dataValidation = [
+            'recoCrossSelling' =>  $recoCrossSelling,
+            'recoReversCrossSelling' => $recoReversCrossSelling,
+            'validationErrors' => $invalid,
+            'notification' => $this->getNotification($invalid),
+        ];
+
+        $template = $this->render(
+            $this->translate($this->title, 'general'),
+            $this->templatePath,
+            array_merge($this->getData(), $dataValidation)
+        );
+
+        return $response->write($template);
+    }
+
+    private function getNotification(array $invalid): array
+    {
+        if (empty($invalid)) {
+            return ['type' => 'success', 'message' => $this->translate('saved', 'general'), 'title' => $this->translate('success', 'general')];
+        }
+
+        return ['type' => 'warning', 'message' => $this->translate('invalid', 'general'), 'title' => $this->translate('warning', 'general')];
     }
 }
