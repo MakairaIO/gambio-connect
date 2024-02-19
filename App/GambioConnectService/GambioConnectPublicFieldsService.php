@@ -10,7 +10,7 @@ class GambioConnectPublicFieldsService extends GambioConnectService
     public function setUpPublicFields(): void
     {
         $publicFields = json_decode($this->client->getPublicFields()->getBody()->getContents());
-        $unsetPublicFields = array_filter(MakairaProduct::FIELDS, function(string $field) use($publicFields) {
+        $unsetPublicFields = array_filter(MakairaProduct::FIELDS, function (string $field) use ($publicFields) {
             foreach($publicFields as $publicField) {
                 if($publicField->fieldId === $field || $publicField->fieldName === $field) {
                     return null;

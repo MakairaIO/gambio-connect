@@ -16,7 +16,6 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
  */
 class GambioConnectEntry extends AdminModuleAction
 {
-
     public function __construct(protected ModuleStatusService $moduleStatusService)
     {
     }

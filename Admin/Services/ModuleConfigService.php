@@ -6,7 +6,6 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 
 class ModuleConfigService
 {
-
   private const CONFIG_PREFIX = 'modules/MakairaGambioConnect/';
 
   public const CONFIG_MAKAIRA_URL = 'makairaUrl';
@@ -38,7 +37,6 @@ class ModuleConfigService
   public const CONFIG_MAKAIRA_RECO_CROSS_SELLING = 'recoCrossSelling';
 
   public const CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING = 'recoReverseCrossSelling';
-
 
   public function __construct(private ConfigurationService $configurationService)
   {
@@ -154,12 +152,10 @@ class ModuleConfigService
     $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
   }
 
-
   public function getCronjobStatus(): bool
   {
     return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE)?->value();
   }
-
 
   private function getConfigValue(string $key): string
   {

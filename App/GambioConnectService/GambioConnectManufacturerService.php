@@ -49,8 +49,8 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
 
                 foreach($manufacturers as $manufacturer) {
                     try {
-                    $documents[] = $this->pushRevision($manufacturer);
-                    }catch (Exception $exception) {
+                        $documents[] = $this->pushRevision($manufacturer);
+                    } catch (Exception $exception) {
                         $this->logger->error("Manufacturer Export to Makaira Failed", [
                             'id' => $manufacturer['manufacturers_id'],
                             'message' => $exception->getMessage()
@@ -66,8 +66,8 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
             }
         }
     }
-    
-    
+
+
     /**
      * @throws Exception
      */

@@ -4,7 +4,6 @@ use GXModules\Makaira\GambioConnect\GambioConnectInstaller;
 
 class GambioConnectModuleCenterModule extends AbstractModuleCenterModule
 {
-
     protected function _init()
     {
         $this->title       = $this->languageTextManager->get_text('title', 'general');

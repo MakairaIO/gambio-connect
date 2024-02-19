@@ -12,7 +12,8 @@ class ReplaceAction extends AbstractAction
 {
     public function __construct(
         protected GambioConnectService $gambioConnectService
-    ) {}
+    ) {
+    }
 
 
     /**

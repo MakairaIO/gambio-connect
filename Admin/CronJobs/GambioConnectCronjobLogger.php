@@ -2,7 +2,6 @@
 
 class GambioConnectCronjobLogger extends AbstractCronjobLogger
 {
-
     /**
      * @inheritDoc
      */

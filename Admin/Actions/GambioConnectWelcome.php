@@ -17,7 +17,6 @@ use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
  */
 class GambioConnectWelcome extends AdminModuleAction
 {
-
     public function __construct(protected ModuleStatusService $moduleStatusService)
     {
     }

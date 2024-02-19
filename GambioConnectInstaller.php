@@ -29,8 +29,6 @@ use GXModules\Makaira\GambioConnect\App\Installer\GambioConnectProductsXsellTabl
 
 class GambioConnectInstaller
 {
-
-
     public static function onInstallation(CI_DB_query_builder $db)
     {
         $db->query(

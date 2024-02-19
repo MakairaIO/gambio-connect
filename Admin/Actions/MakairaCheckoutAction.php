@@ -18,17 +18,17 @@ class MakairaCheckoutAction extends AbstractAction
     ) {
         $this->configurationService = $this->application->get(ConfigurationService::class);
     }
-    
-    
+
+
     /**
      * @inheritDoc
      */
     public function handle(Request $request, Response $response): Response
     {
         $stripeService = new StripeService();
-        
+
         $stripeService->setConfigurationService($this->configurationService);
-        
+
         if($request->getParsedBodyParam(StripeService::BUNDLE_PRICE_ID) === "on") {
             $stripeService->addPriceId(StripeService::BUNDLE_PRICE_ID);
         } else {
@@ -41,7 +41,7 @@ class MakairaCheckoutAction extends AbstractAction
                     $stripeService->addPriceId(StripeService::SEARCH_PRICE_ID);
                 }
             }
-            
+
             if ($request->getParsedBodyParam(StripeService::RECOMMENDATIONS_PRICE_ID) === "on") {
                 $stripeService->addPriceId(StripeService::RECOMMENDATIONS_PRICE_ID);
             }
@@ -50,13 +50,13 @@ class MakairaCheckoutAction extends AbstractAction
         $successUrl = $this->url->admin() . '/makaira/gambio-connect/stripe-checkout-success-callback';
 
         $cancelUrl = $this->url->admin() . '/makaira/welcome';
-        
+
         $stripeService->setSuccessUrl($successUrl);
-        
+
         $stripeService->setCancelUrl($cancelUrl);
-        
+
         $session = $stripeService->createCheckoutSession();
-        
+
         return $response->withRedirect($session->url);
     }
 }

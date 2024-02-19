@@ -22,11 +22,11 @@ class MakairaDataMapper
     public static function mapManufacturer(array $data): MakairaManufacturer
     {
         $transfer = new MakairaManufacturer();
-        
+
         $createdAt = $data['date_added'] ? new DateTime($data['date_added']) : null;
         $updatedAt = $data['last_modified'] ? new DateTime($data['last_modified']) : null;
         $lastClickedAt = $data['date_last_click'] ? new DateTime($data['date_last_click']) : null;
-        
+
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
             ->setId($data['manufacturers_id'])
@@ -40,17 +40,17 @@ class MakairaDataMapper
             ->setRemoteUrl($data['manufacturers_url'])
             ->setIsUrlClicked($data['url_clicked'])
             ->setLastClickedAt($lastClickedAt);
-            
+
         return $transfer;
     }
-    
+
     /**
      * @throws \Exception
      */
-    public static function mapCategory(array $data, array $hierarchy, Language $language) : MakairaCategory
+    public static function mapCategory(array $data, array $hierarchy, Language $language): MakairaCategory
     {
         $transfer = new MakairaCategory();
-        
+
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
@@ -58,10 +58,10 @@ class MakairaDataMapper
             ->setDepth($hierarchy['depth'])
             ->setHierarchy($hierarchy['hierarchy'])
             ->setUrl('?'.xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()));
-            
+
         return $transfer;
     }
-    
+
     public static function mapVariant(array $product, ProductVariant $variant): MakairaVariant
     {
         $productDocument = self::mapProduct($product);
@@ -84,16 +84,16 @@ class MakairaDataMapper
             ->setMaincategory($productDocument->getMainCategory())
             ->setMaincategoryurl($productDocument->getMainCategoryUrl())
             ->setPictureUrlMain($productDocument->getPictureUrlMain());
-        
+
         return $variantDocument;
     }
-    
+
     public static function mapProduct(array $data): MakairaProduct
     {
         $transfer = new MakairaProduct();
-    
+
         $stock = 1;
-        
+
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
@@ -113,7 +113,7 @@ class MakairaDataMapper
             ->setProductsVpeStatus($data['products_vpe_status'])
             ->setProductsVpeValue($data['products_vpe_value'])
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
-        
+
         return $transfer;
     }
 }

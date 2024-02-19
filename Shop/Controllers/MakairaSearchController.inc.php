@@ -22,7 +22,7 @@ class MakairaSearchController extends HttpViewController
     private $configurationStorage;
     private $languageService;
 
-    function __construct(
+    public function __construct(
         HttpContextReaderInterface $httpContextReader,
         HttpResponseProcessorInterface $httpResponseProcessor,
         ContentViewInterface $defaultContentView,

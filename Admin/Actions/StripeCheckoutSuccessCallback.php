@@ -14,7 +14,7 @@ use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 class StripeCheckoutSuccessCallback extends AdminModuleAction
 {
     protected ConfigurationService $configurationService;
-    
+
     public function __construct(
         protected Application $application,
     ) {
@@ -48,7 +48,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
             'subdomain' => strtolower($subdomain),
             'instance_name' => strtolower($subdomain)
         ];
-        
+
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
@@ -60,7 +60,7 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         ]);
         try {
             $installationServiceResponse = $installationService->callRegistrationService();
-        }catch(\Exception $exception) {
+        } catch(\Exception $exception) {
             $data['duration'] = 'Error';
             $template = $this->render($pageTitle, $templatePath, $data);
             return $response->write($template);
