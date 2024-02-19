@@ -3,6 +3,9 @@
 use ContentViewInterface;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use HttpContextReaderInterface;
 use HttpResponseProcessorInterface;
 use HttpViewController;
@@ -37,6 +40,36 @@ class MakairaInstallationServiceController extends HttpViewController
             $this->moduleConfigService->setMakairaInstance($this->_getPostData('instance'));
 
             $this->moduleConfigService->setMakairaSecret($this->_getPostData('shared_secret'));
+
+            $makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($this->configurationService);
+            $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
+            $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Language\Services\LanguageReadService::class);
+            $makairaLogger = new \GXModules\Makaira\GambioConnect\App\MakairaLogger();
+            $productVariantsRepository = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository::class);
+
+            (new GambioConnectManufacturerService(
+                $makairaClient,
+                $languageReadService,
+                $connection,
+                $makairaLogger,
+                $productVariantsRepository
+            ))->prepareExport();
+
+            (new GambioConnectCategoryService(
+                $makairaClient,
+                $languageReadService,
+                $connection,
+                $makairaLogger,
+                $productVariantsRepository
+            ))->prepareExport();
+
+            (new GambioConnectProductService(
+                $makairaClient,
+                $languageReadService,
+                $connection,
+                $makairaLogger,
+                $productVariantsRepository
+            ))->prepareExport();
 
             return new \JsonHttpControllerResponse(['success' => true]);
         }
