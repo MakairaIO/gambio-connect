@@ -3,6 +3,7 @@
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectImporterConfigService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
@@ -14,6 +15,8 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     protected GambioConnectProductService $gambioConnectProductService;
 
     protected GambioConnectPublicFieldsService $gambioConnectPublicFieldsService;
+
+    protected GambioConnectImporterConfigService $gambioConnectImporterConfigService;
 
     protected ModuleConfigService $moduleConfigService;
 
@@ -57,7 +60,22 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $dependencies['productVariantsRepository']
             );
 
+            $this->gambioConnectImporterConfigService = new GambioConnectImporterConfigService(
+                $dependencies['MakairaClient'],
+                $dependencies['LanguageReadService'],
+                $dependencies['Connection'],
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository'],
+            );
+
             return function () {
+                if(!$this->checkImporterSetup()) {
+                    $this->logInfo("Importer was not created yet - creating it now");
+                    $this->gambioConnectImporterConfigService->setUpImporter();
+
+                    $this->completeImporterSetUp();
+                }
+
                 $this->logInfo('GambioConnect Cronjob Started');
 
                 $this->logInfo('Begin Export Manufacturers to PersistenceLayer');
@@ -124,6 +142,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
+        return true;
         $makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
@@ -172,5 +191,15 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
     private function completePublicFieldsSetup(): void
     {
         $this->moduleConfigService->setPublicFieldsSetupDone();
+    }
+
+    protected function checkImporterSetup(): bool
+    {
+        return $this->moduleConfigService->isMakairaImporterSetupDone();
+    }
+
+    public function completeImporterSetup(): void
+    {
+        $this->moduleConfigService->setMakairaImporterSetupDone();
     }
 }

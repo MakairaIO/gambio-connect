@@ -3,9 +3,12 @@
 namespace GXModules\Makaira\GambioConnect\App;
 
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use MainFactory;
+use Psr\Http\Message\ResponseInterface;
 
 class MakairaClient
 {
@@ -14,20 +17,15 @@ class MakairaClient
     private string $makairaUrl;
     private string $makairaSecret;
     private string $makairaInstance;
+    private ModuleConfigService $moduleConfigService;
 
-
-    /**
-     * @var ConfigurationFinder
-     */
-    private $configurationFinder;
-
-    public function __construct(ConfigurationFinder $configurationFinder)
+    public function __construct(ConfigurationService $configurationFinder)
     {
 
-        $this->configurationFinder = $configurationFinder;
-        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', 'https://stage.makaira.io');
-        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', 'aAO3XD4D2FoGxGKCVz4t');
-        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', 'gambio');
+        $this->moduleConfigService = new ModuleConfigService($configurationFinder);
+        $this->makairaUrl = $this->moduleConfigService->getMakairaUrl();
+        $this->makairaSecret = $this->moduleConfigService->getMakairaSecret();
+        $this->makairaInstance = $this->moduleConfigService->getMakairaInstance();
         $this->nonce = bin2hex(random_bytes(8));
 
 
@@ -118,6 +116,62 @@ class MakairaClient
             'onDetailPage' => true,
             'onLandingPage' => true,
             'onListingPage' => true,
+        ]);
+    }
+
+    public function createImporter(): ResponseInterface
+    {
+        return $this->do_request('POST', 'importer/config', [
+            'internalTitle' => 'GambioConnect Importer',
+            'languages' => [],
+            'notificationsEnabled' => false,
+            'notificationMails' => [],
+            'otherSchedules' => [
+                [
+                    'active' => true,
+                    'autoswitch' => false,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'enabled' => true,
+                    'kind' => 'continously',
+                    'timeout' => 21600
+                ],
+                [
+                    'active' => false,
+                    'autoswitch' => true,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'kind' => 'one-time',
+                    'timeout' => 21600
+                ]
+            ],
+            'runnerCountMax' => 500,
+            'scheduledImporters' => [],
+            'schedules' => [
+                [
+                    'active' => true,
+                    'autoswitch' => false,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'enabled' => true,
+                    'kind' => 'continously',
+                    'timeout' => 21600
+                ],
+                [
+                    'active' => false,
+                    'autoswitch' => true,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'kind' => 'one-time',
+                    'timeout' => 21600
+                ]
+            ],
+            'sourceAuthPassword' => '',
+            'sourceAuthUser' => '',
+            'sourceSecret' => $this->makairaSecret,
+            'sourceType' => 'persistence-layer',
+            'sourceUrl' => '',
+            'targetType' => 'makaira'
         ]);
     }
 }
