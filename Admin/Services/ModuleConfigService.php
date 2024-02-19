@@ -20,7 +20,9 @@ class ModuleConfigService
 
   public const CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE = 'publicFieldsSetupDone';
 
-  public const CONFIG_MAKAIRA_INSTALLED = 'gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED';
+    public const CONFIG_MAKAIRA_IMPORTER_SETUP_DONE = 'makairaImporterSetupDone';
+
+    public const CONFIG_MAKAIRA_INSTALLED = 'gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED';
 
   public const CONFIG_MAKAIRA_ACTIVE_SEARCH = 'makairaActiveSearch';
 
@@ -183,4 +185,5 @@ class ModuleConfigService
       self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
     ];
   }
+
 }

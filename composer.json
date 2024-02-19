@@ -1,18 +1,7 @@
 {
-    "name": "dat.lieu/gambio-connect",
-    "autoload": {
-        "psr-4": {
-            "DatLieu\\GambioConnect\\": "/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Dat Lieu",
-            "email": "dl@marmalade.group"
-        }
-    ],
-    "require": {
-        "stripe/stripe-php": "^13.9",
-        "respect/validation": "2.2.4"
-    }
+  "name": "makaira/gambio-connect",
+  "require": {
+    "stripe/stripe-php": "^13.9",
+    "respect/validation": "2.2.4"
+  }
 }
