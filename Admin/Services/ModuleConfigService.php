@@ -20,6 +20,8 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE = 'publicFieldsSetupDone';
 
+    public const CONFIG_MAKAIRA_IMPORTER_SETUP_DONE = 'makairaImporterSetupDone';
+
     public const CONFIG_MAKAIRA_INSTALLED = 'gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED';
 
     public const CONFIG_MAKAIRA_ACTIVE_SEARCH = 'makairaActiveSearch';
@@ -128,6 +130,16 @@ class ModuleConfigService
         return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
     }
 
+    public function setMakairaImporterSetupDone(): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
+    }
+
+    public function isMakairaImporterSetupDone(): bool
+    {
+        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE)?->value() ?? false;
+    }
+
     private function getConfigValue(string $key): string
     {
         return $this->configurationService->find(self::CONFIG_PREFIX . $key)?->value() ?? '';
@@ -150,6 +162,7 @@ class ModuleConfigService
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE,
             self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
             self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
         ];
