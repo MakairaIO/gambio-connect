@@ -42,8 +42,7 @@ class ModuleConfigService
 
     public function getMakairaUrl(): string
     {
-        $url = $this->getConfigValue(self::CONFIG_MAKAIRA_URL);
-        return !empty($url) ? $url : 'https://stage.makaira.io';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_URL);
     }
 
     public function setMakairaUrl(string $value): self
@@ -54,8 +53,7 @@ class ModuleConfigService
 
     public function getMakairaInstance(): string
     {
-        $instance = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE);
-        return !empty($instance) ? $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE) : 'gambio';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE) : 'gambio';
     }
 
     public function setMakairaInstance(string $value): self
@@ -66,8 +64,7 @@ class ModuleConfigService
 
     public function getMakairaSecret(): string
     {
-        $secret = $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET);
-        return !empty($secret) ? $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET) : 'aAO3XD4D2FoGxGKCVz4t';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET);
     }
 
     public function setMakairaSecret(string $value): self
