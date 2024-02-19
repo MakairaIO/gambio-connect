@@ -7,39 +7,39 @@ namespace GXModules\Makaira\GambioConnect\Admin\Services;
 class ModuleStatusService
 {
     public function __construct(
-        protected ModuleConfigService $moduleConfig
+        protected ModuleConfigService $moduleConfigService
     ) {
     }
 
     public function isInstalled(): bool
     {
-        return $this->moduleConfig->getIsInstalled();
+        return $this->moduleConfigService->getIsInstalled();
     }
 
     public function isInSetup(): bool
     {
         return $this->isInstalled()
-            && $this->moduleConfig->getStatus() === "inProgress";
+            && $this->moduleConfigService->getStatus() === "inProgress";
     }
 
     public function isSetUp(): bool
     {
         return $this->isInstalled()
             && $this->makairaConfigIsSet()
-            && $this->moduleConfig->getStatus() === "setup";
+            && $this->moduleConfigService->getStatus() === "setup";
     }
 
     public function isActive(): bool
     {
         return $this->isSetUp()
-            && $this->moduleConfig->getIsActive();
+            && $this->moduleConfigService->getIsActive();
     }
 
     private function makairaConfigIsSet(): bool
     {
-        $urlSet = !empty($this->moduleConfig->getMakairaUrl());
-        $instanceSet = !empty($this->moduleConfig->getMakairaInstance());
-        $secretSet = !empty($this->moduleConfig->getMakairaSecret());
+        $urlSet = !empty($this->moduleConfigService->getMakairaUrl());
+        $instanceSet = !empty($this->moduleConfigService->getMakairaInstance());
+        $secretSet = !empty($this->moduleConfigService->getMakairaSecret());
 
         return $urlSet && $instanceSet && $secretSet;
     }

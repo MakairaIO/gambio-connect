@@ -35,6 +35,11 @@ class ModuleConfigService
 
   public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/GambioConnect/interval';
 
+  public const CONFIG_MAKAIRA_RECO_CROSS_SELLING = 'recoCrossSelling';
+
+  public const CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING = 'recoReverseCrossSelling';
+
+
   public function __construct(private ConfigurationService $configurationService)
   {
   }
@@ -102,32 +107,59 @@ class ModuleConfigService
 
   public function isPublicFieldsSetupDone(): bool
   {
-      return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE)?->value();
+    return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE)?->value();
   }
 
   public function setPublicFieldsSetupDone(): void
   {
-      $this->configurationService->save(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+    $this->configurationService->save(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
   }
 
   public function getStripeCheckoutId(): string|null
   {
-      return $this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
+    return $this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
   }
 
   public function setStripeCheckoutId(string|null $checkoutId = null): void
   {
-      if(!$checkoutId) {
-          $this->configurationService->delete(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
-      } else {
-          $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
-      }
+    if (!$checkoutId) {
+      $this->configurationService->delete(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
+    } else {
+      $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
+    }
   }
 
   public function isStripeOverrideActive(): bool
   {
-      return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
+    return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
   }
+
+  public function getRecoCrossSelling(): string
+  {
+    return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
+  }
+
+  public function setRecoCrossSelling(string $recoCrossSelling = ''): void
+  {
+    $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
+  }
+
+  public function getRecoReverseCrossSelling(): string
+  {
+    return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
+  }
+
+  public function setRecoReverseCrossSelling(string $recoReverseCrossSelling = ''): void
+  {
+    $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
+  }
+
+
+  public function getCronjobStatus(): bool
+  {
+    return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE)?->value();
+  }
+
 
   private function getConfigValue(string $key): string
   {
@@ -139,19 +171,20 @@ class ModuleConfigService
     $this->configurationService->save(self::CONFIG_PREFIX . $key, $value);
   }
 
-  public static function getModuleConfigKeys(): array {
-      return [
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE,
-          self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
-          self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
-          self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
-      ];
+  public static function getModuleConfigKeys(): array
+  {
+    return [
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE,
+      self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
+      self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
+      self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
+    ];
   }
 }
