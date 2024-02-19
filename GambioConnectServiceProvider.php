@@ -140,7 +140,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class);
+            ->addArgument(MakairaLogger::class)
+            ->addArgument(null);
 
         $this->application->registerShared(GambioConnectPublicFieldsService::class)
             ->addArgument(MakairaClient::class)
