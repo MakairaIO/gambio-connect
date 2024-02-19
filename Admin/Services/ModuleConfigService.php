@@ -53,7 +53,7 @@ class ModuleConfigService
 
     public function getMakairaInstance(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE) : 'gambio';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE);
     }
 
     public function setMakairaInstance(string $value): self
