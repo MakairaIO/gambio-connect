@@ -134,22 +134,19 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsReadService::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(GambioConnectManufacturerService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsReadService::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(GambioConnectPublicFieldsService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsReadService::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(ChangesService::class)
             ->addArgument(Connection::class);

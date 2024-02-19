@@ -29,10 +29,8 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected LanguageService         $languageService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
-        protected ProductVariantsRepository $productVariantsRepository,
-        //   ProductRepositoryReader $productReadService,
+        protected ?ProductVariantsRepository $productVariantsRepository = null,
     ) {
-        // $this->productReadService = $productReadService;
     }
 
     protected function getLanguages(): Languages

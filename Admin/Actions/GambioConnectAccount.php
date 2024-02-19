@@ -12,7 +12,6 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use Respect\Validation\Validator as v;
 
-
 /**s
  * Class GambioConnectAccount
  *
