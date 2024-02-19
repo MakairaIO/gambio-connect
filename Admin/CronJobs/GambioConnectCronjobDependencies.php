@@ -13,8 +13,7 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
         $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
         $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Language\Services\LanguageReadService::class);
         $makairaLogger = new \GXModules\Makaira\GambioConnect\App\MakairaLogger();
-        $productVariantsRepository = MainFactory::create(\Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository::class);
-        //$productVariantsRepository = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository::class);
+        $productVariantsRepository = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository::class);
         $moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService(
             $configurationService
         );

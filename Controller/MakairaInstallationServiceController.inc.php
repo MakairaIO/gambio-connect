@@ -45,7 +45,7 @@ class MakairaInstallationServiceController extends HttpViewController
             $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
             $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Admin\Modules\Language\Services\LanguageReadService::class);
             $makairaLogger = new \GXModules\Makaira\GambioConnect\App\MakairaLogger();
-            $productVariantsRepository = MainFactory::create(\Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository::class);
+            $productVariantsRepository = MainFactory::create(\Gambio\Admin\Modules\Product\Services\ProductVariantsReadService::class);
 
             (new GambioConnectManufacturerService(
                 $makairaClient,
