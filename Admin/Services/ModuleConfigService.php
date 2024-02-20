@@ -81,17 +81,6 @@ class ModuleConfigService
         return $this;
     }
 
-    public function getIsActive(): bool
-    {
-        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_ACTIVE);
-    }
-
-    public function setIsActive(bool $value): self
-    {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_ACTIVE, (string) $value);
-        return $this;
-    }
-
     public function getStatus(): string
     {
         return $this->getConfigValue(self::CONFIG_MAKAIRA_STATUS);

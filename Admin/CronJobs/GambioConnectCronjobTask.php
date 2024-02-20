@@ -178,13 +178,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
             } else {
                 $this->logInfo('Module is not Installed');
             }
-            $active = $this->moduleConfigService->getIsActive();
-            if ($active) {
-                $this->logInfo('Module is active');
-            } else {
-                $this->logInfo('Module is not active');
-            }
-            return $installed && $active && $isPaid;
+            return $installed && $isPaid;
         }
         if ($stripeOverride) {
             $this->logInfo('Stripe Override is not active');
