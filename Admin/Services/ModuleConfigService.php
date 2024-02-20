@@ -112,7 +112,7 @@ class ModuleConfigService
 
     public function setPublicFieldsSetupDone(): void
     {
-        return $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
     }
 
     public function getStripeCheckoutId(): string|null
