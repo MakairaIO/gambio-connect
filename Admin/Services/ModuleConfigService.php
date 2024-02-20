@@ -207,6 +207,16 @@ class ModuleConfigService
         return [];
     }
 
+    public function setMakairaCronJobActive(): void
+    {
+        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE, true);
+    }
+
+    public function setMakairaCronJobInterval(): void
+    {
+        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_INTERVAL, '*/4 * * * *');
+    }
+
     private function getConfigValue(string $key): string
     {
         return $this->configurationService->find(self::CONFIG_PREFIX . $key)?->value() ?? '';
