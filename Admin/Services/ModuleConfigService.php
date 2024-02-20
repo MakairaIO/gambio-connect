@@ -40,6 +40,10 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING = 'recoReverseCrossSelling';
 
+    public const CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED = 'makairaInstallationServiceCalled';
+
+    public const CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA = 'makairaInstallationServiceRequestData';
+
     public function __construct(private ConfigurationService $configurationService)
     {
     }
@@ -129,6 +133,16 @@ class ModuleConfigService
         }
     }
 
+    public function getStripeCheckoutEmail(): string|null
+    {
+        return $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL)?->value() ?? null;
+    }
+
+    public function setStripeCheckoutEmail(string $email): void
+    {
+        $this->configurationService->save(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL, $email);
+    }
+
     public function isStripeOverrideActive(): bool
     {
         return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE);
@@ -167,6 +181,40 @@ class ModuleConfigService
     public function isMakairaImporterSetupDone(): bool
     {
         return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
+    }
+
+    public function isMakairaInstallationServiceCalled(): bool
+    {
+        return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED)?->value() ?? false;
+    }
+
+    public function setMakairaInstallationServiceCalled(): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED, true);
+    }
+
+    public function setMakairaInstallationServiceRequestData(array $data): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA, json_encode($data));
+    }
+
+    public function getMakairaInstallationServiceRequestData(): array
+    {
+        $data = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA);
+        if (!empty($data)) {
+            return json_decode($data);
+        }
+        return [];
+    }
+
+    public function setMakairaCronJobActive(): void
+    {
+        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE, true);
+    }
+
+    public function setMakairaCronJobInterval(): void
+    {
+        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_INTERVAL, '*/4 * * * *');
     }
 
     private function getConfigValue(string $key): string
