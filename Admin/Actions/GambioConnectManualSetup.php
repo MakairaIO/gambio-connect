@@ -47,7 +47,6 @@ class GambioConnectManualSetup extends AdminModuleAction
             $this->translate($this->title, 'general'),
             $this->templatePath,
             [
-                'description' => $this->translate('manual_setup_description', 'general'),
                 'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),
                 'makairaInstance'  => $this->moduleConfigService->getMakairaInstance(),
                 'makairaSecret' => $this->moduleConfigService->getMakairaSecret(),

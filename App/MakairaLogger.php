@@ -16,7 +16,7 @@ use function Gambio\Core\Logging\logger;
 class MakairaLogger implements LoggerInterface
 {
     public const LOGFILE = 'makaira';
-    private const logLevels = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
+    private const LOG_LEVELS = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
 
 
     /**
@@ -111,7 +111,7 @@ class MakairaLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = []): void
     {
-        $messageLevel = (int)array_search($level, self::logLevels, true);
+        $messageLevel = (int)array_search($level, self::LOG_LEVELS, true);
 
         if ($messageLevel >= 0) {
             $this->logger->log($level, $message, $context);

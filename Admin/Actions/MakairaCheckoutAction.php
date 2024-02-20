@@ -29,15 +29,15 @@ class MakairaCheckoutAction extends AbstractAction
 
         $stripeService->setConfigurationService($this->configurationService);
 
-        if($request->getParsedBodyParam(StripeService::BUNDLE_PRICE_ID) === "on") {
+        if ($request->getParsedBodyParam(StripeService::BUNDLE_PRICE_ID) === "on") {
             $stripeService->addPriceId(StripeService::BUNDLE_PRICE_ID);
         } else {
-            if($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID) === "on") {
+            if ($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID) === "on") {
                 $stripeService->addPriceId(StripeService::SEARCH_PRICE_ID);
             }
             if ($request->getParsedBodyParam(StripeService::ADS_PRICE_ID) === "on") {
                 $stripeService->addPriceId(StripeService::ADS_PRICE_ID);
-                if($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID) !== "on") {
+                if ($request->getParsedBodyParam(StripeService::SEARCH_PRICE_ID) !== "on") {
                     $stripeService->addPriceId(StripeService::SEARCH_PRICE_ID);
                 }
             }

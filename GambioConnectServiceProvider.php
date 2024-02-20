@@ -98,9 +98,11 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectWelcome::class)
             ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(GambioConnectAccount::class)
-            ->addArgument(ModuleStatusService::class);
-        $this->application->registerShared(GambioConnectFAQ::class);
+            ->addArgument(ModuleStatusService::class)
+            ->addArgument(ModuleConfigService::class)
+            ->addArgument(ChangesService::class);
 
+        $this->application->registerShared(GambioConnectFAQ::class);
 
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)
@@ -126,28 +128,26 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
             ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsRepository::class);
+            ->addArgument(ProductVariantsReadService::class);
 
         $this->application->registerShared(GambioConnectCategoryService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsRepository::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(GambioConnectManufacturerService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
             ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsRepository::class);
+            ->addArgument(null);
 
         $this->application->registerShared(GambioConnectPublicFieldsService::class)
             ->addArgument(MakairaClient::class)
             ->addArgument(LanguageService::class)
             ->addArgument(Connection::class)
-            ->addArgument(MakairaLogger::class)
-            ->addArgument(ProductVariantsRepository::class);
+            ->addArgument(MakairaLogger::class);
 
         $this->application->registerShared(ChangesService::class)
             ->addArgument(Connection::class);

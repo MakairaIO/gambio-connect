@@ -29,10 +29,8 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected LanguageService         $languageService,
         protected Connection                  $connection,
         protected MakairaLogger               $logger,
-        protected ProductVariantsRepository $productVariantsRepository,
-        //   ProductRepositoryReader $productReadService,
+        protected ?ProductVariantsRepository $productVariantsRepository = null,
     ) {
-        // $this->productReadService = $productReadService;
     }
 
     protected function getLanguages(): Languages
@@ -80,7 +78,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             'source_identifier' => 'gambio',
         ];
 
-        foreach($documents as $document) {
+        foreach ($documents as $document) {
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
 

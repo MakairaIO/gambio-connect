@@ -54,13 +54,13 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         $installationService->setCheckoutSessionId($checkoutSessionId);
         $installationService->setShopUrl($this->url->base());
         $installationService->setSubdomain(strtolower($subdomain));
-        $installationService->setCallbackUri($this->url->base() .'/shop.php?do=MakairaInstallationService');
+        $installationService->setCallbackUri($this->url->base() . '/shop.php?do=MakairaInstallationService');
         $installationService->setOptions([
             'instance_name' => strtolower($subdomain)
         ]);
         try {
             $installationServiceResponse = $installationService->callRegistrationService();
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $data['duration'] = 'Error';
             $template = $this->render($pageTitle, $templatePath, $data);
             return $response->write($template);

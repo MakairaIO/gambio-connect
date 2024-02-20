@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace GXModules\Makaira\GambioConnect\App\Actions;
@@ -24,7 +23,6 @@ class Export extends AbstractAction
         protected GambioConnectService\GambioConnectProductService $gambioConnectProductService,
         protected GambioConnectService\GambioConnectManufacturerService $gambioConnectManufacturerService,
     ) {
-
     }
 
 

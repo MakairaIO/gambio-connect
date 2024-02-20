@@ -88,7 +88,7 @@ class MakairaVariant extends MakairaEntity
              'price' => $this->getPrice(),
              'meta_keywords' => $this->getMetaKeywords(),
              'meta_description' => $this->getMetaDescription()
-        ]
+            ]
         );
     }
 

@@ -62,21 +62,28 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                     try {
                         $documents[] = $this->pushRevision($product);
 
-                        $variants = $this->productVariantsRepository->getProductVariantsByProductId(ProductId::create($product['products_id']));
+                        $variants =
+                            $this
+                            ->productVariantsRepository
+                            ->getProductVariantsByProductId(ProductId::create($product['products_id']));
 
-                        $this->logger->info('Processing ' . count($variants->toArray()). ' Variants for ' . $product['products_id']);
+                        $this->logger->info(
+                            'Processing '
+                                . count($variants->toArray())
+                                . ' Variants for '
+                                . $product['products_id']
+                        );
 
-                        foreach($variants as $variant) {
+                        foreach ($variants as $variant) {
                             $documents[] = MakairaDataMapper::mapVariant($product, $variant);
                         }
 
-                        foreach($documents as $document) {
+                        foreach ($documents as $document) {
                             $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
                                 'data' => $document->getId()
                             ]);
                         }
-
-                    } catch(\Exception $exception) {
+                    } catch (\Exception $exception) {
                         $this->logger->error("Product Export to Makaira Failed", [
                             'id' => $product['products_id'],
                             'message' => $exception->getMessage()
@@ -85,7 +92,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
                     $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
 
-                    $this->client->push_revision($data);
+                    $this->client->pushRevision($data);
 
                     $this->exportIsDone($product['products_id'], 'product');
                 }
