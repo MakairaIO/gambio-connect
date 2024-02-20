@@ -169,7 +169,7 @@ class ModuleConfigService
 
     public function isMakairaImporterSetupDone(): bool
     {
-        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
+        return (bool) $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE)?->value() ?? false;
     }
 
     public function isMakairaInstallationServiceCalled(): bool
