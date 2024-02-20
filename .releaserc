@@ -1,5 +1,9 @@
 {
-  "branches": ["+([0-9])?(.{+([0-9]),x}).x", "stable"],
+  "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
+    "main",
+    "feature/MKGO-22-semantic-release"
+  ],
   "tagFormat": "${version}",
   "plugins": [
     "@semantic-release/commit-analyzer",
@@ -16,7 +20,11 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["package.json", "CHANGELOG.md", "metadata.php"],
+        "assets": [
+          "package.json",
+          "CHANGELOG.md",
+          "metadata.php"
+        ],
         "message": "chore(release): ${nextRelease.version} [skip ci] \n\n${nextRelease.notes}"
       }
     ]
