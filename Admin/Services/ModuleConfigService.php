@@ -117,7 +117,7 @@ class ModuleConfigService
 
     public function getStripeCheckoutId(): string|null
     {
-        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
+        return $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value() ?? null;
     }
 
     public function setStripeCheckoutId(string|null $checkoutId = null): void
