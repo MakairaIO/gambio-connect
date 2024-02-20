@@ -5,7 +5,8 @@
     "respect/validation": "2.2.4"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.0"
+    "squizlabs/php_codesniffer": "^3.0",
+    "phpmd/phpmd": "@stable"
   },
   "scripts": {
     "phpunit": [
@@ -16,6 +17,9 @@
     ],
     "phpcbf": [
       "php vendor/bin/phpcbf"
+    ],
+    "phpmd": [
+      "php vendor/bin/phpmd . text  codesize,design --exclude 'tests/*,vendor/*'"
     ],
     "test": [
       "@phpcs",
