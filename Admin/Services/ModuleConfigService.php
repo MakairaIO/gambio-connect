@@ -201,7 +201,7 @@ class ModuleConfigService
     public function getMakairaInstallationServiceRequestData(): array
     {
         $data = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA);
-        if(!empty($data)) {
+        if (!empty($data)) {
             return json_decode($data);
         }
         return [];

@@ -42,7 +42,7 @@ class MakairaInstallationService
     {
         $instance = new self();
 
-        if(!$subdomain || !$baseUrl) {
+        if (!$subdomain || !$baseUrl) {
             $data = $moduleConfigService->getMakairaInstallationServiceRequestData();
             $instance->setRequestDataArray($data);
         } else {

@@ -145,7 +145,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
-        if(!$this->moduleConfigService->setMakairaInstallationServiceCalled()) {
+        if (!$this->moduleConfigService->setMakairaInstallationServiceCalled()) {
             $this->logError("Makaira Installation Service has not been called yet");
             MakairaInstallationService::callInstallationService($this->moduleConfigService);
             return false;
