@@ -31,7 +31,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
         $this->moduleConfigService = $dependencies['ModuleConfigService'];
 
         if ($this->moduleIsInstalledAndActive()) {
-            $this->gambioConnectManufacturerService = new GambioConnectManufacturerService(
+            $gambioConnectService = new \GXModules\Makaira\GambioConnect\App\GambioConnectService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
@@ -39,37 +39,15 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $dependencies['productVariantsRepository']
             );
 
-            $this->gambioConnectCategoryService = new GambioConnectCategoryService(
-                $dependencies['MakairaClient'],
-                $dependencies['LanguageReadService'],
-                $dependencies['Connection'],
-                $dependencies['MakairaLogger'],
-                $dependencies['productVariantsRepository']
-            );
+            $this->gambioConnectProductService = $gambioConnectService->getProductService();
 
-            $this->gambioConnectProductService = new GambioConnectProductService(
-                $dependencies['MakairaClient'],
-                $dependencies['LanguageReadService'],
-                $dependencies['Connection'],
-                $dependencies['MakairaLogger'],
-                $dependencies['productVariantsRepository']
-            );
+            $this->gambioConnectCategoryService = $gambioConnectService->getCategoryService();
 
-            $this->gambioConnectPublicFieldsService = new GambioConnectPublicFieldsService(
-                $dependencies['MakairaClient'],
-                $dependencies['LanguageReadService'],
-                $dependencies['Connection'],
-                $dependencies['MakairaLogger'],
-                $dependencies['productVariantsRepository']
-            );
+            $this->gambioConnectManufacturerService = $gambioConnectService->getManufacturerService();
 
-            $this->gambioConnectImporterConfigService = new GambioConnectImporterConfigService(
-                $dependencies['MakairaClient'],
-                $dependencies['LanguageReadService'],
-                $dependencies['Connection'],
-                $dependencies['MakairaLogger'],
-                $dependencies['productVariantsRepository'],
-            );
+            $this->gambioConnectImporterConfigService = $gambioConnectService->getImporterConfigService();
+
+            $this->gambioConnectPublicFieldsService = $gambioConnectService->getGambioConnectPublicFieldsService();
 
             return function () {
                 if (!$this->checkImporterSetup()) {
