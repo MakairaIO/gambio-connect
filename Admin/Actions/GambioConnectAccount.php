@@ -36,7 +36,6 @@ class GambioConnectAccount extends AdminModuleAction
     public function handle(Request $request, Response $response): Response
     {
         if ($this->moduleStatusService->isInSetup()) {
-
             $template = $this->render(
                 $this->translate('account', 'general'),
                 $this->templatePathInSetup,

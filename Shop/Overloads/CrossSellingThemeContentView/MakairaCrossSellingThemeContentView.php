@@ -2,6 +2,7 @@
 
 use GXModules\Makaira\GambioConnect\App\Core\MakairaRequest;
 
+// phpcs:ignore
 class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 {
     private $configurationStorage;
@@ -19,14 +20,16 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
         $this->makairaRequest = new MakairaRequest($makairaUrl, $makairaInstance, $_SESSION['language_code'] ?? 'de');
     }
 
-
+    // phpcs:ignore
     protected function get_data()
     {
         if (
-            (bool) $this->configurationStorage->get('active') && (
-                ($this->type === 'cross_selling' && $this->configurationStorage->get('recoCrossSelling') != "") ||
-                ($this->type === 'reverse_cross_selling' && $this->configurationStorage->get('recoReverseCrossSelling') != "")
-            )
+            (bool) $this->configurationStorage->get('active')
+            && (
+                ($this->type === 'cross_selling'
+                    && $this->configurationStorage->get('recoCrossSelling') != "")
+                || ($this->type === 'reverse_cross_selling'
+                    && $this->configurationStorage->get('recoReverseCrossSelling') != ""))
         ) {
             return match ($this->type) {
                 'cross_selling' => $this->loadCrossSelling(),

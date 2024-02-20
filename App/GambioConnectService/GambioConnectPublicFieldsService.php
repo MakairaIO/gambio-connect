@@ -11,15 +11,15 @@ class GambioConnectPublicFieldsService extends GambioConnectService
     {
         $publicFields = json_decode($this->client->getPublicFields()->getBody()->getContents());
         $unsetPublicFields = array_filter(MakairaProduct::FIELDS, function (string $field) use ($publicFields) {
-            foreach($publicFields as $publicField) {
-                if($publicField->fieldId === $field || $publicField->fieldName === $field) {
+            foreach ($publicFields as $publicField) {
+                if ($publicField->fieldId === $field || $publicField->fieldName === $field) {
                     return null;
                 }
             }
             return $field;
         });
 
-        foreach($unsetPublicFields as $unsetPublicField) {
+        foreach ($unsetPublicFields as $unsetPublicField) {
             $this->client->setPublicField($unsetPublicField);
         }
     }

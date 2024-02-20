@@ -36,14 +36,17 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/GambioConnect/interval';
 
+    public const CONFIG_MAKAIRA_RECO_CROSS_SELLING = 'recoCrossSelling';
+
+    public const CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING = 'recoReverseCrossSelling';
+
     public function __construct(private ConfigurationService $configurationService)
     {
     }
 
     public function getMakairaUrl(): string
     {
-        $url = $this->getConfigValue(self::CONFIG_MAKAIRA_URL);
-        return !empty($url) ? $url : 'https://stage.makaira.io';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_URL);
     }
 
     public function setMakairaUrl(string $value): self
@@ -54,7 +57,7 @@ class ModuleConfigService
 
     public function getMakairaInstance(): string
     {
-        return !empty($instance) ? $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE) : 'gambio';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE);
     }
 
     public function setMakairaInstance(string $value): self
@@ -65,8 +68,7 @@ class ModuleConfigService
 
     public function getMakairaSecret(): string
     {
-        $secret = $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET);
-        return !empty($secret) ? $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET) : 'aAO3XD4D2FoGxGKCVz4t';
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET);
     }
 
     public function setMakairaSecret(string $value): self
@@ -105,41 +107,66 @@ class ModuleConfigService
 
     public function isPublicFieldsSetupDone(): bool
     {
-        return (bool) $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
     }
 
     public function setPublicFieldsSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+        return $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
     }
 
     public function getStripeCheckoutId(): string|null
     {
-        return $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
     }
 
     public function setStripeCheckoutId(string|null $checkoutId = null): void
     {
-        if(!$checkoutId) {
+        if (!$checkoutId) {
             $this->configurationService->delete(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
         } else {
-            $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
+            $this->setConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
         }
     }
 
     public function isStripeOverrideActive(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE);
+    }
+
+    public function getRecoCrossSelling(): string
+    {
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
+    }
+
+    public function setRecoCrossSelling(string $recoCrossSelling = ''): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
+    }
+
+    public function getRecoReverseCrossSelling(): string
+    {
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
+    }
+
+    public function setRecoReverseCrossSelling(string $recoReverseCrossSelling = ''): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
+    }
+
+    public function getCronjobStatus(): bool
+    {
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE);
     }
 
     public function setMakairaImporterSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
     }
 
     public function isMakairaImporterSetupDone(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE)?->value() ?? false;
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
     }
 
     private function getConfigValue(string $key): string

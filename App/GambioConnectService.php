@@ -78,7 +78,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             'source_identifier' => 'gambio',
         ];
 
-        foreach($documents as $document) {
+        foreach ($documents as $document) {
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
 

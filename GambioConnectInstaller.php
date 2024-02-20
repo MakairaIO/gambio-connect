@@ -148,7 +148,7 @@ class GambioConnectInstaller
 
         GambioConnectCategoriesFilterTableInstaller::uninstall($db);
 
-        foreach(ModuleConfigService::getModuleConfigKeys() as $key) {
+        foreach (ModuleConfigService::getModuleConfigKeys() as $key) {
             $db->query("DELETE FROM gx_configurations where `key` = '$key'");
         }
     }

@@ -28,9 +28,6 @@ class MakairaClient
         $this->makairaInstance = $this->moduleConfigService->getMakairaInstance();
         $this->nonce = bin2hex(random_bytes(8));
 
-
-        //  dump($this->options->get('makairaInstance'));
-
         $this->client = new Client([
             'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
             'headers' => [
@@ -42,7 +39,7 @@ class MakairaClient
     }
 
 
-    private function get_hash($body): string
+    private function getHash($body): string
     {
         return hash_hmac(
             'sha256',
@@ -55,12 +52,12 @@ class MakairaClient
     {
         return [
             'X-Makaira-Nonce' => $this->nonce,
-            'X-Makaira-Hash' => $this->get_hash($body),
+            'X-Makaira-Hash' => $this->getHash($body),
             'content-type' => 'application/json'
         ];
     }
 
-    public function do_request($method, $url, $body = '')
+    public function doRequest($method, $url, $body = '')
     {
         try {
             return $this->client->request($method, $url, [
@@ -72,9 +69,9 @@ class MakairaClient
         }
     }
 
-    public function push_revision(array $document)
+    public function pushRevision(array $document)
     {
-        return $this->do_request('PUT', 'persistence/revisions', $document);
+        return $this->doRequest('PUT', 'persistence/revisions', $document);
     }
 
     public function rebuild(array $types)
@@ -83,7 +80,7 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'persistence/revisions/rebuild', $body);
+        return $this->doRequest('POST', 'persistence/revisions/rebuild', $body);
     }
 
     public function switch(array $types)
@@ -92,7 +89,7 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'persistence/revisions/switch', $body);
+        return $this->doRequest('POST', 'persistence/revisions/switch', $body);
     }
 
     public function getPublicFields(): \Psr\Http\Message\ResponseInterface
@@ -103,12 +100,12 @@ class MakairaClient
             '_sort' => 'changed',
             '_order' => 'DESC'
         ];
-        return $this->do_request('GET', 'publicfield?' . implode('&', $query));
+        return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
     }
 
     public function setPublicField(string $field): \Psr\Http\Message\ResponseInterface
     {
-        return $this->do_request('POST', 'publicfield', [
+        return $this->doRequest('POST', 'publicfield', [
             'field' => $field,
             'fieldName' => $field,
             'fieldId' => 'new',
@@ -121,7 +118,7 @@ class MakairaClient
 
     public function createImporter(): ResponseInterface
     {
-        return $this->do_request('POST', 'importer/config', [
+        return $this->doRequest('POST', 'importer/config', [
             'internalTitle' => 'GambioConnect Importer',
             'languages' => [],
             'notificationsEnabled' => false,

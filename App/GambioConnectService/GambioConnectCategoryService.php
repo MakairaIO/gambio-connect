@@ -35,7 +35,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $makairaExports = $this->getEntitiesForExport('category');
 
         if (!empty($makairaExports)) {
-
             $languages = $this->languageReadService->getLanguages();
 
             foreach ($languages as $language) {
@@ -48,18 +47,22 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 foreach ($categories as $category) {
                     try {
                         $documents[] = $this->pushRevision($category);
-                    } catch(Exception $exception) {
+                    } catch (Exception $exception) {
                         $this->logger->error("Category Export to Makaira Failed", [
                             'id' => $category['categories_id'],
                             'message' => $exception->getMessage()
                         ]);
                     }
-
                 }
                 $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
-                $response = $this->client->push_revision($data);
-                $this->logger->info('Makaira Category Documents: ' . count($documents) . ' with Status Code ' . $response->getStatusCode());
-                foreach($categories as $category) {
+                $response = $this->client->pushRevision($data);
+                $this->logger->info(
+                    'Makaira Category Documents: '
+                        . count($documents)
+                        . ' with Status Code '
+                        . $response->getStatusCode()
+                );
+                foreach ($categories as $category) {
                     $this->exportIsDone($category['categories_id'], 'category');
                 }
             }
@@ -109,7 +112,10 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             $query->add('where', $query->expr()->in('categories.categories_id', array_values($ids)), true);
         }
 
-        return array_filter($query->execute()->fetchAll(FetchMode::ASSOCIATIVE), fn (array $category) => $category['language_id'] == $language->id());
+        return array_filter(
+            $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
+            fn (array $category) => $category['language_id'] == $language->id()
+        );
     }
 
 
