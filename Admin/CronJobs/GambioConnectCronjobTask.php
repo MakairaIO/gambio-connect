@@ -145,14 +145,15 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
-        if (!$this->moduleConfigService->isMakairaInstallationServiceCalled()) {
+        $makairaUrl = $this->moduleConfigService->getMakairaUrl();
+        $makairaSecret = $this->moduleConfigService->getMakairaSecret();
+        $makairaInstance = $this->moduleConfigService->getMakairaInstance();
+
+        if (!$this->moduleConfigService->isMakairaInstallationServiceCalled() && !$makairaUrl && !$makairaSecret && !$makairaInstance) {
             $this->logError("Makaira Installation Service has not been called yet");
             MakairaInstallationService::callInstallationService($this->moduleConfigService);
             return false;
         }
-        $makairaUrl = $this->moduleConfigService->getMakairaUrl();
-        $makairaSecret = $this->moduleConfigService->getMakairaSecret();
-        $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
         if (!$makairaUrl || !$makairaInstance || !$makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
