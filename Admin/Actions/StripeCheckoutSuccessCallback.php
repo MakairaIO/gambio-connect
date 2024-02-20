@@ -27,9 +27,6 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
      */
     public function handle(Request $request, Response $response): Response
     {
-        $pageTitle = 'Makaira Gambio Connect - Successful Checkout';
-        $templatePath = __DIR__ . '/../ui/template/stripe/success.html';
-
         $stripe = new StripeService();
 
         $checkoutSessionId = $this->configurationService->getStripeCheckoutId();
@@ -44,11 +41,8 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
         try {
             MakairaInstallationService::callInstallationService($this->configurationService, $subdomain, $this->url->base());
         } catch (\Exception $exception) {
-            $data['duration'] = 'Error';
-            $template = $this->render($pageTitle, $templatePath, $data);
-            return $response->write($template);
+        } finally {
+            return $response->withRedirect('/admin/makaira/account');
         }
-
-        return $response->withRedirect('/admin/makaira/account');
     }
 }
