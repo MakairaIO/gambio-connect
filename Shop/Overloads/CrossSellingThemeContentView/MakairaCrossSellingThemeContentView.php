@@ -29,7 +29,8 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                 ($this->type === 'cross_selling'
                     && $this->configurationStorage->get('recoCrossSelling') != "")
                 || ($this->type === 'reverse_cross_selling'
-                    && $this->configurationStorage->get('recoReverseCrossSelling') != ""))
+                    && $this->configurationStorage->get('recoReverseCrossSelling') != "")
+            )
         ) {
             return match ($this->type) {
                 'cross_selling' => $this->loadCrossSelling(),

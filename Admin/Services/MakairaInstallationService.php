@@ -19,6 +19,7 @@ class MakairaInstallationService
 
 
     public function __construct(
+        protected ?ModuleConfigService $moduleConfigService = null,
         protected ?Client $client = null,
         private string $email = '',
         private string $subdomain = '',
@@ -35,6 +36,36 @@ class MakairaInstallationService
                                            'basic'
                                        ]
                                    ]);
+    }
+
+    public static function callInstallationService(ModuleConfigService $moduleConfigService, string|null $subdomain = null, string|null $baseUrl = null): void
+    {
+        $instance = new self();
+
+        if(!$subdomain || !$baseUrl) {
+            $data = $moduleConfigService->getMakairaInstallationServiceRequestData();
+            $instance->setRequestDataArray($data);
+        } else {
+            $checkoutSessionId = $moduleConfigService->getStripeCheckoutId();
+
+            $stripe = new StripeService();
+
+            $checkoutSession = $stripe->getCheckoutSession($checkoutSessionId);
+
+            $email = $checkoutSession->customer_details->email;
+            $instance->setEmail($email);
+            $instance->setCheckoutSessionId($checkoutSessionId);
+            $instance->setShopUrl($baseUrl);
+            $instance->setSubdomain(strtolower($subdomain));
+            $instance->setCallbackUri($baseUrl . '/shop.php?do=MakairaInstallationService');
+            $instance->setOptions([
+                'instance_name' => strtolower($subdomain)
+            ]);
+            $moduleConfigService->setMakairaInstallationServiceRequestData($instance->getRequestDataArray());
+        }
+        $instance->callRegistrationService();
+
+        $moduleConfigService->setMakairaInstallationServiceCalled();
     }
 
 
@@ -75,22 +106,46 @@ class MakairaInstallationService
         return $this;
     }
 
+    public function getRequestDataArray(): array
+    {
+        return [
+            'source'             => $this->source,
+            'subdomain'          => $this->subdomain,
+            'email'              => $this->email,
+            'shop_url'           => $this->shopUrl,
+            'callback_url'       => $this->callbackUri,
+            'options'            => $this->options,
+            'payment'            => [
+                'provider'       => 'stripe',
+                'checkout_id'    => $this->checkoutSessionId
+            ]
+        ];
+    }
+
+    public function setRequestDataArray(array $data): static
+    {
+        $this->source = $data['source'];
+
+        $this->subdomain = $data['subdomain'];
+
+        $this->email = $data['email'];
+
+        $this->shopUrl = $data['shop_url'];
+
+        $this->callbackUri = $data['callback_url'];
+
+        $this->options = $data['options'];
+
+        $this->checkoutSessionId = $data['payment']['checkout_id'];
+
+        return $this;
+    }
+
 
     public function callRegistrationService(): ResponseInterface
     {
         return $this->client->post('/api/register', [
-            'body' => json_encode([
-                                      'source'             => $this->source,
-                                      'subdomain'          => $this->subdomain,
-                                      'email'              => $this->email,
-                                      'shop_url'           => $this->shopUrl,
-                                      'callback_url'       => $this->callbackUri,
-                                      'options'            => $this->options,
-                                      'payment'            => [
-                                          'provider'       => 'stripe',
-                                          'checkout_id'    => $this->checkoutSessionId
-                                      ]
-                                  ]),
+            'body' => json_encode($this->getRequestDataArray()),
         ]);
     }
 }

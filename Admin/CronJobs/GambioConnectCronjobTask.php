@@ -2,6 +2,7 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
+use GXModules\Makaira\GambioConnect\Admin\Services\MakairaInstallationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
@@ -144,7 +145,11 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
-        return true;
+        if(!$this->moduleConfigService->setMakairaInstallationServiceCalled()) {
+            $this->logError("Makaira Installation Service has not been called yet");
+            MakairaInstallationService::callInstallationService($this->moduleConfigService);
+            return false;
+        }
         $makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
