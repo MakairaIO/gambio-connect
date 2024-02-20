@@ -107,17 +107,17 @@ class ModuleConfigService
 
     public function isPublicFieldsSetupDone(): bool
     {
-        return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
     }
 
     public function setPublicFieldsSetupDone(): void
     {
-        $this->configurationService->save(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+        return $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
     }
 
     public function getStripeCheckoutId(): string|null
     {
-        return $this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
     }
 
     public function setStripeCheckoutId(string|null $checkoutId = null): void
@@ -125,13 +125,13 @@ class ModuleConfigService
         if (!$checkoutId) {
             $this->configurationService->delete(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
         } else {
-            $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
+            $this->setConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION, $checkoutId);
         }
     }
 
     public function isStripeOverrideActive(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_OVERRIDE);
     }
 
     public function getRecoCrossSelling(): string
@@ -156,7 +156,17 @@ class ModuleConfigService
 
     public function getCronjobStatus(): bool
     {
-        return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE)?->value();
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE);
+    }
+
+    public function setMakairaImporterSetupDone(): void
+    {
+        $this->setConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
+    }
+
+    public function isMakairaImporterSetupDone(): bool
+    {
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
     }
 
     private function getConfigValue(string $key): string
@@ -172,17 +182,18 @@ class ModuleConfigService
     public static function getModuleConfigKeys(): array
     {
         return [
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE,
-        self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
-        self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
-        self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_OVERRIDE,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE,
+            self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
+            self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
         ];
     }
 }

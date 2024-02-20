@@ -25,14 +25,12 @@ class GambioConnectService implements GambioConnectServiceInterface
     // private ProductRepositoryReader $productReadService;
 
     public function __construct(
-        protected MakairaClient $client,
-        protected LanguageService $languageService,
-        protected Connection $connection,
-        protected MakairaLogger $logger,
-        protected ProductVariantsRepository $productVariantsRepository,
-        //   ProductRepositoryReader $productReadService,
+        protected MakairaClient               $client,
+        protected LanguageService         $languageService,
+        protected Connection                  $connection,
+        protected MakairaLogger               $logger,
+        protected ?ProductVariantsRepository $productVariantsRepository = null,
     ) {
-        // $this->productReadService = $productReadService;
     }
 
     protected function getLanguages(): Languages
