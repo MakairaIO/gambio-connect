@@ -13,6 +13,11 @@ use Gambio\Admin\Modules\Language\Services\LanguageRepository;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectImporterConfigService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
 
 /**
@@ -22,15 +27,49 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService as GambioCo
  */
 class GambioConnectService implements GambioConnectServiceInterface
 {
-    // private ProductRepositoryReader $productReadService;
-
     public function __construct(
-        protected MakairaClient               $client,
-        protected LanguageService         $languageService,
-        protected Connection                  $connection,
-        protected MakairaLogger               $logger,
+        protected MakairaClient $client,
+        protected LanguageService $languageService,
+        protected Connection $connection,
+        protected MakairaLogger $logger,
         protected ?ProductVariantsRepository $productVariantsRepository = null,
     ) {
+    }
+
+    private function getService(string $service): static
+    {
+        return new $service(
+            $this->client,
+            $this->languageService,
+            $this->connection,
+            $this->logger,
+            $this->productVariantsRepository
+        );
+    }
+
+    public function getGambioConnectPublicFieldsService(): GambioConnectPublicFieldsService
+    {
+        return $this->getService(GambioConnectPublicFieldsService::class);
+    }
+
+    public function getImporterConfigService(): GambioConnectImporterConfigService
+    {
+        return $this->getService(GambioConnectImporterConfigService::class);
+    }
+
+    public function getCategoryService(): GambioConnectCategoryService
+    {
+        return $this->getService(GambioConnectCategoryService::class);
+    }
+
+    public function getManufacturerService(): GambioConnectManufacturerService
+    {
+        return $this->getService(GambioConnectManufacturerService::class);
+    }
+
+    public function getProductService(): GambioConnectProductService
+    {
+        return $this->getService(GambioConnectProductService::class);
     }
 
     protected function getLanguages(): Languages

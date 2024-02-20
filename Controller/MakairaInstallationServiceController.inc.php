@@ -6,6 +6,7 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepo
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
@@ -56,26 +57,18 @@ class MakairaInstallationServiceController extends HttpViewController
 
             $makairaLogger = MainFactory::create(MakairaLogger::class);
 
-            (new GambioConnectManufacturerService(
+            $gambioConnectService = new GambioConnectService(
                 $makairaClient,
                 $languageService,
                 $connection,
                 $makairaLogger
-            ))->prepareExport();
+            );
 
-            (new GambioConnectCategoryService(
-                $makairaClient,
-                $languageService,
-                $connection,
-                $makairaLogger
-            ))->prepareExport();
+            $gambioConnectService->getManufacturerService()->prepareExport();
 
-            (new GambioConnectProductService(
-                $makairaClient,
-                $languageService,
-                $connection,
-                $makairaLogger,
-            ))->prepareExport();
+            $gambioConnectService->getCategoryService()->prepareExport();
+
+            $gambioConnectService->getProductService()->getProductService();
 
             return new \JsonHttpControllerResponse(['success' => true]);
         }
