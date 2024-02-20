@@ -4,7 +4,7 @@ namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
+use Gambio\Admin\Modules\ProductVariant\Model\ValueObjects\ProductId;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
