@@ -10,6 +10,90 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 
 class MakairaProduct extends MakairaEntity
 {
+    public const FIELD_TYPE = 'type';
+
+    public const FIELD_ID = 'id';
+
+    public const FIELD_PARENT = 'parent';
+
+    public const FIELD_SHOP = 'shop';
+
+    public const FIELD_EAN = 'ean';
+
+    public const FIELD_ACTIVETO = 'activeto';
+
+    public const FIELD_ACTIVEFROM = 'activefrom';
+
+    public const FIELD_IS_VARIANT = 'is_Variant';
+
+    public const FIELD_ACTIVE = 'active';
+
+    public const FIELD_SORT = 'sort';
+
+    public const FIELD_STOCK = 'stock';
+
+    public const FIELD_ONSTOCK = 'onstock';
+
+    public const FIELD_PICTURE_URL_MAIN = 'picture_url_main';
+
+    public const FIELD_TITLE = 'title';
+
+    public const FIELD_SHORTDESC = 'shortdesc';
+
+    public const FIELD_LONGDESC = 'longdesc';
+
+    public const FIELD_PRICE = 'price';
+
+    public const FIELD_SOLDAMOUNT = 'soldamount';
+
+    public const FIELD_SEARCHABLE = 'searchable';
+
+    public const FIELD_SEARCHKEYS = 'searchkeys';
+
+    public const FIELD_URL = 'url';
+
+    public const FIELD_MAINCATEGORY = 'maincategory';
+
+    public const FIELD_MAINCATEGORYURL = 'maincategoryurl';
+
+    public const FIELD_CATEGORY = 'category';
+
+    public const FIELD_ATTRIBUTES = 'attributes';
+
+    public const FIELD_MANUFACTUERID = 'manufacturerid';
+
+    public const FIELD_MANUFACTURER_TITLE = 'manufacturer_title';
+
+    public const FIELDS = [
+        self::FIELD_ID,
+        self::FIELD_TYPE,
+        self::FIELD_PARENT,
+        self::FIELD_SHOP,
+        self::FIELD_EAN,
+        self::FIELD_ACTIVETO,
+        self::FIELD_ACTIVEFROM,
+        self::FIELD_IS_VARIANT,
+        self::FIELD_ACTIVE,
+        self::FIELD_SORT,
+        self::FIELD_STOCK,
+        self::FIELD_ONSTOCK,
+        self::FIELD_PICTURE_URL_MAIN,
+        self::FIELD_TITLE,
+        self::FIELD_SHORTDESC,
+        self::FIELD_LONGDESC,
+        self::FIELD_PRICE,
+        self::FIELD_SOLDAMOUNT,
+        self::FIELD_SEARCHABLE,
+        self::FIELD_SEARCHKEYS,
+        self::FIELD_CATEGORY,
+        self::FIELD_ATTRIBUTES,
+        self::FIELD_MANUFACTUERID,
+        self::FIELD_MANUFACTURER_TITLE,
+        self::FIELD_URL,
+        self::FIELD_MAINCATEGORY,
+        self::FIELD_MAINCATEGORYURL
+    ];
+
     private int $stock = 0;
     private float $price = 0.0;
 
@@ -30,6 +114,20 @@ class MakairaProduct extends MakairaEntity
     private string $manufacturerId = '';
     private string $manufacturerTitle = '';
 
+    private int $sortOrder = 0;
+
+    private bool $fsk18 = false;
+
+    private int $taxClassId = 0;
+
+    private string $gmAltText = '';
+
+    private int $productsVpe = 0;
+
+    private int $productsVpeStatus = 0;
+
+    private float $productsVpeValue = 0;
+
     /* Special makaira fields */
     private float $makBoostNormInsert = 0.0;
     private float $makBoostNormSold = 0.0;
@@ -40,16 +138,23 @@ class MakairaProduct extends MakairaEntity
 
     public function toArray(): array
     {
-        return [
-             /* Makaira fields */
-             ...parent::toArray(),
+        return array_merge(
+            /* Makaira fields */
+            parent::toArray(),
+            [
 
              /* Integer fields */
              'stock' => $this->stock,
              'price' => $this->price,
+             'tax_class_id' => $this->taxClassId,
+             'products_vpe' => $this->productsVpe,
+             'products_vpe_status' => $this->productsVpeStatus,
+             'products_vpe_value' => $this->productsVpeValue,
 
              /* Boolean fields */
              'is_variant' => $this->isVariant,
+             'onstock' => $this->getStock() > 0,
+             'fsk_18' => $this->fsk18,
 
              /* Array fields */
              'attributes' => $this->attributes,
@@ -67,6 +172,7 @@ class MakairaProduct extends MakairaEntity
              'maincategoryurl' => $this->mainCategoryUrl,
              'manufacturerid' => $this->manufacturerId,
              'manufacturer_title' => $this->manufacturerTitle,
+             'gm_alt_text' => $this->gmAltText,
 
              /* Special makaira fields */
              'mak_boost_norm_insert' => $this->makBoostNormInsert,
@@ -74,7 +180,8 @@ class MakairaProduct extends MakairaEntity
              'mak_boost_norm_rating' => $this->makBoostNormRating,
              'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
              'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
-        ];
+            ]
+        );
     }
 
 
@@ -403,4 +510,99 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
+
+    public function setFsk18(bool $fsk18): static
+    {
+        $this->fsk18 = $fsk18;
+
+        return $this;
+    }
+
+
+    public function setTaxClassId(int $taxClassId): static
+    {
+        $this->taxClassId = $taxClassId;
+
+        return $this;
+    }
+
+
+    public function setGmAltText(string $gmAltText): static
+    {
+        $this->gmAltText = $gmAltText;
+
+        return $this;
+    }
+
+
+    public function setProductsVpe(int $productsVpe): static
+    {
+        $this->productsVpe = $productsVpe;
+
+        return $this;
+    }
+
+
+    public function setProductsVpeStatus(int $productsVpeStatus): static
+    {
+        $this->productsVpeStatus = $productsVpeStatus;
+
+        return $this;
+    }
+
+
+    public function setProductsVpeValue(float $productsVpeValue): static
+    {
+        $this->productsVpeValue = $productsVpeValue;
+
+        return $this;
+    }
+
+
+    public function isFsk18(): bool
+    {
+        return $this->fsk18;
+    }
+
+
+    public function getTaxClassId(): int
+    {
+        return $this->taxClassId;
+    }
+
+
+    public function getGmAltText(): string
+    {
+        return $this->gmAltText;
+    }
+
+
+    public function getProductsVpe(): int
+    {
+        return $this->productsVpe;
+    }
+
+
+    public function getProductsVpeStatus(): int
+    {
+        return $this->productsVpeStatus;
+    }
+
+
+    public function getProductsVpeValue(): int
+    {
+        return $this->productsVpeValue;
+    }
+
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): static
+    {
+        $this->sortOrder = $sortOrder;
+
+        return $this;
+    }
 }

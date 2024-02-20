@@ -1,17 +1,29 @@
 {
-    "name": "dat.lieu/gambio-connect",
-    "autoload": {
-        "psr-4": {
-            "DatLieu\\GambioConnect\\": "/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Dat Lieu",
-            "email": "dl@marmalade.group"
-        }
+  "name": "makaira/gambio-connect",
+  "require": {
+    "stripe/stripe-php": "^13.9",
+    "respect/validation": "2.2.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.0",
+    "phpmd/phpmd": "@stable"
+  },
+  "scripts": {
+    "phpunit": [
+      "phpunit"
     ],
-    "require": {
-        "stripe/stripe-php": "^13.9"
-    }
+    "phpcs": [
+      "php vendor/bin/phpcbf"
+    ],
+    "phpcbf": [
+      "php vendor/bin/phpcbf"
+    ],
+    "phpmd": [
+      "php vendor/bin/phpmd . text  codesize,design --exclude 'tests/*,vendor/*'"
+    ],
+    "test": [
+      "@phpcs",
+      "@phpunit"
+    ]
+  }
 }

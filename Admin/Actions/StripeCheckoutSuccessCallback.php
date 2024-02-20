@@ -2,6 +2,7 @@
 
 namespace GXModules\Makaira\GambioConnect\Admin\Actions;
 
+use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Application;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
@@ -10,10 +11,10 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\MakairaInstallationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 
-class StripeCheckoutSuccessCallback extends AbstractAction
+class StripeCheckoutSuccessCallback extends AdminModuleAction
 {
     protected ConfigurationService $configurationService;
-    
+
     public function __construct(
         protected Application $application,
     ) {
@@ -25,25 +26,52 @@ class StripeCheckoutSuccessCallback extends AbstractAction
      */
     public function handle(Request $request, Response $response): Response
     {
+        $pageTitle = 'Makaira Gambio Connect - Successful Checkout';
+        $templatePath = __DIR__ . '/../ui/template/stripe/success.html';
+
         $stripe = new StripeService();
-        
+
         $checkoutSessionId = $this->configurationService->find('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
         $checkoutSession = $stripe->getCheckoutSession($checkoutSessionId);
-        
+
         $email = $checkoutSession->customer_details->email;
-        
+
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutEmail', $email);
-        
+
+        $subdomain = $request->getUri()->getHost() === 'stage.makaira.io'
+            ? 'gambio'
+            : str_replace(['http://', 'https://', '.'], ['', '', '-'], $request->getUri()->getHost());
+
+        $data = [
+            'email' => $email,
+            'shop_url' => $this->url->base(),
+            'subdomain' => strtolower($subdomain),
+            'instance_name' => strtolower($subdomain)
+        ];
+
         $installationService = new MakairaInstallationService();
         $installationService->setEmail($email);
         $installationService->setCheckoutSessionId($checkoutSessionId);
-        $configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
-        $installationService = new MakairaInstallationService();
-        $installationService->setShopUrl($request->getUri()->getHost());
-        $installationService->setSubdomain($request->getUri()->getUserInfo());
-        $installationService->setCallbackUri($request->getUri()->getHost().'shop.php?do=MakairaInstallationService');
-        $installationService->callRegistrationService();
-        
-        return $response->withJson(['success' => true]);
+        $installationService->setShopUrl($this->url->base());
+        $installationService->setSubdomain(strtolower($subdomain));
+        $installationService->setCallbackUri($this->url->base() . '/shop.php?do=MakairaInstallationService');
+        $installationService->setOptions([
+            'instance_name' => strtolower($subdomain)
+        ]);
+        try {
+            $installationServiceResponse = $installationService->callRegistrationService();
+        } catch (\Exception $exception) {
+            $data['duration'] = 'Error';
+            $template = $this->render($pageTitle, $templatePath, $data);
+            return $response->write($template);
+        }
+
+        $responseData = json_decode($installationServiceResponse->getBody()->getContents());
+
+        $data['duration'] = $responseData->estimate_duration_time;
+
+        $template = $this->render($pageTitle, $templatePath, $data);
+
+        return $response->write($template);
     }
 }

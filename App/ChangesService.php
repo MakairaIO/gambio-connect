@@ -51,7 +51,6 @@ class ChangesService
             $record = $this->connection->fetchAssociative($sqlSelect);
 
             if ($record !== false) {
-
                 $change = new Change(
                     (int) $record['id'],
                     $record['gambioid'],
@@ -81,5 +80,13 @@ class ChangesService
     public function delete(int $id): void
     {
         $this->connection->delete(self::TABLE_NAME, ['id' => $id]);
+    }
+
+    public function getQueueLength(): int
+    {
+        $sqlSelect = 'SELECT count(id) FROM ' . self::TABLE_NAME;
+        $queueLength = $this->connection->fetchOne($sqlSelect);
+
+        return (int) $queueLength;
     }
 }

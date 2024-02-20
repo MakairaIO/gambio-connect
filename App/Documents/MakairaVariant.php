@@ -12,136 +12,302 @@ class MakairaVariant extends MakairaEntity
 {
     private array $makairaDocument = [];
     private array $product;
+
+    private int $parent;
+
+    private string $ean;
+
+    private bool $isVariant = true;
+
+    private bool $active = true;
+
+    private int $sort;
+
+    private int $stock;
+
+    private string $picture_url_main = '';
+
+    private string $title;
+
+    private string $shortdesc;
+
+    private string $longdesc;
+
+    private float $price;
+
+    private string $searchkeys;
+
+    private string $meta_keywords;
+
+    private string $meta_description;
+
+    private string $maincategory;
+
+    private string $maincategoryurl;
+
     private ProductVariants $variants;
     private bool $delete = false;
     private array $options = [];
     private string $now;
 
+    public function __construct()
+    {
+        $this->now = (new DateTime())->format('Y-m-d H:i:s');
+    }
+
+
+    public function setProduct(array $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
 
     public function toArray(): array
     {
-        return [
-             /* Makaira fields */
-             ...parent::toArray(),
+        return array_merge(
+            /* Makaira fields */
+            parent::toArray(),
+            [
+
 
              /* Product fields */
 
-        ];
+             'id' => $this->getId(),
+             'type' => $this->getType(),
+             'parent' => $this->getParent(),
+             'shop' => $this->getShop(),
+             'ean' => $this->getEan(),
+             'isVariant' => $this->isVariant(),
+             'active' => $this->isActive(),
+             'stock' => $this->getStock(),
+             'onstock' => $this->isOnstock(),
+             'title' => $this->getTitle(),
+             'shortdesc' => $this->getShortdesc(),
+             'longdesc' => $this->getLongdesc(),
+             'price' => $this->getPrice(),
+             'meta_keywords' => $this->getMetaKeywords(),
+             'meta_description' => $this->getMetaDescription()
+            ]
+        );
     }
 
 
-    private function mapProduct(): array
+    public function getParent(): int
     {
-        if (!$this->product) {
-            return false;
-        }
-
-        $document = [
-            'data' =>  [
-                'type'                         => self::DOC_TYPE,
-                'id'                           => $this->product['products_id'],
-                'parent'                       => '',
-                'shop'                         => 1,
-                'ean'                          => $this->product['products_ean'],
-                'activeto'                     => '',
-                'activefrom'                   => '',
-                'isVariant'                    => false,
-                'active'                       => $this->getActive(),
-                'sort'                         => 0,
-                'stock'                        => $this->getStock(),
-                'onstock'                      => $this->getStock() > 0,
-                'picture_url_main'             => $this->product['products_image'],
-                'title'                        => $this->product['products_name'],
-                'shortdesc'                    => $this->product['products_short_description'],
-                'longdesc'                     => $this->product['products_description'],
-                'price'                        => $this->product['products_price'],
-                'soldamount'                   => "",
-                'searchable'                   => true,
-                'searchkeys'                   => $this->product['products_keywords'] ?? '',
-                'url'                          => $this->getUrl(),
-                'maincategory'                 => $this->product['main_category_id'],
-                'maincategoryurl'              => "",
-                'category'                     => [],
-                'attributes'                   => [],
-                'mak_boost_norm_insert'        => 0.0,
-                'mak_boost_norm_sold'          => 0.0,
-                'mak_boost_norm_rating'        => 0.0,
-                'mak_boost_norm_revenue'       => 0.0,
-                'mak_boost_norm_profit_margin' => 0.0,
-                'timestamp'                    => $this->now,
-                'manufacturerid'               => $this->product['manufacturers_id'],
-                'manufacturer_title'           => '',
-            ],
-            'source_revision' => 1,
-            'language_id' => $this->getLanguage()
-        ];
-        if ($this->delete) {
-            $document['delete'] = true;
-        }
-
-        return $document;
+        return $this->parent;
     }
 
 
-    private function mapVariant(ProductVariant $variant): array
+    public function setParent(int $parent): static
     {
-        $document = [
-            'data' =>  [
-                'type'                         => "variant",
-                'id'                           => $variant->id(),
-                'parent'                       => $this->product['products_id'],
-                'shop'                         => 1,
-                'ean'                          => $variant->ean(),
-                'activeto'                     => '',
-                'activefrom'                   => '',
-                'isVariant'                    => true,
-                'active'                       => $this->getActive(),
-                'sort'                         => 0,
-                'stock'                        => $variant->stock(),
-                'onstock'                      => $variant->stock() > 0,
-                'picture_url_main'             => $this->product['products_image'],
-                'title'                        => $this->product['products_name'],
-                'shortdesc'                    => $this->product['products_short_description'],
-                'longdesc'                     => $this->product['products_description'],
-                'price'                        => $variant->price(),
-                'soldamount'                   => "",
-                'searchable'                   => true,
-                'searchkeys'                   => $this->product['products_keywords'] ?? '',
-                'url'                          => $this->getUrl(),
-                'maincategory'                 => $this->product['main_category_id'],
-                'maincategoryurl'              => "",
-                'category'                     => [],
-                'attributes'                   => [],
-                'mak_boost_norm_insert'        => 0.0,
-                'mak_boost_norm_sold'          => 0.0,
-                'mak_boost_norm_rating'        => 0.0,
-                'mak_boost_norm_revenue'       => 0.0,
-                'mak_boost_norm_profit_margin' => 0.0,
-                'timestamp'                    => $this->now,
-                'manufacturerid'               => $this->product['manufacturers_id'],
-                'manufacturer_title'           => '',
+        $this->parent = $parent;
 
-                // 'additionalData'               => [
-                //     'releaseDate'        => (string) $releaseDate,
-                //     'popularity'         => $product->getSales(),
-                //     'creationDate'       => (string) $creationDate,
-                //     'weight'             => $product->getWeight(),
-                //     'shippingFree'       => $product->isShippingFree(),
-                //     'highlight'          => $product->highlight(),
-                //     'width'              => $product->getWidth(),
-                //     'height'             => $product->getHeight(),
-                //     'length'             => $product->getLength(),
-                // ],
-            ],
-            'source_revision' => 1,
-            'language_id' => $this->getLanguage()
-        ];
+        return $this;
+    }
 
-        if ($this->delete) {
-            $document['delete'] = true;
-        }
+    public function getEan(): string
+    {
+        return $this->ean;
+    }
 
-        return $document;
+
+    public function setEan(string $ean): static
+    {
+        $this->ean = $ean;
+
+        return $this;
+    }
+
+
+    public function isVariant(): bool
+    {
+        return $this->isVariant;
+    }
+
+
+    public function setIsVariant(bool $isVariant): static
+    {
+        $this->isVariant = $isVariant;
+
+        return $this;
+    }
+
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+
+
+    public function setSort(int $sort): static
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+
+    public function getStock(): int
+    {
+        return $this->stock;
+    }
+
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+
+    public function isOnstock(): bool
+    {
+        return $this->onStock;
+    }
+
+    public function setOnstock(bool $onStock): static
+    {
+        $this->onStock = $onStock;
+        return $this;
+    }
+
+
+    public function getPictureUrlMain(): string
+    {
+        return $this->picture_url_main;
+    }
+
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+
+    public function getShortdesc(): string
+    {
+        return $this->shortdesc;
+    }
+
+
+    public function setShortdesc(string $shortdesc): static
+    {
+        $this->shortdesc = $shortdesc;
+
+        return $this;
+    }
+
+
+    public function getLongdesc(): string
+    {
+        return $this->longdesc;
+    }
+
+
+    public function setLongdesc(string $longdesc): static
+    {
+        $this->longdesc = $longdesc;
+
+        return $this;
+    }
+
+
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+
+    public function setPrice(float $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+
+    public function getSearchkeys(): string
+    {
+        return $this->searchkeys;
+    }
+
+
+    public function setSearchkeys(string $searchkeys): static
+    {
+        $this->searchkeys = $searchkeys;
+
+        return $this;
+    }
+
+
+    public function getMetaKeywords(): string
+    {
+        return $this->meta_keywords;
+    }
+
+
+    public function setMetaKeywords(string $meta_keywords): static
+    {
+        $this->meta_keywords = $meta_keywords;
+
+        return $this;
+    }
+
+
+    public function getMetaDescription(): string
+    {
+        return $this->meta_description;
+    }
+
+
+    public function setMetaDescription(string $meta_description): static
+    {
+        $this->meta_description = $meta_description;
+
+        return $this;
+    }
+
+
+    public function getMaincategory(): string
+    {
+        return $this->maincategory;
+    }
+
+
+    public function setMaincategory(string $maincategory): static
+    {
+        $this->maincategory = $maincategory;
+
+        return $this;
+    }
+
+
+    public function getMaincategoryurl(): string
+    {
+        return $this->maincategoryurl;
+    }
+
+
+    public function setMaincategoryurl(string $maincategoryurl): static
+    {
+        $this->maincategoryurl = $maincategoryurl;
+
+        return $this;
     }
 
 
@@ -152,44 +318,5 @@ class MakairaVariant extends MakairaEntity
             'import_timestamp' =>  $this->now,
             'source_identifier' => 'gambio'
         ];
-    }
-
-    private function getActive(): bool
-    {
-        return true;
-    }
-
-    private function getLanguage(): string
-    {
-        return 'de';
-    }
-
-    private function getUrl(): string
-    {
-        return "";
-    }
-
-    private function getStock(): int
-    {
-        return 1;
-    }
-
-
-
-    private function getCategories(): array
-    {
-        return [];
-    }
-
-
-    private function checkQualityGate(): bool
-    {
-
-        return true;
-
-
-        // check if all required fields are set
-        // for errors
-
     }
 }

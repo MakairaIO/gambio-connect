@@ -2,101 +2,109 @@
 
 namespace GXModules\Makaira\GambioConnect\App\GambioConnectService;
 
+use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\GambioConnect\Service\GambioConnectEntityInterface;
+use GXModules\Makaira\GambioConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectManufacturerService extends GambioConnectService implements GambioConnectEntityInterface
 {
     private Language $currentLanguage;
-    
-    
-    
+
+
+
     public function prepareExport(): void
     {
-        $languages = $this->languageReadService->getLanguages();
-        
-        foreach($languages as $language) {
+        $languages = $this->getLanguages();
+
+        foreach ($languages as $language) {
             $manufacturers = $this->getQuery($language);
-            
-            foreach($manufacturers as $manufacturer) {
-                $this->connection->executeQuery('CALL makairaChange(' . $manufacturer['manufacturers_id'] . ', "manufacturer")');
+
+            foreach ($manufacturers as $manufacturer) {
+                $this->connection->executeQuery(
+                    'CALL makairaChange('
+                        . $manufacturer['manufacturers_id']
+                        . ', "manufacturer")'
+                );
             }
         }
     }
-    
-    
+
+
     /**
      * @throws Exception
      */
     public function export(): void
     {
-        $languages = $this->languageReadService->getLanguages();
-        
+        $languages = $this->getLanguages();
+
         $makairaExports = $this->getEntitiesForExport('manufacturer');
-        
-        if(!empty($makairaExports)) {
-            foreach($languages as $language) {
-                
+
+        if (!empty($makairaExports)) {
+            foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $manufacturers = $this->getQuery($language, $makairaExports);
-                
-                foreach($manufacturers as $manufacturer) {
-                    $this->pushRevision($manufacturer);
+
+                $documents = [];
+
+                foreach ($manufacturers as $manufacturer) {
+                    try {
+                        $documents[] = $this->pushRevision($manufacturer);
+                    } catch (Exception $exception) {
+                        $this->logger->error("Manufacturer Export to Makaira Failed", [
+                            'id' => $manufacturer['manufacturers_id'],
+                            'message' => $exception->getMessage()
+                        ]);
+                    }
+                }
+                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+                $response = $this->client->pushRevision($data);
+                $this->logger->info(
+                    'Makaira Manufacturer Documents: '
+                        . count($documents)
+                        . ' with Status Code '
+                        . $response->getStatusCode()
+                );
+                foreach ($manufacturers as $manufacturer) {
                     $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
                 }
             }
         }
     }
-    
-    
+
+
     /**
      * @throws Exception
      */
-    public function pushRevision(array $manufacturer): void
+    public function pushRevision(array $manufacturer): MakairaEntity
     {
-        $makairaManufactuer = MakairaDataMapper::mapManufacturer($manufacturer);
-        
-        $data = $this->addMakairaDocumentWrapper($makairaManufactuer, $this->currentLanguage);
-        
-        $response = $this->client->push_revision($data);
-        
-        $this->logger->info('Makaira Manufacturer Status for: ' . $manufacturer['manufacturers_id'] . ': ' . $response->getStatusCode());
+        return MakairaDataMapper::mapManufacturer($manufacturer);
     }
-    
-    public function replace(): void
-    {
-        $this->client->rebuild(['manufacturer']);
-    }
-    
-    
-    public function switch(): void
-    {
-        $this->client->rebuild(['manufacturer']);
-    }
-    
-    
+
+
     public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('manufacturers')
-            ->leftJoin('manufacturers',
-                       'manufacturers_info',
-                       'manufacturers_info',
-                       'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id')
+            ->leftJoin(
+                'manufacturers',
+                'manufacturers_info',
+                'manufacturers_info',
+                'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id'
+            )
             ->where('manufacturers_info.languages_id = :languageId')
             ->setParameter('languageId', $language->id());
-        
-        if(!empty($makairaChanges)) {
-            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
+
+        if (!empty($makairaChanges)) {
+            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
             $query->where('manufacturers.manufacturers_id IN (:ids)')
                 ->setParameter('ids', implode(',', array_values($ids)));
         }
-        
-        return $query->fetchAllAssociative();
+
+        return $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
     }
 }

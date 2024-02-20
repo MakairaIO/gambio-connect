@@ -3,9 +3,12 @@
 namespace GXModules\Makaira\GambioConnect\App;
 
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use MainFactory;
+use Psr\Http\Message\ResponseInterface;
 
 class MakairaClient
 {
@@ -14,27 +17,19 @@ class MakairaClient
     private string $makairaUrl;
     private string $makairaSecret;
     private string $makairaInstance;
+    private ModuleConfigService $moduleConfigService;
 
-
-    /**
-     * @var ConfigurationFinder
-     */
-    private $configurationFinder;
-
-    public function __construct(ConfigurationFinder $configurationFinder)
+    public function __construct(ConfigurationService $configurationFinder)
     {
 
-        $this->configurationFinder = $configurationFinder;
-        $this->makairaUrl =  $this->configurationFinder->get('modules/MakairaGambioConnect/makairaUrl', 'https://stage.makaira.io');
-        $this->makairaSecret = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaSecret', 'aAO3XD4D2FoGxGKCVz4t');
-        $this->makairaInstance = $this->configurationFinder->get('modules/MakairaGambioConnect/makairaInstance', 'gambio');
+        $this->moduleConfigService = new ModuleConfigService($configurationFinder);
+        $this->makairaUrl = $this->moduleConfigService->getMakairaUrl();
+        $this->makairaSecret = $this->moduleConfigService->getMakairaSecret();
+        $this->makairaInstance = $this->moduleConfigService->getMakairaInstance();
         $this->nonce = bin2hex(random_bytes(8));
 
-
-        //  dump($this->options->get('makairaInstance'));
-
         $this->client = new Client([
-            'base_uri' => rtrim($this->makairaUrl, "/") . '/persistence/', // we trim the url to make sure we have no double slashes
+            'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
             'headers' => [
                 'X-Makaira-Instance' => $this->makairaInstance,
                 'Accept' => 'application/json',
@@ -44,7 +39,7 @@ class MakairaClient
     }
 
 
-    private function get_hash($body): string
+    private function getHash($body): string
     {
         return hash_hmac(
             'sha256',
@@ -57,11 +52,12 @@ class MakairaClient
     {
         return [
             'X-Makaira-Nonce' => $this->nonce,
-            'X-Makaira-Hash' => $this->get_hash($body),
+            'X-Makaira-Hash' => $this->getHash($body),
+            'content-type' => 'application/json'
         ];
     }
 
-    public function do_request($method, $url, $body)
+    public function doRequest($method, $url, $body = '')
     {
         try {
             return $this->client->request($method, $url, [
@@ -73,9 +69,9 @@ class MakairaClient
         }
     }
 
-    public function push_revision(array $document)
+    public function pushRevision(array $document)
     {
-        return $this->do_request('PUT', 'revisions', $document);
+        return $this->doRequest('PUT', 'persistence/revisions', $document);
     }
 
     public function rebuild(array $types)
@@ -84,7 +80,7 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'revisions/rebuild', $body);
+        return $this->doRequest('POST', 'persistence/revisions/rebuild', $body);
     }
 
     public function switch(array $types)
@@ -93,6 +89,86 @@ class MakairaClient
             'docTypes' => $types
         ];
 
-        return $this->do_request('POST', 'revisions/switch', $body);
+        return $this->doRequest('POST', 'persistence/revisions/switch', $body);
+    }
+
+    public function getPublicFields(): \Psr\Http\Message\ResponseInterface
+    {
+        $query = [
+            '_start' => 0,
+            '_end' => 100,
+            '_sort' => 'changed',
+            '_order' => 'DESC'
+        ];
+        return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
+    }
+
+    public function setPublicField(string $field): \Psr\Http\Message\ResponseInterface
+    {
+        return $this->doRequest('POST', 'publicfield', [
+            'field' => $field,
+            'fieldName' => $field,
+            'fieldId' => 'new',
+            'fieldType' => 'field',
+            'onDetailPage' => true,
+            'onLandingPage' => true,
+            'onListingPage' => true,
+        ]);
+    }
+
+    public function createImporter(): ResponseInterface
+    {
+        return $this->doRequest('POST', 'importer/config', [
+            'internalTitle' => 'GambioConnect Importer',
+            'languages' => [],
+            'notificationsEnabled' => false,
+            'notificationMails' => [],
+            'otherSchedules' => [
+                [
+                    'active' => true,
+                    'autoswitch' => false,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'enabled' => true,
+                    'kind' => 'continously',
+                    'timeout' => 21600
+                ],
+                [
+                    'active' => false,
+                    'autoswitch' => true,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'kind' => 'one-time',
+                    'timeout' => 21600
+                ]
+            ],
+            'runnerCountMax' => 500,
+            'scheduledImporters' => [],
+            'schedules' => [
+                [
+                    'active' => true,
+                    'autoswitch' => false,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'enabled' => true,
+                    'kind' => 'continously',
+                    'timeout' => 21600
+                ],
+                [
+                    'active' => false,
+                    'autoswitch' => true,
+                    'bulk' => true,
+                    'cronExpression' => '',
+                    'kind' => 'one-time',
+                    'timeout' => 21600
+                ]
+            ],
+            'sourceAuthPassword' => '',
+            'sourceAuthUser' => '',
+            'sourceSecret' => $this->makairaSecret,
+            'sourceType' => 'persistence-layer',
+            'sourceUrl' => '',
+            'targetType' => 'makaira'
+        ]);
     }
 }

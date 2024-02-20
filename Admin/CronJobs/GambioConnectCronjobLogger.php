@@ -1,8 +1,9 @@
 <?php
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+
 class GambioConnectCronjobLogger extends AbstractCronjobLogger
 {
-
     /**
      * @inheritDoc
      */

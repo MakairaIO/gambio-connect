@@ -1,44 +1,83 @@
 <?php
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+
+use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectImporterConfigService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
 class GambioConnectCronjobTask extends AbstractCronjobTask
 {
     protected GambioConnectManufacturerService $gambioConnectManufacturerService;
-    protected GambioConnectCategoryService     $gambioConnectCategoryService;
-    protected GambioConnectProductService      $gambioConnectProductService;
+    protected GambioConnectCategoryService $gambioConnectCategoryService;
+    protected GambioConnectProductService $gambioConnectProductService;
+
+    protected GambioConnectPublicFieldsService $gambioConnectPublicFieldsService;
+
+    protected GambioConnectImporterConfigService $gambioConnectImporterConfigService;
+
+    protected ModuleConfigService $moduleConfigService;
 
 
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
 
+        $this->moduleConfigService = $dependencies['ModuleConfigService'];
+
         if ($this->moduleIsInstalledAndActive()) {
             $this->gambioConnectManufacturerService = new GambioConnectManufacturerService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
             );
 
             $this->gambioConnectCategoryService = new GambioConnectCategoryService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
             );
 
             $this->gambioConnectProductService = new GambioConnectProductService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
-                $dependencies['MakairaLogger']
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
+            );
+
+            $this->gambioConnectPublicFieldsService = new GambioConnectPublicFieldsService(
+                $dependencies['MakairaClient'],
+                $dependencies['LanguageReadService'],
+                $dependencies['Connection'],
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository']
+            );
+
+            $this->gambioConnectImporterConfigService = new GambioConnectImporterConfigService(
+                $dependencies['MakairaClient'],
+                $dependencies['LanguageReadService'],
+                $dependencies['Connection'],
+                $dependencies['MakairaLogger'],
+                $dependencies['productVariantsRepository'],
             );
 
             return function () {
+                if (!$this->checkImporterSetup()) {
+                    $this->logInfo("Importer was not created yet - creating it now");
+                    $this->gambioConnectImporterConfigService->setUpImporter();
+
+                    $this->completeImporterSetUp();
+                }
+
                 $this->logInfo('GambioConnect Cronjob Started');
 
                 $this->logInfo('Begin Export Manufacturers to PersistenceLayer');
@@ -54,8 +93,20 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 $this->gambioConnectProductService->export();
 
                 $this->logInfo('All Exports to PersistenceLayer Successful');
+
+                if (!$this->checkPublicFieldsSetup()) {
+                    $this->logInfo('Makaira Public Fields Setup Has Started');
+
+                    $this->gambioConnectPublicFieldsService->setUpPublicFields();
+
+                    $this->logInfo('Makaira Public Fields has been setup');
+
+                    $this->completePublicFieldsSetup();
+                }
             };
         }
+        return function () {
+        };
     }
 
 
@@ -93,47 +144,64 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
     protected function moduleIsInstalledAndActive(): bool
     {
-        $configurationFinder = $this->dependencies->getDependencies()['ConfigurationFinder'];
-
-        $makairaUrl = $configurationFinder->get('modules/MakairaGambioConnect/makairaUrl')->value();
-
-        $makairaSecret = $configurationFinder->get('modules/MakairaGambioConnect/makairaSecret')->value();
-
-        $makairaInstance = $configurationFinder->get('modules/MakairaGambioConnect/makairaInstance')->value();
+        return true;
+        $makairaUrl = $this->moduleConfigService->getMakairaUrl();
+        $makairaSecret = $this->moduleConfigService->getMakairaSecret();
+        $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
         if (!$makairaUrl || !$makairaInstance || !$makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
             return false;
         }
 
-        $stripeCheckoutId = $configurationFinder->get('modules/MakairaGambioConnect/stripeCheckoutSession')?->value();
-        $stripeOverride = $configurationFinder->get('modules/MakairaGambioConnect/stripeOverride')?->value();
-        if (!$stripeOverride) {
-            $this->logInfo('Stripe Override is not active');
-            if ($stripeCheckoutId) {
-                $this->logInfo('Stripe Subscription ID found');
-                $stripe = new StripeService();
-                $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
-                $isPaid = $checkoutSession->payment_status === "paid";
-                if ($isPaid) {
-                    $this->logInfo("Stripe Subscription Status is Paid");
-                }
-                $installed = (bool)$configurationFinder->get('gm_configuration/MODULE_CENTER_MAKAIRAGAMBIOCONNECT_INSTALLED');
-                if ($installed) {
-                    $this->logInfo('Module is Installed');
-                }
-                $active = (bool)$configurationFinder->get('modules/MakairaGambioConnect/active');
-                if ($active) {
-                    $this->logInfo('Module is Active');
-                }
-                return $installed && $active && $isPaid;
+        $stripeCheckoutId = $this->moduleConfigService->getStripeCheckoutId();
+        $stripeOverride = $this->moduleConfigService->isStripeOverrideActive();
+
+        if ($stripeCheckoutId) {
+            $this->logInfo('Stripe Subscription ID found');
+            $stripe = new StripeService();
+            $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+            $isPaid = $checkoutSession->payment_status === "paid";
+            if ($isPaid) {
+                $this->logInfo("Stripe Subscription Status is Paid");
             }
+            $installed = $this->moduleConfigService->getIsInstalled();
+
+            if ($installed) {
+                $this->logInfo('Module is Installed');
+            }
+            $active = $this->moduleConfigService->getIsActive();
+            if ($active) {
+                $this->logInfo('Module is Active');
+            }
+            return $installed && $active && $isPaid;
+        }
+        if ($stripeOverride) {
+            $this->logInfo('Stripe Override is not active');
             $this->logInfo('No Stripe Subscription ID found');
-        } else if ($stripeOverride && $stripeCheckoutId) {
-            $this->logInfo('Stripe Override is active but Stripe Checkout Session ID if found');
-            return false;
+            return true;
         }
 
         return false;
+    }
+
+    protected function checkPublicFieldsSetup(): bool
+    {
+        return $this->moduleConfigService->isPublicFieldsSetupDone();
+    }
+
+    private function completePublicFieldsSetup(): void
+    {
+        $this->moduleConfigService->setPublicFieldsSetupDone();
+    }
+
+    protected function checkImporterSetup(): bool
+    {
+        return $this->moduleConfigService->isMakairaImporterSetupDone();
+    }
+
+    public function completeImporterSetup(): void
+    {
+        $this->moduleConfigService->setMakairaImporterSetupDone();
     }
 }
