@@ -68,7 +68,7 @@ class MakairaInstallationServiceController extends HttpViewController
 
             $gambioConnectService->getCategoryService()->prepareExport();
 
-            $gambioConnectService->getProductService()->getProductService();
+            $gambioConnectService->getProductService()->prepareExport();
 
             return new \JsonHttpControllerResponse(['success' => true]);
         }
