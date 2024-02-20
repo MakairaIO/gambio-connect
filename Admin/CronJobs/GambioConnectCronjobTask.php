@@ -1,5 +1,7 @@
 <?php
 
+// phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
+
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
@@ -69,7 +71,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
             );
 
             return function () {
-                if(!$this->checkImporterSetup()) {
+                if (!$this->checkImporterSetup()) {
                     $this->logInfo("Importer was not created yet - creating it now");
                     $this->gambioConnectImporterConfigService->setUpImporter();
 
@@ -92,7 +94,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
 
                 $this->logInfo('All Exports to PersistenceLayer Successful');
 
-                if(!$this->checkPublicFieldsSetup()) {
+                if (!$this->checkPublicFieldsSetup()) {
                     $this->logInfo('Makaira Public Fields Setup Has Started');
 
                     $this->gambioConnectPublicFieldsService->setUpPublicFields();

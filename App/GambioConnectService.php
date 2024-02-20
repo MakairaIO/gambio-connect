@@ -25,10 +25,10 @@ class GambioConnectService implements GambioConnectServiceInterface
     // private ProductRepositoryReader $productReadService;
 
     public function __construct(
-        protected MakairaClient               $client,
-        protected LanguageService         $languageService,
-        protected Connection                  $connection,
-        protected MakairaLogger               $logger,
+        protected MakairaClient $client,
+        protected LanguageService $languageService,
+        protected Connection $connection,
+        protected MakairaLogger $logger,
         protected ProductVariantsRepository $productVariantsRepository,
         //   ProductRepositoryReader $productReadService,
     ) {
@@ -80,7 +80,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             'source_identifier' => 'gambio',
         ];
 
-        foreach($documents as $document) {
+        foreach ($documents as $document) {
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
 

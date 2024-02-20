@@ -24,6 +24,7 @@ class StripeService
         private string $cancelUrl = 'http://0.0.0.0:2001/cancel',
         private string $shopUrl = '',
     ) {
+        // phpcs:ignore Generic.Files.LineLength
         \Stripe\Stripe::setApiKey('rk_test_51OZrRtKFggkIYTFu2fF8ez660T4WGFSR0Dke4BVPsu5JeJepy2paR1QhoMtGTdaoyeIg8Jny6FMCWVVlrlwXRyq000mY2tYjQM');
     }
 
@@ -99,7 +100,7 @@ class StripeService
             'metadata' => [
                 'shop_url' => $this->shopUrl
             ]
-                               ]);
+        ]);
 
         $this->configurationService->save('modules/MakairaGambioConnect/stripeCheckoutSession', $session->id);
 

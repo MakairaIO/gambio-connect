@@ -20,12 +20,12 @@ class MakairaInstallationService
 
     public function __construct(
         protected ?Client $client = null,
-        private string    $email = '',
-        private string    $subdomain = '',
-        private string    $shopUrl = '',
-        private string    $checkoutSessionId = '',
-        private string    $callbackUri = '',
-        private array     $options = []
+        private string $email = '',
+        private string $subdomain = '',
+        private string $shopUrl = '',
+        private string $checkoutSessionId = '',
+        private string $callbackUri = '',
+        private array $options = []
     ) {
         $this->client = new Client([
                                        'base_uri' => self::URL,

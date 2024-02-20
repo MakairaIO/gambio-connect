@@ -51,7 +51,6 @@ class ChangesService
             $record = $this->connection->fetchAssociative($sqlSelect);
 
             if ($record !== false) {
-
                 $change = new Change(
                     (int) $record['id'],
                     $record['gambioid'],

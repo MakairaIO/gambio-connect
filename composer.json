@@ -3,5 +3,23 @@
   "require": {
     "stripe/stripe-php": "^13.9",
     "respect/validation": "2.2.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.0"
+  },
+  "scripts": {
+    "phpunit": [
+      "phpunit"
+    ],
+    "phpcs": [
+      "php vendor/bin/phpcbf"
+    ],
+    "phpcbf": [
+      "php vendor/bin/phpcbf"
+    ],
+    "test": [
+      "@phpcs",
+      "@phpunit"
+    ]
   }
 }

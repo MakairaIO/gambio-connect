@@ -12,7 +12,6 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\ChangesService;
 use Respect\Validation\Validator as v;
 
-
 /**s
  * Class GambioConnectAccount
  *
@@ -37,7 +36,6 @@ class GambioConnectAccount extends AdminModuleAction
     public function handle(Request $request, Response $response): Response
     {
         if ($this->moduleStatusService->isInSetup()) {
-
             $template = $this->render(
                 $this->translate('account', 'general'),
                 $this->templatePathInSetup,

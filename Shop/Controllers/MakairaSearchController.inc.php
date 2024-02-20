@@ -65,6 +65,4 @@ class MakairaSearchController extends HttpViewController
 
         return new HttpControllerResponse($html);
     }
-
-
 }
