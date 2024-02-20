@@ -56,8 +56,6 @@ class MakairaInstallationServiceController extends HttpViewController
 
             $makairaLogger = MainFactory::create(MakairaLogger::class);
 
-            $productVariantsRepository = LegacyDependencyContainer::getInstance()->get(ProductVariantsRepository::class);
-
             (new GambioConnectManufacturerService(
                 $makairaClient,
                 $languageService,
@@ -77,7 +75,6 @@ class MakairaInstallationServiceController extends HttpViewController
                 $languageService,
                 $connection,
                 $makairaLogger,
-                $productVariantsRepository
             ))->prepareExport();
 
             return new \JsonHttpControllerResponse(['success' => true]);
