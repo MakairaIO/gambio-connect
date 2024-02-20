@@ -1,4 +1,4 @@
-name: Stable Branch Workflow
+name: Release Workflow
 on:
   push:
     branches: ["[0-9]+.x", "main", "feature/MKGO-22-semantic-release"]
