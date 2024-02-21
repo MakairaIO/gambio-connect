@@ -5,6 +5,7 @@
 use GXModules\Makaira\GambioConnect\Admin\Services\MakairaInstallationService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
+use GXModules\Makaira\GambioConnect\App\GambioConnectService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectImporterConfigService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufacturerService;
@@ -31,7 +32,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
         $this->moduleConfigService = $dependencies['ModuleConfigService'];
 
         if ($this->moduleIsInstalledAndActive()) {
-            $gambioConnectService = new \GXModules\Makaira\GambioConnect\App\GambioConnectService(
+            $gambioConnectService = new GambioConnectService(
                 $dependencies['MakairaClient'],
                 $dependencies['LanguageReadService'],
                 $dependencies['Connection'],
@@ -145,6 +146,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
             $this->logInfo('Stripe Subscription ID found');
             $stripe = new StripeService();
             $checkoutSession = $stripe->getCheckoutSession($stripeCheckoutId);
+            $this->logInfo("Stripe Checkout Session Payment Status: " . $checkoutSession->payment_status);
             $isPaid = $checkoutSession->payment_status === "paid";
             if ($isPaid) {
                 $this->logInfo("Stripe Subscription Status is Paid");

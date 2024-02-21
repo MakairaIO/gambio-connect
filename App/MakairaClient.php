@@ -130,7 +130,7 @@ class MakairaClient
                     'bulk' => true,
                     'cronExpression' => '',
                     'enabled' => true,
-                    'kind' => 'continously',
+                    'kind' => 'continuously',
                     'timeout' => 21600
                 ],
                 [
@@ -151,7 +151,7 @@ class MakairaClient
                     'bulk' => true,
                     'cronExpression' => '',
                     'enabled' => true,
-                    'kind' => 'continously',
+                    'kind' => 'continuously',
                     'timeout' => 21600
                 ],
                 [

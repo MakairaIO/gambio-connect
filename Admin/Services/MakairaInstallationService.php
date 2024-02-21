@@ -40,32 +40,34 @@ class MakairaInstallationService
 
     public static function callInstallationService(ModuleConfigService $moduleConfigService, string|null $subdomain = null, string|null $baseUrl = null): void
     {
-        $instance = new self();
+        if($moduleConfigService->shouldMakairaInstallationServiceBeCalled()) {
+            $instance = new self();
 
-        if (!$subdomain || !$baseUrl) {
-            $data = $moduleConfigService->getMakairaInstallationServiceRequestData();
-            $instance->setRequestDataArray($data);
-        } else {
-            $checkoutSessionId = $moduleConfigService->getStripeCheckoutId();
+            if (!$subdomain || !$baseUrl) {
+                $data = $moduleConfigService->getMakairaInstallationServiceRequestData();
+                $instance->setRequestDataArray($data);
+            } else {
+                $checkoutSessionId = $moduleConfigService->getStripeCheckoutId();
 
-            $stripe = new StripeService();
+                $stripe = new StripeService();
 
-            $checkoutSession = $stripe->getCheckoutSession($checkoutSessionId);
+                $checkoutSession = $stripe->getCheckoutSession($checkoutSessionId);
 
-            $email = $checkoutSession->customer_details->email;
-            $instance->setEmail($email);
-            $instance->setCheckoutSessionId($checkoutSessionId);
-            $instance->setShopUrl($baseUrl);
-            $instance->setSubdomain(strtolower($subdomain));
-            $instance->setCallbackUri($baseUrl . '/shop.php?do=MakairaInstallationService');
-            $instance->setOptions([
-                'instance_name' => strtolower($subdomain)
-            ]);
-            $moduleConfigService->setMakairaInstallationServiceRequestData($instance->getRequestDataArray());
+                $email = $checkoutSession->customer_details->email;
+                $instance->setEmail($email);
+                $instance->setCheckoutSessionId($checkoutSessionId);
+                $instance->setShopUrl($baseUrl);
+                $instance->setSubdomain(strtolower($subdomain));
+                $instance->setCallbackUri($baseUrl . '/shop.php?do=MakairaInstallationService');
+                $instance->setOptions([
+                    'instance_name' => strtolower($subdomain)
+                ]);
+                $moduleConfigService->setMakairaInstallationServiceRequestData($instance->getRequestDataArray());
+            }
+            $instance->callRegistrationService();
+
+            $moduleConfigService->setMakairaInstallationServiceCalled();
         }
-        $instance->callRegistrationService();
-
-        $moduleConfigService->setMakairaInstallationServiceCalled();
     }
 
 
