@@ -40,7 +40,7 @@ class MakairaInstallationService
 
     public static function callInstallationService(ModuleConfigService $moduleConfigService, string|null $subdomain = null, string|null $baseUrl = null): void
     {
-        if($moduleConfigService->shouldMakairaInstallationServiceBeCalled()) {
+        if ($moduleConfigService->shouldMakairaInstallationServiceBeCalled()) {
             $instance = new self();
 
             if (!$subdomain || !$baseUrl) {

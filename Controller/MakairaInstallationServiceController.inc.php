@@ -45,7 +45,7 @@ class MakairaInstallationServiceController extends HttpViewController
 
             $this->moduleConfigService->setMakairaInstance($this->_getPostData('instance'));
 
-            $this->moduleConfigService->setMakairaSecret($this->_getPostData('shared_secret'));
+            $this->moduleConfigService->setMakairaSecret($this->_getPostData('sharedSecret'));
 
             $makairaClient = new MakairaClient(
                 LegacyDependencyContainer::getInstance()->get(ConfigurationService::class)
