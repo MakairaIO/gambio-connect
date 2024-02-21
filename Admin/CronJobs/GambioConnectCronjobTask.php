@@ -128,7 +128,7 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
-        if (!$this->moduleConfigService->isMakairaInstallationServiceCalled() && !$makairaUrl && !$makairaSecret && !$makairaInstance) {
+        if (!$this->moduleConfigService->isMakairaInstallationServiceCalled()) {
             $this->logError("Makaira Installation Service has not been called yet");
             MakairaInstallationService::callInstallationService($this->moduleConfigService);
             return false;

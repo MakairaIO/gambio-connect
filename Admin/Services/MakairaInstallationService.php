@@ -64,9 +64,13 @@ class MakairaInstallationService
                 ]);
                 $moduleConfigService->setMakairaInstallationServiceRequestData($instance->getRequestDataArray());
             }
-            $instance->callRegistrationService();
+            try {
+                $instance->callRegistrationService();
 
-            $moduleConfigService->setMakairaInstallationServiceCalled();
+                $moduleConfigService->setMakairaInstallationServiceCalled();
+            }catch(\Exception $exception) {
+
+            }
         }
     }
 
@@ -136,9 +140,9 @@ class MakairaInstallationService
 
         $this->callbackUri = $data['callback_url'];
 
-        $this->options = $data['options'];
+        $this->options = (array)$data['options'];
 
-        $this->checkoutSessionId = $data['payment']['checkout_id'];
+        $this->checkoutSessionId = $data['payment']->checkout_id;
 
         return $this;
     }

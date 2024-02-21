@@ -182,7 +182,7 @@ class ModuleConfigService
 
     public function isMakairaInstallationServiceCalled(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED)?->value(
+        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED)?->value(
         ) ?? false;
     }
 
@@ -202,7 +202,7 @@ class ModuleConfigService
     {
         $data = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA);
         if (!empty($data)) {
-            return json_decode($data);
+            return (array)json_decode($data);
         }
         return [];
     }

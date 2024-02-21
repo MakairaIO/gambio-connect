@@ -26,6 +26,8 @@ class MakairaInstallationServiceController extends HttpViewController
 
     private ModuleConfigService $moduleConfigService;
 
+    private \Psr\Log\LoggerInterface $logger;
+
     public function __construct(
         HttpContextReaderInterface $httpContextReader,
         HttpResponseProcessorInterface $httpResponseProcessor,
@@ -35,11 +37,17 @@ class MakairaInstallationServiceController extends HttpViewController
 
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
 
+        $this->logger = new MakairaLogger();
+
         $this->moduleConfigService = new ModuleConfigService($this->configurationService);
     }
 
     public function actionDefault(): \JsonHttpControllerResponse
     {
+        $this->logger->debug("Makaira Installation Service Callback", [
+            'data' => $this->_getPostDataCollection()
+        ]);
+
         if ($this->moduleConfigService->getStripeCheckoutId() === $this->_getPostData('stripeCheckoutId')) {
             $this->moduleConfigService->setMakairaUrl($this->_getPostData('url'));
 

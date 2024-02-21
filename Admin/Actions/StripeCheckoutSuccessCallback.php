@@ -38,15 +38,12 @@ class StripeCheckoutSuccessCallback extends AdminModuleAction
             ? 'gambio'
             : str_replace(['http://', 'https://', '.'], ['', '', '-'], $request->getUri()->getHost());
 
-        try {
-            $this->configurationService->setMakairaCronJobActive();
+        $this->configurationService->setMakairaCronJobActive();
 
-            $this->configurationService->setMakairaCronJobInterval();
+        $this->configurationService->setMakairaCronJobInterval();
 
-            MakairaInstallationService::callInstallationService($this->configurationService, $subdomain, $this->url->base());
-        } catch (\Exception $exception) {
-        } finally {
-            return $response->withRedirect('/admin/makaira/account');
-        }
+        MakairaInstallationService::callInstallationService($this->configurationService, $subdomain, $this->url->base());
+
+        return $response->withRedirect($this->url->admin() . '/makaira/account');
     }
 }
