@@ -12,12 +12,6 @@
     "@semantic-release/github",
     "@semantic-release/npm",
     [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "sed -i -E \"s/('version'\\s+=>\\s+').*(',)/\\1${nextRelease.version}\\2/\" metadata.php"
-      }
-    ],
-    [
       "@semantic-release/git",
       {
         "assets": [
