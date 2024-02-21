@@ -8,7 +8,6 @@ jobs:
   stage-deployment:
     name: Trigger a new stage deployment
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/stage'
     steps:
       - name: Create new Gitlab pipeline for Gambio
         run: |
