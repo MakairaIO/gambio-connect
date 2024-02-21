@@ -44,16 +44,18 @@ class MakairaInstallationServiceController extends HttpViewController
 
     public function actionDefault(): \JsonHttpControllerResponse
     {
+        $data = json_decode(file_get_contents('php://input'), true);
+
         $this->logger->debug("Makaira Installation Service Callback", [
-            'data' => $this->_getPostDataCollection()
+            'data' => $data
         ]);
 
-        if ($this->moduleConfigService->getStripeCheckoutId() === $this->_getPostData('stripeCheckoutId')) {
-            $this->moduleConfigService->setMakairaUrl($this->_getPostData('url'));
+        if ($this->moduleConfigService->getStripeCheckoutId() === $data['stripeCheckoutId']) {
+            $this->moduleConfigService->setMakairaUrl($data['url']);
 
-            $this->moduleConfigService->setMakairaInstance($this->_getPostData('instance'));
+            $this->moduleConfigService->setMakairaInstance($data['instance']);
 
-            $this->moduleConfigService->setMakairaSecret($this->_getPostData('sharedSecret'));
+            $this->moduleConfigService->setMakairaSecret($data['sharedSecret']);
 
             $makairaClient = new MakairaClient(
                 LegacyDependencyContainer::getInstance()->get(ConfigurationService::class)
