@@ -1,17 +1,15 @@
-name: Deploy Stage
+name: Stage Deployment Workflow
 on:
   push:
     branches:
       - main
+      - stage
 jobs:
-  trigger:
+  stage-deployment:
+    name: Trigger a new stage deployment
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/stage'
     steps:
-      - name: trigger Job
-        uses: appleboy/gitlab-ci-action@master
-        with:
-          host: ${{ secrets.GITLAB_URL }}
-          token: ${{ secrets.GITLAB_DEPLOY_TRIGGER_TOKEN }}
-          debug: true
-          project_id: ${{ vars.GITLAB_PROJECT_ID }}
-          ref: ${{ vars.GITLAB_REF }}
+      - name: Create new Gitlab pipeline for Gambio
+        run: |
+          curl -XPOST -H "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" "https://gitlab.marmalade.de/api/v4/projects/${{ secrets.GITLAB_PROJECT_ID }}/pipeline?ref=${{ secrets.GITLAB_GAMBIO_REF }}"
