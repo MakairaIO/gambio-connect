@@ -68,8 +68,7 @@ class MakairaInstallationService
                 $instance->callRegistrationService();
 
                 $moduleConfigService->setMakairaInstallationServiceCalled();
-            }catch(\Exception $exception) {
-
+            } catch (\Exception $exception) {
             }
         }
     }
