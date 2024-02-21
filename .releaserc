@@ -1,8 +1,7 @@
 {
   "branches": [
     "+([0-9])?(.{+([0-9]),x}).x",
-    "main",
-    "feature/MKGO-22-semantic-release"
+    "main"
   ],
   "tagFormat": "${version}",
   "plugins": [
