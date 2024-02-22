@@ -61,10 +61,8 @@ class GambioConnectServiceProvider extends AbstractBootableServiceProvider
             GambioConnectInstaller::class,
             GambioConnectEntry::class,
             GambioConnectManualSetup::class,
-            GambioConnectDocument::class,
             GambioConnectWelcome::class,
             GambioConnectAccount::class,
-            GambioConnectFAQ::class,
             Export::class,
             VariantUpdateEventListener::class,
             LanguageService::class,
@@ -97,7 +95,6 @@ class GambioConnectServiceProvider extends AbstractBootableServiceProvider
         $this->application->registerShared(GambioConnectManualSetup::class)
             ->addArgument(ModuleConfigService::class);
 
-        $this->application->registerShared(GambioConnectDocument::class);
         $this->application->registerShared(GambioConnectWelcome::class)
             ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(GambioConnectAccount::class)
@@ -105,7 +102,6 @@ class GambioConnectServiceProvider extends AbstractBootableServiceProvider
             ->addArgument(ModuleConfigService::class)
             ->addArgument(ChangesService::class);
 
-        $this->application->registerShared(GambioConnectFAQ::class);
 
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ec0b8c9237d9fa94c6a40868e033f5d",
+    "content-hash": "76f5b8b7dc86fd68618decbfb6d81499",
     "packages": [
         {
             "name": "respect/stringifier",
@@ -1257,9 +1257,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "phpmd/phpmd": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
