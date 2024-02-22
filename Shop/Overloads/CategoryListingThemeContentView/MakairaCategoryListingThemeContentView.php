@@ -36,7 +36,7 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
 
     private function mapMakairaFieldsToGambio(object $resultCategory, string $targetArray = 'categoryArray')
     {
-        foreach(MakairaCategory::FIELDS as $field) {
+        foreach (MakairaCategory::FIELDS as $field) {
             $this->$targetArray[$field] = $resultCategory->fields->$field;
         }
     }
@@ -45,7 +45,7 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
     {
         $image = '';
 
-        foreach($this->subcategories as $subcategory) {
+        foreach ($this->subcategories as $subcategory) {
             $result = $this->makairaClient->getCategory($subcategory);
             $resultCategory = $result->category->items[0] ?? [];
             $this->subcategoriesArray[] = [

@@ -99,7 +99,8 @@ class MakairaRequest
         return $response;
     }
 
-    public function getCategory($id) {
+    public function getCategory($id)
+    {
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [

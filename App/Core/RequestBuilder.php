@@ -31,7 +31,7 @@ class RequestBuilder
             $constraints['query.group'] = strtoupper($additionalConstraints->language);
         }
 
-        if($additionalConstraints?->category_id) {
+        if ($additionalConstraints?->category_id) {
             $constraints['query.category_id'] = $additionalConstraints->category_id;
         }
 

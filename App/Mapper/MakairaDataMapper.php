@@ -53,7 +53,7 @@ class MakairaDataMapper
 
         $subCategories = [];
 
-        foreach($data['subcategories'] as $subcategory) {
+        foreach ($data['subcategories'] as $subcategory) {
             $subCategories[] = $subcategory['categories_id'];
         }
 

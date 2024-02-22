@@ -178,7 +178,8 @@ class MakairaClient
         ]);
     }
 
-    public function getCategory(string $id) {
+    public function getCategory(string $id)
+    {
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [

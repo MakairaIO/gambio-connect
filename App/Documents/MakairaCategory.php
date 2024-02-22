@@ -373,6 +373,4 @@ class MakairaCategory extends MakairaEntity
 
         return $this;
     }
-
-
 }
