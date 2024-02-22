@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ClientException;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\App\Core\RequestBuilder;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 
@@ -178,7 +179,30 @@ class MakairaClient
         ]);
     }
 
-    public function getCategory(string $id)
+    public function getProduct(string $id, int $maxResults = 12) {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $id,
+            'isSearch' => false,
+            'enableAggregations' => false,
+            'aggregations' => [],
+            'sorting' => [
+                'id' => 'ASC'
+            ],
+            'fields' => array_merge(
+                MakairaProduct::FIELDS,
+            ),
+            'count' => $maxResults,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint(),
+        ];
+
+        $url = $this->makairaUrl . '/search/public';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
+
+    public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
     {
         $requestBuilder = new RequestBuilder($this->language);
 
@@ -192,10 +216,11 @@ class MakairaClient
                 MakairaCategory::FIELDS,
                 [
                     'subcategories'
-                ]
+                ],
+                MakairaProduct::FIELDS
             ),
-            'count' => 12,
-            'offset' => 0,
+            'count' => $maxSearchResults,
+            'offset' => $pageNumber ?: 0,
             'constraints' => $requestBuilder->getConstraint(),
         ];
 

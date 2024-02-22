@@ -79,6 +79,8 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
      */
     public function register(): void
     {
+        $this->application->registerShared(\MakairaProductListingContentControl::class, ProductListingContentControl::class);
+
         $this->application->registerShared(MakairaCheckoutAction::class)
             ->addArgument($this->application);
 
