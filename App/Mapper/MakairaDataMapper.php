@@ -51,13 +51,34 @@ class MakairaDataMapper
     {
         $transfer = new MakairaCategory();
 
+        $subCategories = [];
+
+        foreach($data['subcategories'] as $subcategory) {
+            $subCategories[] = $subcategory['categories_id'];
+        }
+
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
             ->setCategoryTitle($data['categories_name'])
             ->setDepth($hierarchy['depth'])
             ->setHierarchy($hierarchy['hierarchy'])
-            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()));
+            ->setSubCategories($subCategories)
+            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()))
+            ->setCategoryDescription($data['categories_description'])
+            ->setCategoryDescriptionBottom($data['categories_description_bottom'])
+            ->setCategoryHeadingTitle($data['categories_heading_title'])
+            ->setGmAltText($data['gm_alt_text'])
+            ->setShowSubCategories($data['show_sub_categories'] ?? false)
+            ->setShowSubCategoriesImages($data['show_sub_categories_images'] ?? false)
+            ->setShowSubCategoriesNames($data['show_sub_categories_names'] ?? false)
+            ->setShowCategoriesImageInDescription($data['show_sub_categories_image_in_description'] ?? false)
+            ->setShowSubProducts($data['show_sub_products'] ?? false)
+            ->setCategoriesTemplate($data['categories_template'])
+            ->setCategoriesId($data['categories_id'])
+            ->setViewModeTiled($data['view_mode_tiled'])
+            ->setCategoriesImage($data['categories_image'] ?? '')
+        ;
 
         return $transfer;
     }

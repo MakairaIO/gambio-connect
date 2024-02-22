@@ -7,6 +7,8 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\App\Core\RequestBuilder;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
 use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,6 +21,8 @@ class MakairaClient
     private string $makairaInstance;
     private ModuleConfigService $moduleConfigService;
 
+    private string $language = 'de';
+
     public function __construct(ConfigurationService $configurationFinder)
     {
 
@@ -27,6 +31,8 @@ class MakairaClient
         $this->makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $this->makairaInstance = $this->moduleConfigService->getMakairaInstance();
         $this->nonce = bin2hex(random_bytes(8));
+
+        $this->language = $_SESSION['language_code'] ?? 'de';
 
         $this->client = new Client([
             'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
@@ -103,16 +109,16 @@ class MakairaClient
         return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
     }
 
-    public function setPublicField(string $field): \Psr\Http\Message\ResponseInterface
+    public function setPublicField(string $field, bool $showOnDetailPage = true, bool $showOnLandingPage = true, bool $showOnListingPage = true): \Psr\Http\Message\ResponseInterface
     {
         return $this->doRequest('POST', 'publicfield', [
             'field' => $field,
             'fieldName' => $field,
             'fieldId' => 'new',
             'fieldType' => 'field',
-            'onDetailPage' => true,
-            'onLandingPage' => true,
-            'onListingPage' => true,
+            'onDetailPage' => $showOnDetailPage,
+            'onLandingPage' => $showOnLandingPage,
+            'onListingPage' => $showOnListingPage,
         ]);
     }
 
@@ -170,5 +176,29 @@ class MakairaClient
             'sourceUrl' => '',
             'targetType' => 'makaira'
         ]);
+    }
+
+    public function getCategory(string $id) {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $id,
+            'isSearch' => true,
+            'enableAggregations' => true,
+            'aggregations' => [],
+            'sorting' => [],
+            'fields' => array_merge(
+                MakairaCategory::FIELDS,
+                [
+                    'subcategories'
+                ]
+            ),
+            'count' => 12,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint(),
+        ];
+
+        $url = $this->makairaUrl . '/search/public';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 }
