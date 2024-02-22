@@ -112,9 +112,7 @@ class ModuleConfigService
 
     public function getStripeCheckoutId(): string|null
     {
-        return $this->configurationService->find(
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION
-        )?->value() ?? null;
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_SESSION);
     }
 
     public function setStripeCheckoutId(string|null $checkoutId = null): void
@@ -128,14 +126,12 @@ class ModuleConfigService
 
     public function getStripeCheckoutEmail(): string|null
     {
-        return $this->configurationService->find(
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL
-        )?->value() ?? null;
+        return $this->getConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL);
     }
 
     public function setStripeCheckoutEmail(string $email): void
     {
-        $this->configurationService->save(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL, $email);
+        $this->setConfigValue(self::CONFIG_MAKAIRA_STRIPE_CHECKOUT_EMAIL, $email);
     }
 
     public function isStripeOverrideActive(): bool
@@ -175,15 +171,12 @@ class ModuleConfigService
 
     public function isMakairaImporterSetupDone(): bool
     {
-        return (bool)$this->configurationService->find(
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE
-        )?->value() ?? false;
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
     }
 
     public function isMakairaInstallationServiceCalled(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED)?->value(
-        ) ?? false;
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED);
     }
 
     public function setMakairaInstallationServiceCalled(): void
@@ -209,15 +202,14 @@ class ModuleConfigService
 
     public function makairaInstallationServiceCalled(): void
     {
-        $counter = $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER)?->value() ?? 0;
+        $counter = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER) ?? 0;
         $counter++;
-        $this->configurationService->save(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER, $counter);
+        $this->setConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER, $counter);
     }
 
     public function shouldMakairaInstallationServiceBeCalled(): bool
     {
-        $counter = $this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER)?->value() ?? 0;
-
+        $counter = $this->getConfigValue(self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER) ?? 0;
         return $counter < 2;
     }
 

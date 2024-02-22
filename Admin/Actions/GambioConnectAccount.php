@@ -44,15 +44,15 @@ class GambioConnectAccount extends AdminModuleAction
             return $response->write($template);
         }
 
-
+        if (!$this->moduleStatusService->isSetUp()) {
+            return $response->withRedirect($this->url->admin() . '/makaira/gambio-connect', 302);
+        }
 
         if ($request->isPost()) {
             return $this->handlePost($request, $response);
         }
 
         return $this->handleGet($request, $response);
-
-
 
         $template = $this->render(
             $this->translate('account', 'general'),

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace GXModules\Makaira\GambioConnect;
 
 use Doctrine\DBAL\Connection;
+use Gambio\Admin\Layout\Menu\Filter\FilterFactory;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
+use Gambio\Core\Application\DependencyInjection\AbstractBootableServiceProvider;
 use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use Gambio\Core\Configuration\Services\ConfigurationService;
@@ -22,9 +24,8 @@ use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
+use GXModules\Makaira\GambioConnect\Admin\MenuFilter\isInstalledFilter;
+use GXModules\Makaira\GambioConnect\Admin\MenuFilter\isSetUpFilter;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
@@ -46,7 +47,7 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService;
  *
  * @package GXModules\Makaira\GambioConnect
  */
-class GambioConnectServiceProvider extends AbstractModuleServiceProvider
+class GambioConnectServiceProvider extends AbstractBootableServiceProvider
 {
     /**
      * @inheritcDoc
@@ -69,7 +70,9 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             LanguageService::class,
             MakairaRequest::class,
             ModuleConfigService::class,
-            ModuleStatusService::class
+            ModuleStatusService::class,
+            IsSetUpFilter::class,
+            IsInstalledFilter::class,
         ];
     }
 
@@ -166,10 +169,18 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
 
         $this->application->registerShared(ModuleStatusService::class)
             ->addArgument(ModuleConfigService::class);
+
+        $this->application->registerShared(IsSetUpFilter::class)
+            ->addArgument(ModuleStatusService::class);
+
+        $this->application->registerShared(IsInstalledFilter::class)
+            ->addArgument(ModuleStatusService::class);
     }
 
     public function boot(): void
     {
+        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isSetupFilter', IsSetUpFilter::class]);
+        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isInstalledFilter', IsInstalledFilter::class]);
         $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
     }
 }
