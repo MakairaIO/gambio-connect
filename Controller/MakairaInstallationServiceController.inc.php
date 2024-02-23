@@ -54,19 +54,6 @@ class MakairaInstallationServiceController extends HttpViewController
 
         $makairaLogger = MainFactory::create(MakairaLogger::class);
 
-        $gambioConnectService = new GambioConnectService(
-            $makairaClient,
-            $languageService,
-            $connection,
-            $makairaLogger
-        );
-
-        $gambioConnectService->getManufacturerService()->prepareExport();
-
-        $gambioConnectService->getCategoryService()->prepareExport();
-
-        //$gambioConnectService->getProductService()->prepareExport();
-
         $data = json_decode(file_get_contents('php://input'), true);
 
         $this->logger->debug("Makaira Installation Service Callback", [
