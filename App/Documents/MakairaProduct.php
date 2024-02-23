@@ -608,6 +608,4 @@ class MakairaProduct extends MakairaEntity
 
         return $this;
     }
-
-
 }

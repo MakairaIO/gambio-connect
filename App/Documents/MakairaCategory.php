@@ -390,6 +390,4 @@ class MakairaCategory extends MakairaEntity
         $this->gmShowQtyInfo = $gmShowQtyInfo;
         return $this;
     }
-
-
 }

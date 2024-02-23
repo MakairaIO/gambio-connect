@@ -26,7 +26,6 @@ class MakairaClient
 
     public function __construct(ConfigurationService $configurationFinder)
     {
-
         $this->moduleConfigService = new ModuleConfigService($configurationFinder);
         $this->makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $this->makairaSecret = $this->moduleConfigService->getMakairaSecret();
@@ -179,7 +178,8 @@ class MakairaClient
         ]);
     }
 
-    public function getManufacturer(string $id) {
+    public function getManufacturer(string $id)
+    {
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [
