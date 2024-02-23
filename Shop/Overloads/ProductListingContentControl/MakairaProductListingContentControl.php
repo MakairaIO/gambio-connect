@@ -19,6 +19,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
         );
 
         $this->makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($configurationService);
+
+        $this->product_listing_view = MainFactory::create('MakairaProductListingThemeContentView');
     }
 
     private function getCategory($categoryId)
@@ -81,18 +83,27 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         case 'nested':
                             $t_html_output = $this->get_category_listing_html_output();
 
-                        // no break;
+                            // no break;
                         default:
                             $this->build_sql_query();
                     }
-                    break;
             }
+
+            $this->extend_proceed($p_action);
+
+            if (empty($this->sql_query)) {
+                return true;
+            }
+
             $category = $this->get_category_data_array();
 
             $t_max_display_search_results = $this->determine_max_display_search_results();
 
+            $this->last_listing_sql = $this->sql_query;
+
             $coo_listing_split = new splitPageResults(
-                $this->makairaClient, $this->categories_id, $this->products, $this->page_number,
+                $this->products,
+                $this->page_number,
                 $t_max_display_search_results
             );
             $t_products_array = array();
@@ -115,7 +126,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                 $t_rows_count = 0;
 
-                foreach($coo_listing_split->products as $t_product_array) {
+                foreach ($coo_listing_split->products as $t_product_array) {
                     $t_rows_count++;
 
                     // check if product has properties
@@ -131,11 +142,13 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     }
 
                     $GLOBALS['xtPrice']->showFrom_Attributes = true;
-                    if (((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
+                    if (
+                        ((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
                                 && isset($t_category_data_array['gm_show_attributes']) == false)
                             || (isset($t_category_data_array['gm_show_attributes'])
                                 && $t_category_data_array['gm_show_attributes'] == '1'))
-                        && $t_product_has_properties == false) {
+                        && $t_product_has_properties == false
+                    ) {
                         $GLOBALS['xtPrice']->showFrom_Attributes = false;
                     }
 
@@ -143,11 +156,13 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $t_products_array[] = $coo_product->buildDataArray($coo_product->data);
 
                     $t_attributes_html = '';
-                    if (((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
+                    if (
+                        ((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
                                 && isset($t_category_data_array['gm_show_attributes']) == false)
                             || (isset($t_category_data_array['gm_show_attributes'])
                                 && $t_category_data_array['gm_show_attributes'] == '1'))
-                        && $t_product_has_properties == false) {
+                        && $t_product_has_properties == false
+                    ) {
                         // CREATE ProductAttributesContentView OBJECT
                         $coo_product_attributes = MainFactory::create_object('ProductAttributesThemeContentView');
 
@@ -195,7 +210,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         'GM_HAS_ATTRIBUTES' => $gm_has_attributes
                     ));
 
-                    if (empty($coo_product->data['quantity_unit_id']) == false
+                    if (
+                        empty($coo_product->data['quantity_unit_id']) == false
                         && (!$t_product_has_properties
                             || ($t_product_has_properties
                                 && $coo_product->data['use_properties_combis_quantity'] == '0'))
@@ -208,7 +224,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     }
 
                     if ($t_category_show_quantity) {
-                        if (empty($coo_product->data['gm_show_qty_info']) == false
+                        if (
+                            empty($coo_product->data['gm_show_qty_info']) == false
                             && (!$t_product_has_properties
                                 || ($t_product_has_properties
                                     && ($coo_product->data['use_properties_combis_quantity'] === '0'
@@ -246,9 +263,11 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                 $this->build_cache_id_parameter_array(array($t_view_mode));
 
-                if ($this->product_listing_view->get_content_template() === ''
+                if (
+                    $this->product_listing_view->get_content_template() === ''
                     || basename($this->product_listing_view->get_content_template())
-                    === $this->product_listing_view->get_template_name('default')) {
+                    === $this->product_listing_view->get_template_name('default')
+                ) {
                     $this->product_listing_view->set_template($t_category_data_array['listing_template'] ?? null);
                 }
 
@@ -332,7 +351,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 $this->product_listing_view->set_('view_mode_url_tiled', $this->build_view_mode_url('tiled'));
 
                 $showRating = false;
-                if (gm_get_conf('ENABLE_RATING') === 'true'
+                if (
+                    gm_get_conf('ENABLE_RATING') === 'true'
                     && gm_get_conf('SHOW_RATING_IN_GRID_AND_LISTING') === 'true'
                 ) {
                     $showRating = true;
@@ -350,11 +370,10 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 }
 
                 $t_html_output .= $this->product_listing_view->get_html();
-
-            } elseif (!defined('GM_CAT_COUNT')
+            } elseif (
+                !defined('GM_CAT_COUNT')
                 || GM_CAT_COUNT == 0
-            ) // GM_CAT_COUNT > 0: products FALSE, sub-categories TRUE
-            {
+            ) { // GM_CAT_COUNT > 0: products FALSE, sub-categories TRUE
                 $t_html_output = $this->get_error_html_output(TEXT_PRODUCT_NOT_FOUND);
                 $this->empty_result = true;
             } else {
@@ -377,15 +396,18 @@ class MakairaProductListingContentControl extends ProductListingContentControl
         }
 
         $this->v_output_buffer = $t_html_output;
-
     }
 
     protected function createPager()
     {
         $totalItemCount = count($this->products);
 
-        return ExtendedInformationPager::createExtendedInformationPager($this->page_number ?: 1,
-            (int)$this->determine_max_display_search_results(), $totalItemCount, 'page');
+        return ExtendedInformationPager::createExtendedInformationPager(
+            $this->page_number ?: 1,
+            (int)$this->determine_max_display_search_results(),
+            $totalItemCount,
+            'page'
+        );
     }
 
     public function get_category_data_array()
