@@ -78,6 +78,7 @@ class MakairaDataMapper
             ->setCategoriesId($data['categories_id'])
             ->setViewModeTiled($data['view_mode_tiled'])
             ->setCategoriesImage($data['categories_image'] ?? '')
+            ->setGmShowQtyInfo($data['gm_show_qty_info'])
         ;
 
         return $transfer;

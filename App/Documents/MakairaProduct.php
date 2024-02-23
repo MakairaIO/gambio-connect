@@ -94,7 +94,7 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_URL,
         self::FIELD_MAINCATEGORY,
         self::FIELD_MAINCATEGORYURL,
-        self::FIELD_FSK18
+        self::FIELD_FSK18,
     ];
 
     private int $stock = 0;
@@ -608,4 +608,6 @@ class MakairaProduct extends MakairaEntity
 
         return $this;
     }
+
+
 }

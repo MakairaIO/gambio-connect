@@ -34,6 +34,8 @@ class MakairaCategory extends MakairaEntity
 
     public const FIELD_CATEGORIES_IMAGE = 'categories_image';
 
+    public const FIELD_GM_SHOW_QTY_INFO = 'gm_show_qty_info';
+
     public const FIELDS = [
         self::FIELD_PARENT,
         self::FIELD_CATEGORIES_DESCRIPTION,
@@ -48,7 +50,8 @@ class MakairaCategory extends MakairaEntity
         self::FIELD_SHOW_SUB_PRODUCTS,
         self::FIELD_CATEGORIES_TEMPLATE,
         self::FIELD_VIEW_MODE_TILES,
-        self::FIELD_CATEGORIES_IMAGE
+        self::FIELD_CATEGORIES_IMAGE,
+        self::FIELD_GM_SHOW_QTY_INFO
     ];
 
     private int $depth = 0;
@@ -88,6 +91,8 @@ class MakairaCategory extends MakairaEntity
     private array $subCategories = [];
     private array $selfLinks = [];
 
+    private bool $gmShowQtyInfo = false;
+
 
     public function toArray(): array
     {
@@ -117,6 +122,7 @@ class MakairaCategory extends MakairaEntity
                 'url' => $this->getUrl(),
                 'subcategories' => $this->getSubCategories(),
                 'selfLinks' => $this->getSelfLinks(),
+                'gm_show_qty_info' => $this->isGmShowQtyInfo()
             ]
         );
     }
@@ -373,4 +379,17 @@ class MakairaCategory extends MakairaEntity
 
         return $this;
     }
+
+    public function isGmShowQtyInfo(): bool
+    {
+        return $this->gmShowQtyInfo;
+    }
+
+    public function setGmShowQtyInfo(bool $gmShowQtyInfo): static
+    {
+        $this->gmShowQtyInfo = $gmShowQtyInfo;
+        return $this;
+    }
+
+
 }

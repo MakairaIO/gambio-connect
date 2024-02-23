@@ -179,7 +179,29 @@ class MakairaClient
         ]);
     }
 
-    public function getProduct(string $id, int $maxResults = 12) {
+    public function getManufacturer(string $id) {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $id,
+            'isSearch' => false,
+            'enableAggregations' => false,
+            'aggregations' => [],
+            'sorting' => [
+                'id' => 'ASC'
+            ],
+            'fields' => [],
+            'count' => 0,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint()
+        ];
+
+        $url = $this->makairaUrl . '/search/public';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
+
+    public function getProduct(string $id, int $maxResults = 12, int $offset = 0)
+    {
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [
@@ -194,7 +216,7 @@ class MakairaClient
                 MakairaProduct::FIELDS,
             ),
             'count' => $maxResults,
-            'offset' => 0,
+            'offset' => $offset,
             'constraints' => $requestBuilder->getConstraint(),
         ];
 
