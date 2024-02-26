@@ -8,6 +8,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     private $products = [];
 
+    private $totalProducts = 0;
+
     private $category;
 
     public function __construct()
@@ -27,11 +29,13 @@ class MakairaProductListingContentControl extends ProductListingContentControl
     {
         $category = $this->makairaClient->getCategory($categoryId);
 
-        $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0);
+        $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
 
         $this->category = $category->category->items[0];
 
         $this->products = $result->product->items;
+
+        $this->totalProducts = $result->product->total;
     }
 
     public function proceed($p_action = 'default')
@@ -402,7 +406,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     protected function createPager()
     {
-        $totalItemCount = count($this->products);
+        $totalItemCount = $this->totalProducts;
 
         return ExtendedInformationPager::createExtendedInformationPager(
             $this->page_number ?: 1,
@@ -431,5 +435,25 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             'view_mode_tiled' => $this->category->fields->view_mode_tiled,
             'show_quantity' => $this->category->fields->gm_show_qty_info
         ];
+    }
+
+    private function prepareSortingForMakaira(): array
+    {
+        if(!$this->listing_sort) {
+            return [];
+        }
+        $sort = explode('_', $this->listing_sort);
+
+        switch($sort[0]) {
+            case 'name':
+                $type = 'title';
+                break;
+            case 'price':
+                $type = 'price';
+            default:
+                return [];
+        }
+
+        return [$type => $sort[1]];
     }
 }

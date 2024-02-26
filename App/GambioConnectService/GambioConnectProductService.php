@@ -55,8 +55,8 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $products = [];
-                foreach($makairaChanges as $change) {
-                    if($change['delete']) {
+                foreach ($makairaChanges as $change) {
+                    if ($change['delete']) {
                         $products[] = [
                             'products_id' => $change['gambio_id'],
                             'delete' => true,

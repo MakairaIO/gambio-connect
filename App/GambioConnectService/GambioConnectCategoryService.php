@@ -38,8 +38,8 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
                 $categories = [];
-                foreach($makairaExports as $export) {
-                    if($export['delete']) {
+                foreach ($makairaExports as $export) {
+                    if ($export['delete']) {
                         $categories[] = [
                             'categories_id' => $export['gambio_id'],
                             'delete' => true,

@@ -143,6 +143,4 @@ class MakairaEntity
         $this->delete = $delete;
         return $this;
     }
-
-
 }

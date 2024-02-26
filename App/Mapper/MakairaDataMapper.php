@@ -23,7 +23,7 @@ class MakairaDataMapper
     {
         $transfer = new MakairaManufacturer();
 
-        if($data['delete']) {
+        if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
                 ->setId($data['manufacturers_id'])
                 ->setDelete(true);
@@ -57,7 +57,7 @@ class MakairaDataMapper
     {
         $transfer = new MakairaCategory();
 
-        if($data['delete']) {
+        if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
                 ->setId($data['categories_id'])
                 ->setDelete(true);
@@ -126,7 +126,7 @@ class MakairaDataMapper
     {
         $transfer = new MakairaProduct();
 
-        if($data['delete']) {
+        if ($data['delete']) {
             return $transfer->setId($data['products_id'])
                 ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
                 ->setDelete(true);
