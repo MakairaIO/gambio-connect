@@ -5,22 +5,17 @@
     "class": "fa fa-hand-sparkles",
     "title": "general.title",
     "if": {
-      "filter": "configActive",
-      "args": ["gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED"]
+      "filter": "isInstalledFilter",
+      "args": [true]
     },
     "items": [
       {
         "sort": 10,
         "link": "makaira/welcome",
-        "title": "general.welcome"
-      },
-      {
-        "sort": 20,
-        "link": "makaira/gambio-connect",
-        "title": "Makaira Gambio Connect",
+        "title": "general.welcome",
         "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
+          "filter": "isSetupFilter",
+          "args": [false]
         }
       },
       {
@@ -28,26 +23,8 @@
         "link": "makaira/account",
         "title": "general.my_account",
         "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
-        }
-      },
-      {
-        "sort": 40,
-        "link": "makaira/document",
-        "title": "general.document",
-        "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
-        }
-      },
-      {
-        "sort": 50,
-        "link": "makaira/faq",
-        "title": "general.faq",
-        "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
+          "filter": "isSetupFilter",
+          "args": [true]
         }
       }
     ]
