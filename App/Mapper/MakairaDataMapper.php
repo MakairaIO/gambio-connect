@@ -116,6 +116,13 @@ class MakairaDataMapper
 
         $stock = 1;
 
+        $category = [
+            'catid' => $data['products_to_categories']['categories_id'],
+            'shopid' => 1,
+            'path' => '?' . xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']),
+            'title' => $data['products_to_categories']['categories_name']
+        ];
+
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
@@ -135,8 +142,9 @@ class MakairaDataMapper
             ->setProductsVpeStatus($data['products_vpe_status'])
             ->setProductsVpeValue($data['products_vpe_value'])
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '')
-            ->setMainCategory($data['products_to_categories']['categories_id'])
-            ->setMainCategoryUrl('?' . xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']));
+            ->setCategories([$category])
+            ->setMainCategory($category['title'])
+            ->setMainCategoryUrl($category['path']);
 
         return $transfer;
     }
