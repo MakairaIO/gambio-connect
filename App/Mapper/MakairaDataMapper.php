@@ -23,6 +23,12 @@ class MakairaDataMapper
     {
         $transfer = new MakairaManufacturer();
 
+        if($data['delete']) {
+            return $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
+                ->setId($data['manufacturers_id'])
+                ->setDelete(true);
+        }
+
         $createdAt = $data['date_added'] ? new DateTime($data['date_added']) : null;
         $updatedAt = $data['last_modified'] ? new DateTime($data['last_modified']) : null;
         $lastClickedAt = $data['date_last_click'] ? new DateTime($data['date_last_click']) : null;
@@ -50,6 +56,12 @@ class MakairaDataMapper
     public static function mapCategory(array $data, array $hierarchy, Language $language): MakairaCategory
     {
         $transfer = new MakairaCategory();
+
+        if($data['delete']) {
+            return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
+                ->setId($data['categories_id'])
+                ->setDelete(true);
+        }
 
         $subCategories = [];
 
@@ -113,6 +125,12 @@ class MakairaDataMapper
     public static function mapProduct(array $data): MakairaProduct
     {
         $transfer = new MakairaProduct();
+
+        if($data['delete']) {
+            return $transfer->setId($data['products_id'])
+                ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+                ->setDelete(true);
+        }
 
         $stock = 1;
 

@@ -85,7 +85,33 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     protected function getEntitiesForExport(string $type): array
     {
-        return $this->getMakairaChangesForType($type);
+        $changes = $this->getMakairaChangesForType($type);
+        foreach ($changes as $index => $change) {
+            switch ($type) {
+                case 'product':
+                    $table = 'products';
+                    $key = 'products_id';
+                    break;
+                case 'category':
+                    $table = 'categories';
+                    $key = 'categories_id';
+                    break;
+                case 'manufacturer':
+                    $table = 'manufacturers';
+                    $key = 'manufacturers_id';
+                    break;
+            }
+            $query = $this->connection->createQueryBuilder()
+                ->select('*')
+                ->from($table)
+                ->where("$table.$key = :gambioId")
+                ->setParameter('gambioId', $change['gambio_id'])
+                ->execute()
+                ->fetchAll(FetchMode::ASSOCIATIVE);
+
+            $changes[$index]['delete'] = empty($query);
+        }
+        return $changes;
     }
 
     private function getMakairaChangesForType(string $type): array
@@ -103,7 +129,8 @@ class GambioConnectService implements GambioConnectServiceInterface
     {
         return [
             'data' => $document->toArray(),
-            'language_id' => $language->code()
+            'language_id' => $language->code(),
+            'delete' => $document->isDelete()
         ];
     }
 
@@ -111,7 +138,7 @@ class GambioConnectService implements GambioConnectServiceInterface
     {
         $data = [
             'items' => [],
-            'import_timestamp'  => (new \DateTime())->format('Y-m-d H:i:s'),
+            'import_timestamp' => (new \DateTime())->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
 

@@ -46,7 +46,22 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
         if (!empty($makairaExports)) {
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
-                $manufacturers = $this->getQuery($language, $makairaExports);
+                $manufacturers = [];
+                foreach($makairaExports as $export) {
+                    if($export['delete']) {
+                        $manufacturers[] = [
+                            'manufacturers_id' => $export['gambio_id'],
+                            'delete' => true
+                        ];
+                    } else {
+                        $manufacturers[] = array_merge(
+                            $this->getQuery($language, [$eyport])[0],
+                            [
+                                'delete' => false
+                            ]
+                        );
+                    }
+                }
 
                 $documents = [];
 
