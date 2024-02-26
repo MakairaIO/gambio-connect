@@ -25,9 +25,11 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     private function getCategory($categoryId)
     {
-        $result = $this->makairaClient->getCategory($categoryId, $this->determine_max_display_search_results(), $this->page_number);
+        $category = $this->makairaClient->getCategory($categoryId);
 
-        $this->category = $result->category->items[0];
+        $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0);
+
+        $this->category = $category->category->items[0];
 
         $this->products = $result->product->items;
     }

@@ -200,27 +200,25 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function getProduct(string $id, int $maxResults = 12, int $offset = 0)
+    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0)
     {
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [
-            'searchPhrase' => $id,
+            'searchPhrase' => $categoryId,
             'isSearch' => false,
-            'enableAggregations' => false,
+            'enableAggregations' => true,
             'aggregations' => [],
-            'sorting' => [
-                'id' => 'ASC'
-            ],
-            'fields' => array_merge(
-                MakairaProduct::FIELDS,
-            ),
+            'sorting' => [],
+            'fields' => [],
             'count' => $maxResults,
             'offset' => $offset,
             'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        $url = $this->makairaUrl . '/search/public';
+        $body['constraints']['query.category_id'] = $categoryId;
+
+        $url = $this->makairaUrl . '/search/';
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
@@ -235,9 +233,7 @@ class MakairaClient
             'searchPhrase' => $id,
             'isSearch' => true,
             'enableAggregations' => true,
-            'aggregations' => [
-                'maincategory' => $id,
-            ],
+            'aggregations' => [],
             'sorting' => [],
             'fields' => array_merge(
                 MakairaCategory::FIELDS,
@@ -251,7 +247,9 @@ class MakairaClient
             'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        $url = $this->makairaUrl . '/search/public';
+        $body['constraints']['query.category_id'] = $id;
+
+        $url = $this->makairaUrl . '/search/';
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 }
