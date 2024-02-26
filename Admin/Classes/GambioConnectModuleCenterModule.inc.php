@@ -2,7 +2,6 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-use Gambio\MainComponents\Loaders\Modules\ModuleCenter\AbstractModuleCenterModule;
 use GXModules\Makaira\GambioConnect\GambioConnectInstaller;
 
 class GambioConnectModuleCenterModule extends AbstractModuleCenterModule

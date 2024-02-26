@@ -226,13 +226,18 @@ class MakairaClient
 
     public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
     {
+        if(empty($id)) {
+            return [];
+        }
         $requestBuilder = new RequestBuilder($this->language);
 
         $body = [
             'searchPhrase' => $id,
             'isSearch' => true,
             'enableAggregations' => true,
-            'aggregations' => [],
+            'aggregations' => [
+                'maincategory' => $id,
+            ],
             'sorting' => [],
             'fields' => array_merge(
                 MakairaCategory::FIELDS,
