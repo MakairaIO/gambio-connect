@@ -138,14 +138,14 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 }
 
                 if ($relationTable === 'products_to_categories') {
-                    $query->join($relationTable, 'categories_description', 'categories_description', $relationTable.'.categories_id = categories_description.categories_id')
+                    $query->join($relationTable, 'categories_description', 'categories_description', $relationTable . '.categories_id = categories_description.categories_id')
                         ->andWhere('categories_description.language_id = :languageId')
                         ->setParameter('languageId', $language->id());
                 }
 
                 $relationResult = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
-                if(count($relationResult) === 1) {
+                if (count($relationResult) === 1) {
                     $relationResult = $relationResult[0];
                 }
 

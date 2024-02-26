@@ -136,7 +136,7 @@ class MakairaDataMapper
             ->setProductsVpeValue($data['products_vpe_value'])
             ->setSearchKeys($data['products_description']['products_keywords'] ?? '')
             ->setMainCategory($data['products_to_categories']['categories_id'])
-            ->setMainCategoryUrl('?'.xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']));
+            ->setMainCategoryUrl('?' . xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']));
 
         return $transfer;
     }

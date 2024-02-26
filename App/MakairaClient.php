@@ -226,7 +226,7 @@ class MakairaClient
 
     public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
     {
-        if(empty($id)) {
+        if (empty($id)) {
             return [];
         }
         $requestBuilder = new RequestBuilder($this->language);
