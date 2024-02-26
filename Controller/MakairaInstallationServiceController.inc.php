@@ -60,15 +60,6 @@ class MakairaInstallationServiceController extends HttpViewController
             'data' => $data
         ]);
 
-        $gambioConnectService = new GambioConnectService(
-            $makairaClient,
-            $languageService,
-            $connection,
-            $makairaLogger
-        );
-
-        $gambioConnectService->getProductService()->prepareExport();
-
         if ($this->moduleConfigService->getStripeCheckoutId() === $data['stripeCheckoutId']) {
             $this->moduleConfigService->setMakairaUrl($data['url']);
 
