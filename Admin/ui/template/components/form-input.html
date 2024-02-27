@@ -1,7 +1,5 @@
 {assign var='type' value=$type|default:'text'}
 {assign var='value' value=$value|default:${$name}}
-{assign var='disabled' value=($disabled == "true") ? 'disabled' : ''}
-{assign var='required' value=($required == "true") ? 'required' : ''}
 {assign var='validationClass' value=(isset($validationErrors) && in_array($name, $validationErrors)) ? 'is-invalid' :
 ''}
 
@@ -19,7 +17,13 @@
     <span>{$value}</span>
     {else}
     <input class="form-control {$validationClass}" type="{$type}" id="{$name}" name="{$name}" value="{$value}"
-      {$required} {$disabled} />
+       {if isset($required)}
+           required
+       {/if}
+        {if isset($disabled)}
+            disabled
+      {/if}
+    />
     {/if}
   </div>
 </div>

@@ -1,0 +1,39 @@
+<?php
+
+class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
+{
+    private \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest $makairaRequest;
+
+    public function proceed()
+    {
+        if (defined('_GM_VALID_CALL') === false) {
+            die('x0');
+        }
+
+        $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
+
+        $moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService($configurationService);
+
+        $this->makairaRequest = new \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest($moduleConfigService->getMakairaUrl(), $moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $moduleConfigService->getMakairaSecret());
+
+        $keywords = trim($this->v_data_array['GET']['needle']);
+
+        $result = $this->makairaRequest->fetchAutoSuggest($keywords);
+
+        $moduleContent = [
+            'products' => $result?->product?->items ?? [],
+            'categories' => $result?->category?->items ?? [],
+            'manufacturers' => $result?->manufacturer?->items ?? [],
+            'links' => $result?->links?->items ?? [],
+            'pages' => $result?->pages?->items ?? []
+        ];
+
+        $view = MainFactory::create('MakairaSearchAutoCompleterThemeContentView');
+
+        $view->set_content_data('module_content', $moduleContent);
+
+        $this->v_output_buffer = $view->get_html();
+
+        return true;
+    }
+}
