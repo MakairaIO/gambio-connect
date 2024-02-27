@@ -34,14 +34,13 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     private function getCategory($categoryId)
     {
-        if($this->isSearch()) {
-            $makairaRequest = new \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest($this->moduleConfigService->getMakairaUrl(), $this->moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $this->moduleConfigService->getMakairaSecret());
+        if ($this->isSearch()) {
+            $result = $this->makairaClient->search($this->search_keywords);
 
-            $result = $makairaRequest->fetchAutoSuggest($this->search_keywords);
+            $this->category = $result->category->items;
 
-            $this->category = $result['category']['items'];
+            $this->products = $result->product->items;
 
-            $this->products = $result['category']['items'];
         } else {
             $category = $this->makairaClient->getCategory($categoryId);
 
@@ -83,18 +82,9 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                     $this->build_search_result_sql();
 
-                    $makairaRequest = new \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest(
-                        $this->moduleConfigService->getMakairaUrl(),
-                        $this->moduleConfigService->getMakairaInstance(),
-                        $_SESSION['language_code'],
-                        $this->moduleConfigService->getMakairaSecret()
-                    );
+                    $result = $this->makairaClient->search($this->search_keywords, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
 
-                    $result = $makairaRequest->fetchAutoSuggest($this->search_keywords);
-
-                    $this->products = array_map(function (array $product) {
-                        return (object)$product;
-                    }, $result['product']['items']);
+                    $this->products = $result->product->items;
 
                     break;
                 default:
@@ -138,7 +128,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             $this->last_listing_sql = $this->sql_query;
 
             $coo_listing_split = new splitPageResults(
-                $this->products,
+                $this->products ?? [],
                 $this->page_number,
                 $t_max_display_search_results
             );

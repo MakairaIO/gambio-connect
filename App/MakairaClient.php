@@ -252,4 +252,25 @@ class MakairaClient
         $url = $this->makairaUrl . '/search/';
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
+
+    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null)
+    {
+        if(empty($searchkey)) {
+            return [];
+        }
+        $requestBuilder = new RequestBuilder($this->language);
+        $body = [
+            'searchPhrase' => $searchkey,
+            'isSearch' => true,
+            'enableAggregations' => true,
+            'aggregations' => [],
+            'sorting' => [],
+            'count' => $maxSearchResults,
+            'offset' => $pageNumber ?: 0,
+            'constraints' => $requestBuilder->getConstraint()
+        ];
+
+        $url = $this->makairaUrl . '/search/';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
 }
