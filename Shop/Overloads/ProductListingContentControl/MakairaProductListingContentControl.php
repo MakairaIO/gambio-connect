@@ -20,22 +20,39 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             \Gambio\Core\Configuration\Services\ConfigurationService::class
         );
 
+        $this->moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService($configurationService);
+
         $this->makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($configurationService);
 
         $this->product_listing_view = MainFactory::create('MakairaProductListingThemeContentView');
     }
 
+    private function isSearch(): bool
+    {
+        return (bool)$this->search_keywords;
+    }
+
     private function getCategory($categoryId)
     {
-        $category = $this->makairaClient->getCategory($categoryId);
+        if($this->isSearch()) {
+            $makairaRequest = new \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest($this->moduleConfigService->getMakairaUrl(), $this->moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $this->moduleConfigService->getMakairaSecret());
 
-        $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
+            $result = $makairaRequest->fetchAutoSuggest($this->search_keywords);
 
-        $this->category = $category->category->items[0];
+            $this->category = $result['category']['items'];
 
-        $this->products = $result->product->items;
+            $this->products = $result['category']['items'];
+        } else {
+            $category = $this->makairaClient->getCategory($categoryId);
 
-        $this->totalProducts = $result->product->total;
+            $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
+
+            $this->category = $category->category->items[0];
+
+            $this->products = $result->product->items;
+
+            $this->totalProducts = $result->product->total;
+        }
     }
 
     public function proceed($p_action = 'default')
@@ -65,6 +82,19 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $this->filter_selection_html = $coo_filter_selection_content_view->get_html();
 
                     $this->build_search_result_sql();
+
+                    $makairaRequest = new \GXModules\Makaira\GambioConnect\App\Core\MakairaRequest(
+                        $this->moduleConfigService->getMakairaUrl(),
+                        $this->moduleConfigService->getMakairaInstance(),
+                        $_SESSION['language_code'],
+                        $this->moduleConfigService->getMakairaSecret()
+                    );
+
+                    $result = $makairaRequest->fetchAutoSuggest($this->search_keywords);
+
+                    $this->products = array_map(function (array $product) {
+                        return (object)$product;
+                    }, $result['product']['items']);
 
                     break;
                 default:
@@ -157,7 +187,6 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     ) {
                         $GLOBALS['xtPrice']->showFrom_Attributes = false;
                     }
-
                     $coo_product = new product($t_product_array['products_id']);
                     $t_products_array[] = $coo_product->buildDataArray($coo_product->data);
 
@@ -439,17 +468,18 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     private function prepareSortingForMakaira(): array
     {
-        if(!$this->listing_sort) {
+        if (!$this->listing_sort) {
             return [];
         }
         $sort = explode('_', $this->listing_sort);
 
-        switch($sort[0]) {
+        switch ($sort[0]) {
             case 'name':
                 $type = 'title';
                 break;
             case 'price':
                 $type = 'price';
+                // no break
             default:
                 return [];
         }

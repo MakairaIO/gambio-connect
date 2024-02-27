@@ -7,10 +7,8 @@ use Gambio\Admin\Layout\Menu\Filter\FilterInterface;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 
-
 class IsSetUpFilter implements FilterInterface
 {
-
     public function __construct(protected ModuleStatusService $moduleStatusService)
     {
     }
@@ -20,7 +18,9 @@ class IsSetUpFilter implements FilterInterface
         $args = $condition->args();
         $isSetUp = (bool) $this->moduleStatusService->isSetUp();
 
-        if ($args[0] == false) return !$isSetUp;
+        if ($args[0] == false) {
+            return !$isSetUp;
+        }
 
         return $isSetUp;
     }
