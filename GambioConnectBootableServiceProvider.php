@@ -34,4 +34,6 @@ class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvid
      */
     public function register(): void
     {
+
     }
+}
