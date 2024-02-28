@@ -11,7 +11,6 @@ use GXModules\Makaira\GambioConnect\App\EventListeners\VariantUpdateEventListene
 
 class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvider
 {
-
     /**
      * @inheritDoc
      */
@@ -27,7 +26,7 @@ class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvid
      */
     public function provides(): array
     {
-        // TODO: Implement provides() method.
+        return [];
     }
 
     /**
@@ -35,6 +34,6 @@ class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvid
      */
     public function register(): void
     {
-        // TODO: Implement register() method.
+
     }
 }
