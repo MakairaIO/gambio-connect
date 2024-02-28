@@ -41,15 +41,23 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
             $this->products = $result->product->items;
         } else {
-            $category = $this->makairaClient->getCategory($categoryId);
+            if(empty($categoryId)) {
+                $this->category = [];
 
-            $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
+                $this->products = [];
 
-            $this->category = $category->category->items[0];
+                $this->totalProducts = 0;
+            } else {
+                $category = $this->makairaClient->getCategory($categoryId);
 
-            $this->products = $result->product->items;
+                $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
 
-            $this->totalProducts = $result->product->total;
+                $this->category = $category->category->items[0];
+
+                $this->products = $result->product->items;
+
+                $this->totalProducts = $result->product->total;
+            }
         }
     }
 
