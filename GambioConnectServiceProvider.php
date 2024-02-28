@@ -16,9 +16,7 @@ use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
@@ -80,8 +78,6 @@ class GambioConnectServiceProvider extends AbstractBootableServiceProvider
      */
     public function register(): void
     {
-        $this->application->registerShared(\MakairaProductListingContentControl::class, ProductListingContentControl::class);
-
         $this->application->registerShared(MakairaCheckoutAction::class)
             ->addArgument($this->application);
 
