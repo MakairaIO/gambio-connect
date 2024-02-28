@@ -57,6 +57,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                         $manufacturers[] = array_merge(
                             $this->getQuery($language, [$eyport])[0],
                             [
+                                'manufacturers_id' => $export['gambio_id'],
                                 'delete' => false
                             ]
                         );

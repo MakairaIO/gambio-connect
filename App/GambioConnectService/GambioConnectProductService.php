@@ -65,6 +65,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         $products[] = array_merge(
                             $this->getQuery($language, [$change])[0],
                             [
+                                'products_id' => $change['gambio_id'],
                                 'delete' => false,
                             ]
                         );
