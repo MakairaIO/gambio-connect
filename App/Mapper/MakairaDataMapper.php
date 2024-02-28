@@ -141,11 +141,18 @@ class MakairaDataMapper
             'title' => $data['products_to_categories']['categories_name']
         ];
 
+        $image = '';
+
+        if (!empty($data['products_image'])) {
+            $image = 'images/original_images/' . $data['products_image'];
+        }
+
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
             ->setPrice($data['products_price'])
             ->setIsVariant(false)
+            ->setPictureUrlMain($image)
             ->setTitle($data['products_description']['products_name'])
             ->setEan($data['products_item_codes']['code_mpn'] ?? '')
             ->setShortDescription($data['products_description']['products_short_description'])

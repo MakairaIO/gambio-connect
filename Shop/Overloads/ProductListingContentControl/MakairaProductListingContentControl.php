@@ -20,7 +20,9 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             \Gambio\Core\Configuration\Services\ConfigurationService::class
         );
 
-        $this->moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService($configurationService);
+        $this->moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService(
+            $configurationService
+        );
 
         $this->makairaClient = new \GXModules\Makaira\GambioConnect\App\MakairaClient($configurationService);
 
@@ -40,10 +42,21 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             $this->category = $result->category->items;
 
             $this->products = $result->product->items;
+        } elseif (empty($categoryId)) {
+            $this->category = [];
+
+            $this->products = [];
+
+            $this->totalProducts = 0;
         } else {
             $category = $this->makairaClient->getCategory($categoryId);
 
-            $result = $this->makairaClient->getProducts($categoryId, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
+            $result = $this->makairaClient->getProducts(
+                $categoryId,
+                $this->determine_max_display_search_results(),
+                $this->page_number ?? 0,
+                $this->prepareSortingForMakaira()
+            );
 
             $this->category = $category->category->items[0];
 
@@ -81,7 +94,12 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                     $this->build_search_result_sql();
 
-                    $result = $this->makairaClient->search($this->search_keywords, $this->determine_max_display_search_results(), $this->page_number ?? 0, $this->prepareSortingForMakaira());
+                    $result = $this->makairaClient->search(
+                        $this->search_keywords,
+                        $this->determine_max_display_search_results(),
+                        $this->page_number ?? 0,
+                        $this->prepareSortingForMakaira()
+                    );
 
                     $this->products = $result->product->items;
 
@@ -415,8 +433,11 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 $t_html_output .= $categoryDescriptionBottomContentView->get_html();
             }
         } else {
-            trigger_error("Variable(s) " . implode(', ', $t_uninitialized_array) . " do(es) not exist in class "
-                . get_class($this) . " or is/are null", E_USER_ERROR);
+            trigger_error(
+                "Variable(s) " . implode(', ', $t_uninitialized_array) . " do(es) not exist in class "
+                . get_class($this) . " or is/are null",
+                E_USER_ERROR
+            );
         }
 
         $this->v_output_buffer = $t_html_output;
