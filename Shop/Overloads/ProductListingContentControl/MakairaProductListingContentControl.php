@@ -126,7 +126,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         case 'nested':
                             $t_html_output = $this->get_category_listing_html_output();
 
-                        // no break;
+                            // no break;
                         default:
                             $this->build_sql_query();
                     }
@@ -489,7 +489,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 break;
             case 'price':
                 $type = 'price';
-            // no break
+                // no break
             default:
                 return [];
         }
