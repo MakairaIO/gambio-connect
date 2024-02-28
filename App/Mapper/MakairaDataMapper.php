@@ -143,7 +143,7 @@ class MakairaDataMapper
 
         $image = '';
 
-        if(!empty($data['products_image'])) {
+        if (!empty($data['products_image'])) {
             $image = 'images/original_images/' . $data['products_image'];
         }
 
