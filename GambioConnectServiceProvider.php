@@ -45,7 +45,7 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService;
  *
  * @package GXModules\Makaira\GambioConnect
  */
-class GambioConnectServiceProvider extends AbstractBootableServiceProvider
+class GambioConnectServiceProvider extends AbstractModuleServiceProvider
 {
     /**
      * @inheritcDoc
@@ -169,12 +169,5 @@ class GambioConnectServiceProvider extends AbstractBootableServiceProvider
 
         $this->application->registerShared(IsInstalledFilter::class)
             ->addArgument(ModuleStatusService::class);
-    }
-
-    public function boot(): void
-    {
-        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isSetupFilter', IsSetUpFilter::class]);
-        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isInstalledFilter', IsInstalledFilter::class]);
-        $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
     }
 }
