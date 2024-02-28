@@ -176,7 +176,6 @@ class MakairaProduct extends MakairaEntity
              'manufacturerid' => $this->manufacturerId,
              'manufacturer_title' => $this->manufacturerTitle,
              'gm_alt_text' => $this->gmAltText,
-             'picture_url_main' => $this->getPictureUrlMain(),
 
              /* Special makaira fields */
              'mak_boost_norm_insert' => $this->makBoostNormInsert,
