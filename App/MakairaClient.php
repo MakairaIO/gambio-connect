@@ -255,7 +255,7 @@ class MakairaClient
 
     public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null)
     {
-        if(empty($searchkey)) {
+        if (empty($searchkey)) {
             return [];
         }
         $requestBuilder = new RequestBuilder($this->language);

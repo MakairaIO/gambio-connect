@@ -40,7 +40,6 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             $this->category = $result->category->items;
 
             $this->products = $result->product->items;
-
         } else {
             $category = $this->makairaClient->getCategory($categoryId);
 
