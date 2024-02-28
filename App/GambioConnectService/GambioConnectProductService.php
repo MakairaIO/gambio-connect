@@ -57,10 +57,12 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $products = [];
                 foreach ($makairaChanges as $change) {
                     if ($change['delete']) {
-                        $products[] = [
-                            'products_id' => $change['gambio_id'],
-                            'delete' => true,
-                        ];
+                        if($change['gambio_id'] !== 0) {
+                            $products[] = [
+                                'products_id' => $change['gambio_id'],
+                                'delete' => true,
+                            ];
+                        }
                     } else {
                         $products[] = array_merge(
                             $this->getQuery($language, [$change])[0],
