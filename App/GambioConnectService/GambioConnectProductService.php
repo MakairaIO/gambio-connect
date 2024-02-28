@@ -54,7 +54,22 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         if (!empty($makairaChanges)) {
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
-                $products = $this->getQuery($language, $makairaChanges);
+                $products = [];
+                foreach ($makairaChanges as $change) {
+                    if ($change['delete']) {
+                        $products[] = [
+                            'products_id' => $change['gambio_id'],
+                            'delete' => true,
+                        ];
+                    } else {
+                        $products[] = array_merge(
+                            $this->getQuery($language, [$change])[0],
+                            [
+                                'delete' => false,
+                            ]
+                        );
+                    }
+                }
 
                 $documents = [];
 
@@ -107,17 +122,17 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
     public function getQuery(Language $language, array $makairaChanges = []): array
     {
-        $query = $this->connection->createQueryBuilder()
+        $productsQuery = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('products');
 
         if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query
-                ->add('where', $query->expr()->in('products.products_id', $ids), true);
+            $productsQuery
+                ->add('where', $productsQuery->expr()->in('products.products_id', $ids), true);
         }
 
-        $results = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
+        $results = $productsQuery->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
         if (empty($makairaChanges)) {
             return $results;
@@ -137,13 +152,19 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         ->setParameter('languageId', $language->id());
                 }
 
+                if ($relationTable === 'products_to_categories') {
+                    $query->join($relationTable, 'categories_description', 'categories_description', $relationTable . '.categories_id = categories_description.categories_id')
+                        ->andWhere('categories_description.language_id = :languageId')
+                        ->setParameter('languageId', $language->id());
+                }
+
                 $relationResult = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
                 if (count($relationResult) === 1) {
-                    $results[$index][$relationTable] = $relationResult[0];
-                } else {
-                    $results[$index][$relationTable] = $relationResult;
+                    $relationResult = $relationResult[0];
                 }
+
+                $results[$index][$relationTable] = $relationResult;
             }
         }
 

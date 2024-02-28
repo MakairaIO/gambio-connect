@@ -4,19 +4,27 @@ namespace GXModules\Makaira\GambioConnect\App\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
+use GXModules\Makaira\GambioConnect\App\MakairaClient;
+use Makaira\Constraints;
+use Makaira\Query;
 
 class MakairaRequest
 {
     private Client $client;
     private string $makairaUrl;
     private string $makairaInstance;
+
+    private string $makairaSecret = '';
+
+    private string $nonce = "";
     private string $language;
 
-    public function __construct(string $makairaUrl, string $makairaInstance, string $language)
+    public function __construct(string $makairaUrl, string $makairaInstance, string $language, string $makairaSecret = '')
     {
         $this->makairaInstance = $makairaInstance;
         $this->makairaUrl = $makairaUrl;
         $this->language = $language;
+        $this->nonce = bin2hex(random_bytes(8));
 
         $this->client = new Client([
           'base_uri' => rtrim($this->makairaUrl), // we trim the url to make sure we have no double slashes
@@ -58,7 +66,7 @@ class MakairaRequest
           'offset' => 0,
           'constraints' => $requestBuilder->getConstraint()
         ];
-        $uri = $this->makairaUrl . $this->getEndpoint('search');
+        $uri = $this->makairaUrl . $this->getEndpoint('search/public');
         $response = $this->request('POST', $uri, $body);
         return $response;
     }
@@ -91,6 +99,26 @@ class MakairaRequest
         return $response;
     }
 
+    public function getCategory($id)
+    {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => "$id",
+            'isSearch' => false,
+            'enableAggregations' => true,
+            'constraints' => $requestBuilder->getConstraint(),
+            'aggregations' => [],
+            'customFilter' => [],
+            'sorting' => [],
+            'count' => 12,
+            'offset' => 0,
+        ];
+
+        $url = $this->makairaUrl . $this->getEndpoint('category') . $id;
+        return $this->request('GET', $url, '');
+    }
+
     public function getPageComponents($pageData)
     {
         return $pageData['data']['config']['top']['elements'];
@@ -100,6 +128,8 @@ class MakairaRequest
     {
         switch ($endPointType) {
             case 'search':
+                return '/search';
+            case 'search/public':
                 return '/search/public';
             case 'snippets':
                 return '/enterprise/snippets';
@@ -107,6 +137,8 @@ class MakairaRequest
                 return '/recommendation/public';
             case 'documents':
                 return '/documents/public';
+            case 'category':
+                return '/category/';
             default:
                 return '/enterprise/page';
         }

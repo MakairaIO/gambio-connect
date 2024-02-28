@@ -64,6 +64,8 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_MANUFACTURER_TITLE = 'manufacturer_title';
 
+    public const FIELD_FSK18 = 'fsk_18';
+
     public const FIELDS = [
         self::FIELD_ID,
         self::FIELD_TYPE,
@@ -91,7 +93,8 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_MANUFACTURER_TITLE,
         self::FIELD_URL,
         self::FIELD_MAINCATEGORY,
-        self::FIELD_MAINCATEGORYURL
+        self::FIELD_MAINCATEGORYURL,
+        self::FIELD_FSK18,
     ];
 
     private int $stock = 0;

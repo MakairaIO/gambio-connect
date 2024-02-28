@@ -11,6 +11,11 @@ class ModuleStatusService
     ) {
     }
 
+    public function getModuleConfigService(): ModuleConfigService
+    {
+        return $this->moduleConfigService;
+    }
+
     public function isInstalled(): bool
     {
         return $this->moduleConfigService->getIsInstalled();
@@ -19,8 +24,8 @@ class ModuleStatusService
     public function isInSetup(): bool
     {
         return $this->isInstalled()
-            && (bool) $this->moduleConfigService->getStripeCheckoutEmail()
-            && (bool) $this->moduleConfigService->getStripeCheckoutId()
+            && $this->moduleConfigService->getStripeCheckoutEmail()
+            && $this->moduleConfigService->getStripeCheckoutId()
             && !$this->makairaConfigIsSet();
     }
 

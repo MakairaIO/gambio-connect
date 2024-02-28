@@ -37,13 +37,28 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
             foreach ($languages as $language) {
                 $this->currentLanguage = $language;
-                $categories            = $this->getQuery($language, $makairaExports);
-
+                $categories = [];
+                foreach ($makairaExports as $export) {
+                    if ($export['delete']) {
+                        $categories[] = [
+                            'categories_id' => $export['gambio_id'],
+                            'delete' => true,
+                        ];
+                    } else {
+                        $categories[] = array_merge(
+                            $this->getQuery($language, [$export])[0],
+                            [
+                                'delete' => false
+                            ]
+                        );
+                    }
+                }
 
                 $documents = [];
 
                 foreach ($categories as $category) {
                     try {
+                        $category['subcategories'] = $this->getSubCategories($language, $category['categories_id']);
                         $documents[] = $this->pushRevision($category);
                     } catch (Exception $exception) {
                         $this->logger->error("Category Export to Makaira Failed", [
@@ -116,18 +131,33 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         );
     }
 
-
-    private function getSubcategories(int $category_id): array
+    public function getSubCategories(Language $language, int $parentCategoryId): array
     {
-        return $this->connection->createQueryBuilder()
-            ->select('categories_id')
+        $query = $this->connection->createQueryBuilder()
+            ->select('*')
             ->from('categories')
-            ->where('parent_id = :categories_id')
-            ->setParameter('categories_id', $category_id)
-            ->execute()
-            ->fetchAll(FetchMode::ASSOCIATIVE);
-    }
+            ->leftJoin(
+                'categories',
+                'categories_description',
+                'categories_description',
+                'categories.categories_id = categories_description.categories_id'
+            )
+            ->leftJoin(
+                'categories_description',
+                'languages',
+                'languages',
+                'categories_description.language_id = languages.languages_id'
+            )
+            ->where('categories_description.language_id = :languageId')
+            ->setParameter('languageId', $language->id())
+            ->where('categories.parent_id = :parentId')
+            ->setParameter('parentId', $parentCategoryId);
 
+        return array_filter(
+            $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
+            fn (array $category) => $category['language_id'] == $language->id()
+        );
+    }
 
     private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array
     {

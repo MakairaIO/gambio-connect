@@ -4,8 +4,82 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "76f5b8b7dc86fd68618decbfb6d81499",
+    "content-hash": "37b11910376df897d2bb4989a523d854",
     "packages": [
+        {
+            "name": "kore/data-object",
+            "version": "1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kore/DataObject.git",
+                "reference": "ea2d6cd1c91d81131d7e537e8d8b038321b26e67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kore/DataObject/zipball/ea2d6cd1c91d81131d7e537e8d8b038321b26e67",
+                "reference": "ea2d6cd1c91d81131d7e537e8d8b038321b26e67",
+                "shasum": ""
+            },
+            "require-dev": {
+                "pdepend/pdepend": "@stable",
+                "phpmd/phpmd": "@stable",
+                "phpunit/phpunit": "@stable",
+                "sebastian/phpcpd": "@stable",
+                "squizlabs/php_codesniffer": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Kore": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple base class for data objects.",
+            "support": {
+                "issues": "https://github.com/kore/DataObject/issues",
+                "source": "https://github.com/kore/DataObject/tree/1.3"
+            },
+            "time": "2019-09-27T09:41:36+00:00"
+        },
+        {
+            "name": "makaira/shared-libs",
+            "version": "2022.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MakairaIO/shared-libs.git",
+                "reference": "3656c13ba1e680025b8d7c4a75b63e4df4f819e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MakairaIO/shared-libs/zipball/3656c13ba1e680025b8d7c4a75b63e4df4f819e0",
+                "reference": "3656c13ba1e680025b8d7c4a75b63e4df4f819e0",
+                "shasum": ""
+            },
+            "require": {
+                "kore/data-object": "1.3"
+            },
+            "require-dev": {
+                "pdepend/pdepend": "@stable",
+                "phpmd/phpmd": "@stable",
+                "phpunit/phpunit": "^4.0",
+                "squizlabs/php_codesniffer": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Makaira\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "support": {
+                "issues": "https://github.com/MakairaIO/shared-libs/issues",
+                "source": "https://github.com/MakairaIO/shared-libs/tree/2022.2.4"
+            },
+            "time": "2023-08-03T12:03:14+00:00"
+        },
         {
             "name": "respect/stringifier",
             "version": "0.2.0",

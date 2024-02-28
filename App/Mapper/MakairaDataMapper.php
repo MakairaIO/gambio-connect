@@ -23,6 +23,12 @@ class MakairaDataMapper
     {
         $transfer = new MakairaManufacturer();
 
+        if ($data['delete']) {
+            return $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
+                ->setId($data['manufacturers_id'])
+                ->setDelete(true);
+        }
+
         $createdAt = $data['date_added'] ? new DateTime($data['date_added']) : null;
         $updatedAt = $data['last_modified'] ? new DateTime($data['last_modified']) : null;
         $lastClickedAt = $data['date_last_click'] ? new DateTime($data['date_last_click']) : null;
@@ -51,13 +57,41 @@ class MakairaDataMapper
     {
         $transfer = new MakairaCategory();
 
+        if ($data['delete']) {
+            return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
+                ->setId($data['categories_id'])
+                ->setDelete(true);
+        }
+
+        $subCategories = [];
+
+        foreach ($data['subcategories'] as $subcategory) {
+            $subCategories[] = $subcategory['categories_id'];
+        }
+
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($data['categories_id'])
             ->setCategoryTitle($data['categories_name'])
             ->setDepth($hierarchy['depth'])
             ->setHierarchy($hierarchy['hierarchy'])
-            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()));
+            ->setSubCategories($subCategories)
+            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()))
+            ->setCategoryDescription($data['categories_description'])
+            ->setCategoryDescriptionBottom($data['categories_description_bottom'])
+            ->setCategoryHeadingTitle($data['categories_heading_title'])
+            ->setGmAltText($data['gm_alt_text'])
+            ->setShowSubCategories($data['show_sub_categories'] ?? false)
+            ->setShowSubCategoriesImages($data['show_sub_categories_images'] ?? false)
+            ->setShowSubCategoriesNames($data['show_sub_categories_names'] ?? false)
+            ->setShowCategoriesImageInDescription($data['show_sub_categories_image_in_description'] ?? false)
+            ->setShowSubProducts($data['show_sub_products'] ?? false)
+            ->setCategoriesTemplate($data['categories_template'])
+            ->setCategoriesId($data['categories_id'])
+            ->setViewModeTiled($data['view_mode_tiled'])
+            ->setCategoriesImage($data['categories_image'] ?? '')
+            ->setGmShowQtyInfo($data['gm_show_qty_info'])
+        ;
 
         return $transfer;
     }
@@ -92,7 +126,20 @@ class MakairaDataMapper
     {
         $transfer = new MakairaProduct();
 
+        if ($data['delete']) {
+            return $transfer->setId($data['products_id'])
+                ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+                ->setDelete(true);
+        }
+
         $stock = 1;
+
+        $category = [
+            'catid' => $data['products_to_categories']['categories_id'],
+            'shopid' => 1,
+            'path' => '?' . xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']),
+            'title' => $data['products_to_categories']['categories_name']
+        ];
 
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
@@ -112,7 +159,10 @@ class MakairaDataMapper
             ->setProductsVpe($data['products_vpe'])
             ->setProductsVpeStatus($data['products_vpe_status'])
             ->setProductsVpeValue($data['products_vpe_value'])
-            ->setSearchKeys($data['products_description']['products_keywords'] ?? '');
+            ->setSearchKeys($data['products_description']['products_keywords'] ?? '')
+            ->setCategories([$category])
+            ->setMainCategory($category['title'])
+            ->setMainCategoryUrl($category['path']);
 
         return $transfer;
     }
