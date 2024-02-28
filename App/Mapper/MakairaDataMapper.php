@@ -144,7 +144,7 @@ class MakairaDataMapper
         $image = '';
 
         if (!empty($data['products_image'])) {
-            $image = 'images/original_images/' . $data['products_image'];
+            $image = HTTPS_SERVER . DIR_WS_CATALOG . 'images/original_images/' . $data['products_image'];
         }
 
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
