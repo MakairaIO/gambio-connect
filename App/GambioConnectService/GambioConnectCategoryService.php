@@ -48,6 +48,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                         $categories[] = array_merge(
                             $this->getQuery($language, [$export])[0],
                             [
+                                'categories_id' => $export['gambio_id'],
                                 'delete' => false
                             ]
                         );
