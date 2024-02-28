@@ -28,6 +28,8 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
             'pages' => $result['pages']['items'] ?? []
         ];
 
+        dd($moduleContent);
+
         $view = MainFactory::create('SearchAutoCompleterThemeContentView');
 
         $view->set_content_data('result', $moduleContent);
