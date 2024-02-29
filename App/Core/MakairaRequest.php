@@ -71,11 +71,11 @@ class MakairaRequest
         return $response;
     }
 
-    public function fetchRecommendations(string $productId)
+    public function fetchRecommendations(string $productId, string $recommendationId)
     {
         $requestBuilder = new RequestBuilder($this->language);
         $body = [
-            'recommendationId' => 'similar-products',
+            'recommendationId' => $recommendationId,
             'productId' => [$productId],
             'count' => 6,
             'constraints' => $requestBuilder->getConstraint(),

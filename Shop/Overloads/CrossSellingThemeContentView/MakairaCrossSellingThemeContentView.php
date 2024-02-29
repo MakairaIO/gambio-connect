@@ -7,6 +7,8 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 {
     private $moduleStatusService;
 
+    private $moduleConfigService;
+
     private $makairaRequest;
 
     public function __construct()
@@ -17,17 +19,17 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
             \Gambio\Core\Configuration\Services\ConfigurationService::class
         );
 
-        $moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService(
+        $this->moduleConfigService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService(
             $configurationService
         );
 
         $this->moduleStatusService = new \GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService(
-            $moduleConfigService
+            $this->moduleConfigService
         );
 
-        $makairaUrl = $moduleConfigService->getMakairaUrl();
+        $makairaUrl = $this->moduleConfigService->getMakairaUrl();
 
-        $makairaInstance = $moduleConfigService->getMakairaInstance();
+        $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
         $this->makairaRequest = new MakairaRequest($makairaUrl, $makairaInstance, $_SESSION['language_code'] ?? 'de');
     }
@@ -88,21 +90,21 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 
     private function loadCrossSelling(): array
     {
-        if (empty($this->moduleStatusService->getModuleConfigService()->getRecoCrossSelling())) {
+        if (empty($this->moduleConfigService->getRecoCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoCrossSelling())) {
             return [];
         }
         $this->set_content_template('product_info_cross_selling.html');
-        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id']);
+        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id'], $this->moduleConfigService->getRecoCrossSelling());
         return $this->mapMakairaResponse($requestData['items']);
     }
 
     private function loadReverseCrossSelling(): array
     {
-        if (empty($this->moduleStatusService->getModuleConfigService()->getRecoReverseCrossSelling())) {
+        if (empty($this->moduleConfigService->getRecoReverseCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoReverseCrossSelling())) {
             return [];
         }
         $this->set_content_template('product_info_reverse_cross_selling.html');
-        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id']);
+        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id'], $this->moduleConfigService->getRecoReverseCrossSelling());
         return $this->mapMakairaResponse($requestData['items'])[0]['PRODUCTS'];
     }
 }
