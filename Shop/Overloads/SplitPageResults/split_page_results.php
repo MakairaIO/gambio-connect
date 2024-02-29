@@ -66,12 +66,21 @@ class splitPageResults
         }
 
         foreach ($products as $product) {
-            $this->products[] = array_merge(
-                [
-                    'products_id' => $product->id,
-                ],
-                (array)$product->fields
-            );
+            if(is_object($product)) {
+                $this->products[] = array_merge(
+                    [
+                        'products_id' => $product->id,
+                    ],
+                    (array)$product->fields
+                );
+            } else {
+                $fields = $product['fields'];
+                $this->products[] = [
+                    'id' => $product['id'],
+                    'products_name' => $fields['title'],
+                    'url' => $fields['url']
+                ];
+            }
         }
     }
 

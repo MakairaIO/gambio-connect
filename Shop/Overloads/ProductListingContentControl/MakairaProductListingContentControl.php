@@ -63,9 +63,28 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 $this->prepareSortingForMakaira()
             );
 
-            $this->category = $category->category->items[0];
+            $banners = $result->banners;
 
-            $this->products = $result->product->items;
+            foreach($result->product->items as $index => $product) {
+                foreach($banners as $bannerIndex => $banner) {
+                    if((int)$banner->position - 1 === $index) {
+                        $this->products[] = [
+                            'id' => $banner->id,
+                            'fields' => [
+                                'title' => $banner->title,
+                                'shortdesc' => $banner->description,
+                                'longdesc' => $banner->description,
+                                'url' => $banner->link,
+                                'active' => true,
+                            ]
+                        ];
+                        unset($banners[$bannerIndex]);
+                    }
+                }
+                $this->products[] = $product;
+            }
+
+            $this->category = $category->category->items[0];
 
             $this->totalProducts = $result->product->total;
         }
@@ -105,7 +124,6 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         $this->page_number ?? 0,
                         $this->prepareSortingForMakaira()
                     );
-
                     $this->products = $result->product->items;
 
                     break;
@@ -176,15 +194,18 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                 foreach ($coo_listing_split->products as $t_product_array) {
                     $t_rows_count++;
+                    if($t_product_array['products_id']) {
+                        // check if product has properties
+                        $t_query = 'SELECT COUNT(*) AS `count` FROM `products_properties_combis` WHERE `products_id` = '
+                            . $t_product_array['products_id'];
+                        $t_combis_result = xtc_db_query($t_query);
+                        $t_count_combis_array = xtc_db_fetch_array($t_combis_result);
 
-                    // check if product has properties
-                    $t_query = 'SELECT COUNT(*) AS `count` FROM `products_properties_combis` WHERE `products_id` = '
-                        . $t_product_array['products_id'];
-                    $t_combis_result = xtc_db_query($t_query);
-                    $t_count_combis_array = xtc_db_fetch_array($t_combis_result);
-
-                    if ($t_count_combis_array['count'] > 0) {
-                        $t_product_has_properties = true;
+                        if ($t_count_combis_array['count'] > 0) {
+                            $t_product_has_properties = true;
+                        } else {
+                            $t_product_has_properties = false;
+                        }
                     } else {
                         $t_product_has_properties = false;
                     }
@@ -200,7 +221,15 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         $GLOBALS['xtPrice']->showFrom_Attributes = false;
                     }
                     $coo_product = new product($t_product_array['products_id']);
-                    $t_products_array[] = $coo_product->buildDataArray($coo_product->data);
+                    if(!$coo_product->data) {
+                        $bannerData = [];
+                        foreach($t_product_array as $key => $value) {
+                            $bannerData[strtoupper($key)] = $value;
+                        }
+                        $t_products_array[] = $bannerData;
+                    }else {
+                        $t_products_array[] = $coo_product->data ? $coo_product->buildDataArray($coo_product->data) : $t_product_array;
+                    }
 
                     $t_attributes_html = '';
                     if (
