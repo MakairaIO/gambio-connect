@@ -153,6 +153,7 @@ class MakairaDataMapper
             ->setPrice($data['products_price'])
             ->setIsVariant(false)
             ->setPictureUrlMain($image)
+            ->setShippingNumberOfDays($data['shipping_status']['number_of_days'])
             ->setTitle($data['products_description']['products_name'])
             ->setEan($data['products_item_codes']['code_mpn'] ?? '')
             ->setIsbn($data['products_item_codes']['code_isbn'] ?? '')
