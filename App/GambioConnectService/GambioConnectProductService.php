@@ -57,7 +57,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $products = [];
                 foreach ($makairaChanges as $change) {
                     if ($change['delete']) {
-                        if($change['gambio_id'] !== 0) {
+                        if ($change['gambio_id'] !== 0) {
                             $products[] = [
                                 'products_id' => $change['gambio_id'],
                                 'delete' => true,
