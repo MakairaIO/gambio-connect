@@ -29,7 +29,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         'products_properties_index',
         'products_quantity_unit',
         'products_to_categories',
-        'products_xsell'
+        'products_xsell',
     ];
 
     public function prepareExport(): void
@@ -125,6 +125,12 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
     public function getQuery(Language $language, array $makairaChanges = []): array
     {
+        $shippingStatusQuery = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('shipping_status');
+
+        $shippingStatusArray = $shippingStatusQuery->execute()->fetchAll(FetchMode::ASSOCIATIVE);
+
         $productsQuery = $this->connection->createQueryBuilder()
             ->select('*')
             ->from('products');
@@ -142,24 +148,37 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         }
 
         foreach ($results as $index => $result) {
+            foreach($result as $product) {
+                $results[$index]['shipping_status'] = [];
+                foreach($shippingStatusArray as $shippingStatus) {
+                    if($shippingStatus['shipping_status_id'] === $product['products_shippingtime']) {
+                        $results[$index]['shipping_status'] = $shippingStatus;
+                    }
+                }
+            }
             foreach (self::$productRelationTables as $relationTable) {
-                $query = $this->connection->createQueryBuilder()
-                    ->select('*')
-                    ->from($relationTable)
-                    ->where('products_id = :productsId')
-                    ->setParameter('productsId', $result['products_id']);
+                    $query = $this->connection->createQueryBuilder()
+                        ->select('*')
+                        ->from($relationTable)
+                        ->where('products_id = :productsId')
+                        ->setParameter('productsId', $result['products_id']);
 
-                if ($relationTable === 'products_description' || $relationTable === 'products_properties_index') {
-                    $query
-                        ->andWhere($relationTable . '.language_id = :languageId')
-                        ->setParameter('languageId', $language->id());
-                }
+                    if ($relationTable === 'products_description' || $relationTable === 'products_properties_index') {
+                        $query
+                            ->andWhere($relationTable . '.language_id = :languageId')
+                            ->setParameter('languageId', $language->id());
+                    }
 
-                if ($relationTable === 'products_to_categories') {
-                    $query->join($relationTable, 'categories_description', 'categories_description', $relationTable . '.categories_id = categories_description.categories_id')
-                        ->andWhere('categories_description.language_id = :languageId')
-                        ->setParameter('languageId', $language->id());
-                }
+                    if ($relationTable === 'products_to_categories') {
+                        $query->join(
+                            $relationTable,
+                            'categories_description',
+                            'categories_description',
+                            $relationTable . '.categories_id = categories_description.categories_id'
+                        )
+                            ->andWhere('categories_description.language_id = :languageId')
+                            ->setParameter('languageId', $language->id());
+                    }
 
                 $relationResult = $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 

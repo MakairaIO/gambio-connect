@@ -76,6 +76,8 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_DATE_AVAILABLE = 'products_date_available';
 
+    public const FIELD_SHIPPING_NUMBER_OF_DAYS = 'shipping_number_of_days';
+
     public const FIELDS = [
         self::FIELD_ID,
         self::FIELD_TYPE,
@@ -110,6 +112,7 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_FSK18,
         self::FIELD_DATE_ADDED,
         self::FIELD_DATE_AVAILABLE,
+        self::FIELD_SHIPPING_NUMBER_OF_DAYS,
     ];
 
     private int $stock = 0;
@@ -156,6 +159,8 @@ class MakairaProduct extends MakairaEntity
 
     private float $productsVpeValue = 0;
 
+    private int $shippingNumberOfDays = 0;
+
     /* Special makaira fields */
     private float $makBoostNormInsert = 0.0;
     private float $makBoostNormSold = 0.0;
@@ -178,6 +183,7 @@ class MakairaProduct extends MakairaEntity
              'products_vpe' => $this->productsVpe,
              'products_vpe_status' => $this->productsVpeStatus,
              'products_vpe_value' => $this->productsVpeValue,
+             'shipping_number_of_days' => $this->shippingNumberOfDays,
 
              /* Boolean fields */
              'is_variant' => $this->isVariant,
@@ -693,6 +699,17 @@ class MakairaProduct extends MakairaEntity
     public function setDateAvailable(string $dateAvailable): static
     {
         $this->dateAvailable = $dateAvailable;
+        return $this;
+    }
+
+    public function getShippingNumberOfDays(): int
+    {
+        return $this->shippingNumberOfDays;
+    }
+
+    public function setShippingNumberOfDays(int $shippingNumberOfDays): static
+    {
+        $this->shippingNumberOfDays = $shippingNumberOfDays;
         return $this;
     }
 }
