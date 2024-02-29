@@ -253,7 +253,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null)
+    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [])
     {
         if (empty($searchkey)) {
             return [];
@@ -264,7 +264,8 @@ class MakairaClient
             'isSearch' => true,
             'enableAggregations' => true,
             'aggregations' => [],
-            'sorting' => [],
+            'sorting' => $sorting,
+            'fields' => MakairaProduct::FIELDS,
             'count' => $maxSearchResults,
             'offset' => $pageNumber ?: 0,
             'constraints' => $requestBuilder->getConstraint()

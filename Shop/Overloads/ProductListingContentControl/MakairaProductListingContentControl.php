@@ -37,7 +37,12 @@ class MakairaProductListingContentControl extends ProductListingContentControl
     private function getCategory($categoryId)
     {
         if ($this->isSearch()) {
-            $result = $this->makairaClient->search($this->search_keywords);
+            $result = $this->makairaClient->search(
+                $this->search_keywords,
+                $this->determine_max_display_search_results(),
+                $this->page_number ?? 0,
+                $this->prepareSortingForMakaira()
+            );
 
             $this->category = $result->category->items;
 
@@ -482,7 +487,6 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             return [];
         }
         $sort = explode('_', $this->listing_sort);
-
         switch ($sort[0]) {
             case 'name':
                 $type = 'title';
