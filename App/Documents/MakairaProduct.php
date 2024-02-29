@@ -76,6 +76,7 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_DATE_AVAILABLE = 'products_date_available';
 
+
     public const FIELD_SHIPPING_NUMBER_OF_DAYS = 'shipping_number_of_days';
 
     public const FIELDS = [
@@ -214,6 +215,7 @@ class MakairaProduct extends MakairaEntity
              'manufacturerid' => $this->manufacturerId,
              'manufacturer_title' => $this->manufacturerTitle,
              'gm_alt_text' => $this->gmAltText,
+             'picture_url_main' => $this->getPictureUrlMain(),
 
              /* Special makaira fields */
              'mak_boost_norm_insert' => $this->makBoostNormInsert,
