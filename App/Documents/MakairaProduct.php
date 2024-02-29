@@ -194,13 +194,15 @@ class MakairaProduct extends MakairaEntity
              /* Array fields */
              'attributes' => $this->attributes,
              'category' => $this->categories,
+             'ean' => [
+                 $this->ean,
+                 $this->isbn,
+                 $this->upc,
+                 $this->jan
+             ],
 
              /* String fields */
              'title' => $this->title,
-             'ean' => $this->ean,
-             'isbn' => $this->isbn,
-             'upc' => $this->upc,
-             'jan' => $this->jan,
 
              'products_date_added' => $this->dateAdded,
              'products_date_available' => $this->dateAvailable,
