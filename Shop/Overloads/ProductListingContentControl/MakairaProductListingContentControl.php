@@ -489,7 +489,15 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 break;
             case 'price':
                 $type = 'price';
-                // no break
+                break;
+            case 'date':
+                return [
+                  'products_date_added' => $sort[1],
+                  'products_date_available' => $sort[1]
+                ];
+            case 'shipping':
+                $type = 'shipping_number_of_days';
+                break;
             default:
                 return [];
         }
