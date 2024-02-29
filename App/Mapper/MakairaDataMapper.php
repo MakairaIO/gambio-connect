@@ -164,7 +164,7 @@ class MakairaDataMapper
             ->setDateAvailable($data['products_date_available'] ?? '')
             ->setShortDescription($data['products_description']['products_short_description'])
             ->setLongDescription($data['products_description']['products_description'])
-            ->setUrl('?' . xtc_product_link($data['products_id'], $data['products_description']['products_name']))
+            ->setUrl(HTTPS_SERVER . DIR_WS_CATALOG . FILENAME_PRODUCT_INFO . '?' . xtc_product_link($data['products_id'], $data['products_description']['products_name']))
             ->setSortOrder($data['products_xsell']['sort_order'] ?? 0)
             ->setTaxClassId($data['products_tax_class_id'])
             ->setFsk18($data['fsk18'] ?? false)

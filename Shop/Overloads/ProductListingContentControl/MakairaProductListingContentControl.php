@@ -65,9 +65,9 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
             $banners = $result->banners;
 
-            foreach($result->product->items as $index => $product) {
-                foreach($banners as $bannerIndex => $banner) {
-                    if((int)$banner->position - 1 === $index) {
+            foreach ($result->product->items as $index => $product) {
+                foreach ($banners as $bannerIndex => $banner) {
+                    if ((int)$banner->position - 1 === $index) {
                         $this->products[] = [
                             'id' => $banner->id,
                             'fields' => [
@@ -194,7 +194,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                 foreach ($coo_listing_split->products as $t_product_array) {
                     $t_rows_count++;
-                    if($t_product_array['products_id']) {
+                    if ($t_product_array['products_id']) {
                         // check if product has properties
                         $t_query = 'SELECT COUNT(*) AS `count` FROM `products_properties_combis` WHERE `products_id` = '
                             . $t_product_array['products_id'];
@@ -221,13 +221,14 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         $GLOBALS['xtPrice']->showFrom_Attributes = false;
                     }
                     $coo_product = new product($t_product_array['products_id']);
-                    if(!$coo_product->data) {
+                    if (!$coo_product->data) {
                         $bannerData = [];
-                        foreach($t_product_array as $key => $value) {
+                        $t_product_array['products_link'] = $t_product_array['url'];
+                        foreach ($t_product_array as $key => $value) {
                             $bannerData[strtoupper($key)] = $value;
                         }
                         $t_products_array[] = $bannerData;
-                    }else {
+                    } else {
                         $t_products_array[] = $coo_product->data ? $coo_product->buildDataArray($coo_product->data) : $t_product_array;
                     }
 

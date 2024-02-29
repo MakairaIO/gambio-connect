@@ -66,7 +66,7 @@ class splitPageResults
         }
 
         foreach ($products as $product) {
-            if(is_object($product)) {
+            if (is_object($product)) {
                 $this->products[] = array_merge(
                     [
                         'products_id' => $product->id,
