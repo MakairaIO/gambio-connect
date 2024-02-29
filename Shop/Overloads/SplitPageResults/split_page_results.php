@@ -70,6 +70,7 @@ class splitPageResults
                 $this->products[] = array_merge(
                     [
                         'products_id' => $product->id,
+                        'type' => 'product'
                     ],
                     (array)$product->fields
                 );
@@ -77,6 +78,7 @@ class splitPageResults
                 $fields = $product['fields'];
                 $this->products[] = [
                     'id' => $product['id'],
+                    'type' => 'banner',
                     'products_name' => $fields['title'],
                     'url' => $fields['url'],
                     'imageDesktop' => $fields['imageDesktop'] ?? '',
