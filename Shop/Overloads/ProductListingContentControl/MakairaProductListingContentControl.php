@@ -235,7 +235,13 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                         }
                         $t_products_array[] = $bannerData;
                     } else {
-                        $t_products_array[] = $coo_product->data ? $coo_product->buildDataArray($coo_product->data) : $t_product_array;
+                        $t_products_array[] =
+                            array_merge(
+                                $coo_product->buildDataArray($coo_product->data),
+                                [
+                                    'TYPE' => 'product'
+                                ]
+                            );
                     }
 
                     $t_attributes_html = '';
