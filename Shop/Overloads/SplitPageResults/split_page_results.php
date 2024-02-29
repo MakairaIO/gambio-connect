@@ -78,7 +78,9 @@ class splitPageResults
                 $this->products[] = [
                     'id' => $product['id'],
                     'products_name' => $fields['title'],
-                    'url' => $fields['url']
+                    'url' => $fields['url'],
+                    'imageDesktop' => $fields['imageDesktop'] ?? '',
+                    'imageMobile' => $fields['imageMobile'] ?? ''
                 ];
             }
         }
