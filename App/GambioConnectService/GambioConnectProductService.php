@@ -148,12 +148,9 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         }
 
         foreach ($results as $index => $result) {
-            foreach ($result as $product) {
-                $results[$index]['shipping_status'] = [];
-                foreach ($shippingStatusArray as $shippingStatus) {
-                    if ($shippingStatus['shipping_status_id'] === $product['products_shippingtime']) {
-                        $results[$index]['shipping_status'] = $shippingStatus;
-                    }
+            foreach ($shippingStatusArray as $shippingStatus) {
+                if ($shippingStatus['shipping_status_id'] === $result['products_shippingtime']) {
+                    $results[$index]['shipping_status'] = $shippingStatus;
                 }
             }
             foreach (self::$productRelationTables as $relationTable) {
