@@ -26,6 +26,8 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_JAN = 'jan';
 
+    public const FIELD_MPN = 'mpn';
+
     public const FIELD_ACTIVETO = 'activeto';
 
     public const FIELD_ACTIVEFROM = 'activefrom';
@@ -85,6 +87,7 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_PARENT,
         self::FIELD_SHOP,
         self::FIELD_EAN,
+        self::FIELD_MPN,
         self::FIELD_ISBN,
         self::FIELD_UPC,
         self::FIELD_JAN,
@@ -132,6 +135,8 @@ class MakairaProduct extends MakairaEntity
     private string $upc = '';
 
     private string $jan = '';
+
+    private string $mpn = '';
     private string $shortDescription = '';
     private string $longDescription = '';
     private string $soldAmount = '';
@@ -196,6 +201,7 @@ class MakairaProduct extends MakairaEntity
              'category' => $this->categories,
              'ean' => [
                  $this->ean,
+                 $this->mpn,
                  $this->isbn,
                  $this->upc,
                  $this->jan
@@ -714,6 +720,17 @@ class MakairaProduct extends MakairaEntity
     public function setShippingNumberOfDays(int $shippingNumberOfDays): static
     {
         $this->shippingNumberOfDays = $shippingNumberOfDays;
+        return $this;
+    }
+
+    public function getMpn(): string
+    {
+        return $this->mpn;
+    }
+
+    public function setMpn(string $mpn): static
+    {
+        $this->mpn = $mpn;
         return $this;
     }
 }
