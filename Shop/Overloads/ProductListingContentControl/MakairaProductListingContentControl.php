@@ -223,6 +223,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $coo_product = new product($t_product_array['products_id']);
                     if (!$coo_product->data) {
                         $bannerData = [];
+                        $t_product_array['products_id'] = $t_product_array['id'];
                         $t_product_array['products_link'] = $t_product_array['url'];
                         foreach ($t_product_array as $key => $value) {
                             $bannerData[strtoupper($key)] = $value;
