@@ -55,11 +55,9 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 
         foreach ($items as $item) {
             $fields = $item['fields'];
-            $preparedData[] = array_merge(
+            $preparedData[] =
                 [
                     'products_id' => $item['id'],
-                ],
-                [
                     'products_fsk18' => $fields['fsk_18'] ?? false,
                     'products_tax_class_id' => $fields['tax_class_id'],
                     'products_image' => $fields['picture_url_main'],
@@ -72,14 +70,18 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                     'products_vpe_value' => $fields['products_vpe_value'],
                     'products_vpe_status' => $fields['products_vpe_status'],
                     'sort_order' => $fields['sort_order']
-                ]
-            );
+                ];
         }
 
         $data = [];
 
         foreach ($preparedData as $preparedDataItem) {
-            $data[0]['PRODUCTS'][] = $this->coo_product->buildDataArray($preparedDataItem);
+            $data[0]['PRODUCTS'][] =  array_merge(
+                $this->coo_product->buildDataArray($preparedDataItem),
+                [
+                    'PRODUCTS_IMAGE' => $preparedDataItem['products_image']
+                ]
+            );
         }
         return $data;
     }
