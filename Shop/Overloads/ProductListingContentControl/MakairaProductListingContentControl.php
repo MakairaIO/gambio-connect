@@ -223,6 +223,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $coo_product = new product($t_product_array['products_id']);
                     if (!$coo_product->data) {
                         $bannerData = [];
+                        $t_product_array['products_image'] = 'https://demo.makaira.media/mecs-520f3a57fa38a643-Coming%20Soon%20Instagram%20Post%20%281200%20%C3%97%20627%20px%29%20%28656%20%C3%97%201032%20px%29.png';
                         $t_product_array['products_id'] = $t_product_array['id'];
                         $t_product_array['products_link'] = $t_product_array['url'];
                         foreach ($t_product_array as $key => $value) {
