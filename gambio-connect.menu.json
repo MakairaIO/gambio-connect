@@ -1,53 +1,30 @@
 [
   {
-    "id": "makaira_gambio-connect",
+    "id": "makaira_gambio_connect",
     "sort": 3,
     "class": "fa fa-hand-sparkles",
-    "title": "general.title",
+    "title": "gambio_connect_general.title",
     "if": {
-      "filter": "configActive",
-      "args": ["gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED"]
+      "filter": "isInstalledFilter",
+      "args": [true]
     },
     "items": [
       {
         "sort": 10,
         "link": "makaira/welcome",
-        "title": "general.welcome"
-      },
-      {
-        "sort": 20,
-        "link": "makaira/gambio-connect",
-        "title": "Makaira Gambio Connect",
+        "title": "gambio_connect_general.welcome",
         "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
+          "filter": "isSetUpFilter",
+          "args": [false]
         }
       },
       {
         "sort": 30,
         "link": "makaira/account",
-        "title": "general.my_account",
+        "title": "gambio_connect_general.my_account",
         "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
-        }
-      },
-      {
-        "sort": 40,
-        "link": "makaira/document",
-        "title": "general.document",
-        "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
-        }
-      },
-      {
-        "sort": 50,
-        "link": "makaira/faq",
-        "title": "general.faq",
-        "if": {
-          "filter": "configActive",
-          "args": ["modules/MakairaGambioConnect/active"]
+          "filter": "isSetUpFilter",
+          "args": [true]
         }
       }
     ]

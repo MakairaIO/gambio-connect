@@ -20,6 +20,14 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_EAN = 'ean';
 
+    public const FIELD_ISBN = 'isbn';
+
+    public const FIELD_UPC = 'upc';
+
+    public const FIELD_JAN = 'jan';
+
+    public const FIELD_MPN = 'mpn';
+
     public const FIELD_ACTIVETO = 'activeto';
 
     public const FIELD_ACTIVEFROM = 'activefrom';
@@ -64,12 +72,25 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_MANUFACTURER_TITLE = 'manufacturer_title';
 
+    public const FIELD_FSK18 = 'fsk_18';
+
+    public const FIELD_DATE_ADDED = 'products_date_added';
+
+    public const FIELD_DATE_AVAILABLE = 'products_date_available';
+
+
+    public const FIELD_SHIPPING_NUMBER_OF_DAYS = 'shipping_number_of_days';
+
     public const FIELDS = [
         self::FIELD_ID,
         self::FIELD_TYPE,
         self::FIELD_PARENT,
         self::FIELD_SHOP,
         self::FIELD_EAN,
+        self::FIELD_MPN,
+        self::FIELD_ISBN,
+        self::FIELD_UPC,
+        self::FIELD_JAN,
         self::FIELD_ACTIVETO,
         self::FIELD_ACTIVEFROM,
         self::FIELD_IS_VARIANT,
@@ -91,7 +112,11 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_MANUFACTURER_TITLE,
         self::FIELD_URL,
         self::FIELD_MAINCATEGORY,
-        self::FIELD_MAINCATEGORYURL
+        self::FIELD_MAINCATEGORYURL,
+        self::FIELD_FSK18,
+        self::FIELD_DATE_ADDED,
+        self::FIELD_DATE_AVAILABLE,
+        self::FIELD_SHIPPING_NUMBER_OF_DAYS,
     ];
 
     private int $stock = 0;
@@ -104,6 +129,14 @@ class MakairaProduct extends MakairaEntity
 
     private string $title = '';
     private string $ean = '';
+
+    private string $isbn = '';
+
+    private string $upc = '';
+
+    private string $jan = '';
+
+    private string $mpn = '';
     private string $shortDescription = '';
     private string $longDescription = '';
     private string $soldAmount = '';
@@ -113,6 +146,10 @@ class MakairaProduct extends MakairaEntity
     private string $mainCategoryUrl = '';
     private string $manufacturerId = '';
     private string $manufacturerTitle = '';
+
+    private string $dateAdded = '';
+
+    private string $dateAvailable = '';
 
     private int $sortOrder = 0;
 
@@ -127,6 +164,8 @@ class MakairaProduct extends MakairaEntity
     private int $productsVpeStatus = 0;
 
     private float $productsVpeValue = 0;
+
+    private int $shippingNumberOfDays = 0;
 
     /* Special makaira fields */
     private float $makBoostNormInsert = 0.0;
@@ -150,6 +189,7 @@ class MakairaProduct extends MakairaEntity
              'products_vpe' => $this->productsVpe,
              'products_vpe_status' => $this->productsVpeStatus,
              'products_vpe_value' => $this->productsVpeValue,
+             'shipping_number_of_days' => $this->shippingNumberOfDays,
 
              /* Boolean fields */
              'is_variant' => $this->isVariant,
@@ -159,10 +199,20 @@ class MakairaProduct extends MakairaEntity
              /* Array fields */
              'attributes' => $this->attributes,
              'category' => $this->categories,
+             'ean' => [
+                 $this->ean,
+                 $this->mpn,
+                 $this->isbn,
+                 $this->upc,
+                 $this->jan
+             ],
 
              /* String fields */
              'title' => $this->title,
-             'ean' => $this->ean,
+
+             'products_date_added' => $this->dateAdded,
+             'products_date_available' => $this->dateAvailable,
+
              'shortdesc' => $this->shortDescription,
              'longdesc' => $this->longDescription,
              'soldamount' => $this->soldAmount,
@@ -173,6 +223,7 @@ class MakairaProduct extends MakairaEntity
              'manufacturerid' => $this->manufacturerId,
              'manufacturer_title' => $this->manufacturerTitle,
              'gm_alt_text' => $this->gmAltText,
+             'picture_url_main' => $this->getPictureUrlMain(),
 
              /* Special makaira fields */
              'mak_boost_norm_insert' => $this->makBoostNormInsert,
@@ -603,6 +654,83 @@ class MakairaProduct extends MakairaEntity
     {
         $this->sortOrder = $sortOrder;
 
+        return $this;
+    }
+
+    public function getIsbn(): string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(string $isbn): static
+    {
+        $this->isbn = $isbn;
+        return $this;
+    }
+
+    public function getUpc(): string
+    {
+        return $this->upc;
+    }
+
+    public function setUpc(string $upc): static
+    {
+        $this->upc = $upc;
+        return $this;
+    }
+
+    public function getJan(): string
+    {
+        return $this->jan;
+    }
+
+    public function setJan(string $jan): static
+    {
+        $this->jan = $jan;
+        return $this;
+    }
+
+    public function getDateAdded(): string
+    {
+        return $this->dateAdded;
+    }
+
+    public function setDateAdded(string $dateAdded): static
+    {
+        $this->dateAdded = $dateAdded;
+        return $this;
+    }
+
+    public function getDateAvailable(): string
+    {
+        return $this->dateAvailable;
+    }
+
+    public function setDateAvailable(string $dateAvailable): static
+    {
+        $this->dateAvailable = $dateAvailable;
+        return $this;
+    }
+
+    public function getShippingNumberOfDays(): int
+    {
+        return $this->shippingNumberOfDays;
+    }
+
+    public function setShippingNumberOfDays(int $shippingNumberOfDays): static
+    {
+        $this->shippingNumberOfDays = $shippingNumberOfDays;
+        return $this;
+    }
+
+    public function getMpn(): string
+    {
+        return $this->mpn;
+    }
+
+    public function setMpn(string $mpn): static
+    {
+        $this->mpn = $mpn;
         return $this;
     }
 }

@@ -18,6 +18,8 @@ class MakairaEntity
     private bool $searchable = true;
     private bool $hidden = false;
 
+    private bool $delete = false;
+
     private string $pictureUrlMain = '';
 
 
@@ -128,6 +130,17 @@ class MakairaEntity
     {
         $this->pictureUrlMain = $pictureUrlMain;
 
+        return $this;
+    }
+
+    public function isDelete(): bool
+    {
+        return $this->delete;
+    }
+
+    public function setDelete(bool $delete): static
+    {
+        $this->delete = $delete;
         return $this;
     }
 }

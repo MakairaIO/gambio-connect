@@ -1,30 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
 namespace GXModules\Makaira\GambioConnect;
 
 use Doctrine\DBAL\Connection;
+use Gambio\Admin\Layout\Menu\Filter\FilterFactory;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
-use Gambio\Core\Application\DependencyInjection\AbstractModuleServiceProvider;
-use Gambio\Core\Configuration\Services\ConfigurationFinder;
+use Gambio\Core\Application\DependencyInjection\AbstractBootableServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectDocument;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectFAQ;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
 use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobDependencies;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobLogger;
-use GXModules\Makaira\GambioConnect\Admin\CronJobs\GambioConnectCronjobTask;
+use GXModules\Makaira\GambioConnect\Admin\MenuFilter\IsInstalledFilter;
+use GXModules\Makaira\GambioConnect\Admin\MenuFilter\IsSetUpFilter;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\App\Actions\Export;
@@ -41,15 +35,29 @@ use GXModules\Makaira\GambioConnect\App\MakairaClient;
 use GXModules\Makaira\GambioConnect\App\MakairaLogger;
 use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService;
 
-/**
- * Class GambioConnectServiceProvider
- *
- * @package GXModules\Makaira\GambioConnect
- */
-class GambioConnectServiceProvider extends AbstractModuleServiceProvider
+class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvider
 {
     /**
-     * @inheritcDoc
+     * @inheritDoc
+     */
+    public function boot(): void
+    {
+        $configurationService = $this->application->get(ConfigurationService::class);
+
+        $moduleConfigService = new ModuleConfigService($configurationService);
+
+        $moduleStatusService = new ModuleStatusService($moduleConfigService);
+        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isInstalledFilter', new IsInstalledFilter(
+            $moduleStatusService
+        )]);
+        $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isSetUpFilter', new IsSetUpFilter(
+            $moduleStatusService
+        )]);
+        $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
+    }
+
+    /**
+     * @inheritDoc
      */
     public function provides(): array
     {
@@ -60,25 +68,26 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             GambioConnectInstaller::class,
             GambioConnectEntry::class,
             GambioConnectManualSetup::class,
-            GambioConnectDocument::class,
             GambioConnectWelcome::class,
             GambioConnectAccount::class,
-            GambioConnectFAQ::class,
             Export::class,
             VariantUpdateEventListener::class,
             LanguageService::class,
             MakairaRequest::class,
             ModuleConfigService::class,
-            ModuleStatusService::class
+            ModuleStatusService::class,
+            IsSetUpFilter::class,
+            IsInstalledFilter::class,
         ];
     }
 
-
     /**
-     * @inheritcDoc
+     * @inheritDoc
      */
     public function register(): void
     {
+        $this->application->registerShared(\MakairaProductListingContentControl::class, ProductListingContentControl::class);
+
         $this->application->registerShared(MakairaCheckoutAction::class)
             ->addArgument($this->application);
 
@@ -94,7 +103,6 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
         $this->application->registerShared(GambioConnectManualSetup::class)
             ->addArgument(ModuleConfigService::class);
 
-        $this->application->registerShared(GambioConnectDocument::class);
         $this->application->registerShared(GambioConnectWelcome::class)
             ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(GambioConnectAccount::class)
@@ -102,7 +110,6 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
             ->addArgument(ModuleConfigService::class)
             ->addArgument(ChangesService::class);
 
-        $this->application->registerShared(GambioConnectFAQ::class);
 
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)
@@ -166,10 +173,11 @@ class GambioConnectServiceProvider extends AbstractModuleServiceProvider
 
         $this->application->registerShared(ModuleStatusService::class)
             ->addArgument(ModuleConfigService::class);
-    }
 
-    public function boot(): void
-    {
-        $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
+        $this->application->registerShared(IsSetUpFilter::class)
+            ->addArgument(ModuleStatusService::class);
+
+        $this->application->registerShared(IsInstalledFilter::class)
+            ->addArgument(ModuleStatusService::class);
     }
 }

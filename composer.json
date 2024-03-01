@@ -2,11 +2,12 @@
   "name": "makaira/gambio-connect",
   "require": {
     "stripe/stripe-php": "^13.9",
-    "respect/validation": "2.2.4"
+    "respect/validation": "2.2.4",
+    "makaira/shared-libs": "^2022.2"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.0",
-    "phpmd/phpmd": "@stable"
+    "phpmd/phpmd": "^2.6"
   },
   "scripts": {
     "phpunit": [

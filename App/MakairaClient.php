@@ -7,6 +7,9 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
+use GXModules\Makaira\GambioConnect\App\Core\RequestBuilder;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaCategory;
+use GXModules\Makaira\GambioConnect\App\Documents\MakairaProduct;
 use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 
@@ -19,14 +22,17 @@ class MakairaClient
     private string $makairaInstance;
     private ModuleConfigService $moduleConfigService;
 
+    private string $language = 'de';
+
     public function __construct(ConfigurationService $configurationFinder)
     {
-
         $this->moduleConfigService = new ModuleConfigService($configurationFinder);
         $this->makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $this->makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $this->makairaInstance = $this->moduleConfigService->getMakairaInstance();
         $this->nonce = bin2hex(random_bytes(8));
+
+        $this->language = $_SESSION['language_code'] ?? 'de';
 
         $this->client = new Client([
             'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
@@ -103,16 +109,16 @@ class MakairaClient
         return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
     }
 
-    public function setPublicField(string $field): \Psr\Http\Message\ResponseInterface
+    public function setPublicField(string $field, bool $showOnDetailPage = true, bool $showOnLandingPage = true, bool $showOnListingPage = true): \Psr\Http\Message\ResponseInterface
     {
         return $this->doRequest('POST', 'publicfield', [
             'field' => $field,
             'fieldName' => $field,
             'fieldId' => 'new',
             'fieldType' => 'field',
-            'onDetailPage' => true,
-            'onLandingPage' => true,
-            'onListingPage' => true,
+            'onDetailPage' => $showOnDetailPage,
+            'onLandingPage' => $showOnLandingPage,
+            'onListingPage' => $showOnListingPage,
         ]);
     }
 
@@ -170,5 +176,102 @@ class MakairaClient
             'sourceUrl' => '',
             'targetType' => 'makaira'
         ]);
+    }
+
+    public function getManufacturer(string $id)
+    {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $id,
+            'isSearch' => false,
+            'enableAggregations' => false,
+            'aggregations' => [],
+            'sorting' => [
+                'id' => 'ASC'
+            ],
+            'fields' => [],
+            'count' => 0,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint()
+        ];
+
+        $url = $this->makairaUrl . '/search/public';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
+
+    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [])
+    {
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $categoryId,
+            'isSearch' => false,
+            'enableAggregations' => true,
+            'aggregations' => [],
+            'sorting' => $sorting,
+            'fields' => [],
+            'count' => $maxResults,
+            'offset' => $offset,
+            'constraints' => $requestBuilder->getConstraint(),
+        ];
+
+        $body['constraints']['query.category_id'] = $categoryId;
+
+        $url = $this->makairaUrl . '/search/';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
+
+    public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
+    {
+        if (empty($id)) {
+            return [];
+        }
+        $requestBuilder = new RequestBuilder($this->language);
+
+        $body = [
+            'searchPhrase' => $id,
+            'isSearch' => true,
+            'enableAggregations' => true,
+            'aggregations' => [],
+            'sorting' => [],
+            'fields' => array_merge(
+                MakairaCategory::FIELDS,
+                [
+                    'subcategories'
+                ],
+                MakairaProduct::FIELDS
+            ),
+            'count' => $maxSearchResults,
+            'offset' => $pageNumber ?: 0,
+            'constraints' => $requestBuilder->getConstraint(),
+        ];
+
+        $body['constraints']['query.category_id'] = $id;
+
+        $url = $this->makairaUrl . '/search/';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+    }
+
+    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [])
+    {
+        if (empty($searchkey)) {
+            return [];
+        }
+        $requestBuilder = new RequestBuilder($this->language);
+        $body = [
+            'searchPhrase' => $searchkey,
+            'isSearch' => true,
+            'enableAggregations' => true,
+            'aggregations' => [],
+            'sorting' => $sorting,
+            'fields' => MakairaProduct::FIELDS,
+            'count' => $maxSearchResults,
+            'offset' => $pageNumber ?: 0,
+            'constraints' => $requestBuilder->getConstraint()
+        ];
+
+        $url = $this->makairaUrl . '/search/';
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 }

@@ -39,33 +39,25 @@ class GambioConnectAccount extends AdminModuleAction
             $template = $this->render(
                 $this->translate('account', 'general'),
                 $this->templatePathInSetup,
-                []
             );
             return $response->write($template);
         }
 
-
+        if (!$this->moduleStatusService->isSetUp()) {
+            return $response->withRedirect($this->url->admin() . '/makaira/gambio-connect', 302);
+        }
 
         if ($request->isPost()) {
             return $this->handlePost($request, $response);
         }
 
         return $this->handleGet($request, $response);
-
-
-
-        $template = $this->render(
-            $this->translate('account', 'general'),
-            $this->templatePath,
-            []
-        );
-
-        return $response->write($template);
     }
 
     private function getData(): array
     {
         return [
+            'gambio_connect_form_url' => $this->url->admin(),
             'status' => $this->moduleConfigService->getStatus(),
             'makairaLink' => rtrim($this->moduleConfigService->getMakairaUrl(), "/") . '/' . 'admin/' .  $this->moduleConfigService->getMakairaInstance(),
             'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),

@@ -77,7 +77,9 @@ class GambioConnectCronjobTask extends AbstractCronjobTask
                 if (!$this->checkPublicFieldsSetup()) {
                     $this->logInfo('Makaira Public Fields Setup Has Started');
 
-                    $this->gambioConnectPublicFieldsService->setUpPublicFields();
+                    $this->gambioConnectPublicFieldsService->setUpProductPublicFields();
+
+                    $this->gambioConnectPublicFieldsService->setUpCategoryPublicFields();
 
                     $this->logInfo('Makaira Public Fields has been setup');
 
