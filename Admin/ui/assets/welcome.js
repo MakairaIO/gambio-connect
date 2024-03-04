@@ -1,6 +1,5 @@
 
-function calculateTotal(context)
-{
+function calculateTotal(context) {
     let total = 0;
     const checkboxes = context.querySelectorAll('input[type="checkbox"].package-checkbox');
     const result = context.querySelector('.total-price');
@@ -22,12 +21,11 @@ function calculateTotal(context)
 
 }
 
-function syncDependencies(checkbox, context)
-{
+function syncDependencies(checkbox, context) {
 
     const status = checkbox.checked;
     const name = checkbox.getAttribute('name');
-    const dependsOn = checkbox.getAttribute('data-depends-on') ? .split(',');
+    const dependsOn = checkbox.getAttribute('data-depends-on')?.split(',');
     const checkboxes = context.querySelectorAll('input[type="checkbox"].package-checkbox');
 
 
@@ -39,15 +37,14 @@ function syncDependencies(checkbox, context)
         });
     } else {
         checkboxes.forEach(checkbox => {
-            if (checkbox.getAttribute('data-depends-on') ? .split(',').includes(name)) {
+            if (checkbox.getAttribute('data-depends-on')?.split(',').includes(name)) {
                 checkbox.checked = status;
             }
         });
     }
 }
 
-function attachEventListeners(context)
-{
+function attachEventListeners(context) {
     context.querySelectorAll('input[type="checkbox"].package-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', () => syncDependencies(checkbox, context));
         checkbox.addEventListener('change', () => calculateTotal(context));
