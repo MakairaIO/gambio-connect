@@ -47,6 +47,7 @@ class GambioConnectManualSetup extends AdminModuleAction
             $this->translate($this->title, 'gambio_connect_general'),
             $this->templatePath,
             [
+                'gambio_connect_form_url' => $this->url->admin(),
                 'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),
                 'makairaInstance'  => $this->moduleConfigService->getMakairaInstance(),
                 'makairaSecret' => $this->moduleConfigService->getMakairaSecret(),
@@ -76,6 +77,7 @@ class GambioConnectManualSetup extends AdminModuleAction
             $this->translate($this->title, 'gambio_connect_general'),
             $this->templatePath,
             [
+                'gambio_connect_form_url' => $this->url->admin(),
                 'makairaUrl' => $makairaUrl,
                 'makairaInstance'  => $makairaInstance,
                 'makairaSecret' => $makairaSecret,
