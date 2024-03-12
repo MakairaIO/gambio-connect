@@ -45,39 +45,52 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                             'delete' => true,
                         ];
                     } else {
-                        $categories[] = array_merge(
-                            $this->getQuery($language, [$export])[0],
-                            [
-                                'categories_id' => $export['gambio_id'],
-                                'delete' => false
-                            ]
-                        );
+                        $exportCategory = $this->getQuery($language, [$export])[0];
+                        if(!$exportCategory) {
+                            $this->logger->error("Category export error", [
+                                'data' => $export,
+                            ]);
+                        } else {
+                            $categories[] = array_merge(
+                                $exportCategory,
+                                [
+                                    'categories_id' => $export['gambio_id'],
+                                    'delete' => false
+                                ]
+                            );
+                        }
                     }
                 }
 
                 $documents = [];
 
-                foreach ($categories as $category) {
-                    try {
-                        $category['subcategories'] = $this->getSubCategories($language, $category['categories_id']);
-                        $documents[] = $this->pushRevision($category);
-                    } catch (Exception $exception) {
-                        $this->logger->error("Category Export to Makaira Failed", [
-                            'id' => $category['categories_id'],
-                            'message' => $exception->getMessage()
-                        ]);
+                if(!empty($categories)) {
+                    foreach ($categories as $category) {
+                        try {
+                            $category['subcategories'] = $this->getSubCategories($language, $category['categories_id']);
+                            $documents[] = $this->pushRevision($category);
+                        } catch (Exception $exception) {
+                            $this->logger->error("Category Export to Makaira Failed", [
+                                'id' => $category['categories_id'],
+                                'message' => $exception->getMessage()
+                            ]);
+                        }
                     }
-                }
-                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
-                $response = $this->client->pushRevision($data);
-                $this->logger->info(
-                    'Makaira Category Documents: '
+                    $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+                    $response = $this->client->pushRevision($data);
+                    $this->logger->info(
+                        'Makaira Category Documents: '
                         . count($documents)
                         . ' with Status Code '
                         . $response->getStatusCode()
-                );
-                foreach ($categories as $category) {
-                    $this->exportIsDone($category['categories_id'], 'category');
+                    );
+                    foreach ($categories as $category) {
+                        $this->exportIsDone($category['categories_id'], 'category');
+                    }
+                } else {
+                    $this->logger->debug("No exportable Categories where found", [
+                        'export' => $makairaExports
+                    ]);
                 }
             }
         }

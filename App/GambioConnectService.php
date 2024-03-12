@@ -8,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Collections\Languages;
 use Gambio\Admin\Modules\Language\Model\Language;
-use Gambio\Admin\Modules\ProductVariant\App\ProductVariantsRepository;
+use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\GambioConnect\App\Documents\MakairaEntity;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectCategoryService;
