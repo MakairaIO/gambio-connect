@@ -46,19 +46,13 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                         ];
                     } else {
                         $exportCategory = $this->getQuery($language, [$export])[0];
-                        if(!$exportCategory) {
-                            $this->logger->error("Category export error", [
-                                'data' => $export,
-                            ]);
-                        } else {
-                            $categories[] = array_merge(
-                                $exportCategory,
-                                [
-                                    'categories_id' => $export['gambio_id'],
-                                    'delete' => false
-                                ]
-                            );
-                        }
+                        $categories[] = array_merge(
+                            $exportCategory ?? [],
+                            [
+                                'categories_id' => $export['gambio_id'],
+                                'delete' => false
+                            ]
+                        );
                     }
                 }
 
@@ -136,7 +130,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->add('where', $query->expr()->in('categories.categories_id', array_values($ids)), true);
+            $query->andWhere('categories.categories_id IN (' . implode(',', array_values($ids)) . ')');
         }
 
         return array_filter(
