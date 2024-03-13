@@ -17,7 +17,9 @@ class GambioConnectProductsDescriptionTableInstaller implements GambioConnectTab
         $db->query("
             CREATE TRIGGER makaira_connect_product_description_update_trigger AFTER UPDATE on products_description
             FOR EACH ROW
-            CALL makairaChange(NEW.products_id, 'product')
+                IF NOT NEW.products_viewed > OLD.products_viewed THEN
+                    CALL makairaChange(NEW.products_id, 'product');
+                END IF
         ");
 
         $db->query("
