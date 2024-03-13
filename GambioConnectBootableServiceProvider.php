@@ -37,9 +37,6 @@ use GXModules\Makaira\GambioConnect\App\Service\GambioConnectService;
 
 class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvider
 {
-    /**
-     * @inheritDoc
-     */
     public function boot(): void
     {
         $configurationService = $this->application->get(ConfigurationService::class);

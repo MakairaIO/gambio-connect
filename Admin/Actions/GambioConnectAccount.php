@@ -37,7 +37,7 @@ class GambioConnectAccount extends AdminModuleAction
     {
         if ($this->moduleStatusService->isInSetup()) {
             $template = $this->render(
-                $this->translate('account', 'general'),
+                $this->translate($this->title, 'gambio_connect_general'),
                 $this->templatePathInSetup,
             );
             return $response->write($template);
@@ -62,7 +62,7 @@ class GambioConnectAccount extends AdminModuleAction
             'makairaLink' => rtrim($this->moduleConfigService->getMakairaUrl(), "/") . '/' . 'admin/' .  $this->moduleConfigService->getMakairaInstance(),
             'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),
             'makairaInstance'  => $this->moduleConfigService->getMakairaInstance(),
-            'cornStatus' => (bool)$this->moduleConfigService->getCronjobStatus() ? $this->translate('corn_status_1', 'general') : $this->translate('corn_status_0', 'general'),
+            'cornStatus' => (bool)$this->moduleConfigService->getCronjobStatus() ? $this->translate('corn_status_1', 'gambio_connect_general') : $this->translate('corn_status_0', 'gambio_connect_general'),
             'queueLength' => $this->changesService->getQueueLength(),
             'lastSync' => 'test',
             'recoCrossSelling' =>  $this->moduleConfigService->getRecoCrossSelling(),
@@ -73,7 +73,7 @@ class GambioConnectAccount extends AdminModuleAction
     {
 
         $template = $this->render(
-            $this->translate($this->title, 'general'),
+            $this->translate($this->title, 'gambio_connect_general'),
             $this->templatePath,
             $this->getData()
         );
@@ -102,7 +102,7 @@ class GambioConnectAccount extends AdminModuleAction
         ];
 
         $template = $this->render(
-            $this->translate($this->title, 'general'),
+            $this->translate($this->title, 'gambio_connect_general'),
             $this->templatePath,
             array_merge($this->getData(), $dataValidation)
         );
@@ -113,9 +113,9 @@ class GambioConnectAccount extends AdminModuleAction
     private function getNotification(array $invalid): array
     {
         if (empty($invalid)) {
-            return ['type' => 'success', 'message' => $this->translate('saved', 'general'), 'title' => $this->translate('success', 'general')];
+            return ['type' => 'success', 'message' => $this->translate('saved', 'gambio_connect_general'), 'title' => $this->translate('success', 'gambio_connect_general')];
         }
 
-        return ['type' => 'warning', 'message' => $this->translate('invalid', 'general'), 'title' => $this->translate('warning', 'general')];
+        return ['type' => 'warning', 'message' => $this->translate('invalid', 'gambio_connect_general'), 'title' => $this->translate('warning', 'gambio_connect_general')];
     }
 }

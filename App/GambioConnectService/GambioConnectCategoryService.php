@@ -45,8 +45,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                             'delete' => true,
                         ];
                     } else {
+                        $exportCategory = $this->getQuery($language, [$export])[0];
                         $categories[] = array_merge(
-                            $this->getQuery($language, [$export])[0],
+                            $exportCategory ?? [],
                             [
                                 'categories_id' => $export['gambio_id'],
                                 'delete' => false
@@ -72,9 +73,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 $response = $this->client->pushRevision($data);
                 $this->logger->info(
                     'Makaira Category Documents: '
-                        . count($documents)
-                        . ' with Status Code '
-                        . $response->getStatusCode()
+                    . count($documents)
+                    . ' with Status Code '
+                    . $response->getStatusCode()
                 );
                 foreach ($categories as $category) {
                     $this->exportIsDone($category['categories_id'], 'category');
@@ -123,7 +124,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->add('where', $query->expr()->in('categories.categories_id', array_values($ids)), true);
+            $query->andWhere('categories.categories_id IN (' . implode(',', array_values($ids)) . ')');
         }
 
         return array_filter(
