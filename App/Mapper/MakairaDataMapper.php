@@ -160,6 +160,7 @@ class MakairaDataMapper
             ->setIsbn($data['products_item_codes']['code_isbn'] ?? '')
             ->setUpc($data['products_item_codes']['code_upc'] ?? '')
             ->setJan($data['products_item_codes']['code_jan'] ?? '')
+            ->setModel($data['products_model'])
             ->setDateAdded($data['products_date_added'] ?? '')
             ->setDateAvailable($data['products_date_available'] ?? '')
             ->setShortDescription($data['products_description']['products_short_description'])

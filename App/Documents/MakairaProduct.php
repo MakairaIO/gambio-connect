@@ -137,6 +137,8 @@ class MakairaProduct extends MakairaEntity
     private string $jan = '';
 
     private string $mpn = '';
+
+    private string $model = '';
     private string $shortDescription = '';
     private string $longDescription = '';
     private string $soldAmount = '';
@@ -204,7 +206,8 @@ class MakairaProduct extends MakairaEntity
                  $this->mpn,
                  $this->isbn,
                  $this->upc,
-                 $this->jan
+                 $this->jan,
+                 $this->model,
              ],
 
              /* String fields */
@@ -731,6 +734,17 @@ class MakairaProduct extends MakairaEntity
     public function setMpn(string $mpn): static
     {
         $this->mpn = $mpn;
+        return $this;
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
+    }
+
+    public function setModel(string $model): static
+    {
+        $this->model = $model;
         return $this;
     }
 }
