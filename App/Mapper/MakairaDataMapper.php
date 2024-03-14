@@ -60,6 +60,7 @@ class MakairaDataMapper
         if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
                 ->setId($data['categories_id'])
+                ->setCategoriesId($data['categories_id'])
                 ->setDelete(true);
         }
 
