@@ -201,14 +201,14 @@ class MakairaProduct extends MakairaEntity
              /* Array fields */
              'attributes' => $this->attributes,
              'category' => $this->categories,
-             'ean' => [
+             'ean' => array_filter([
                  $this->ean,
                  $this->mpn,
                  $this->isbn,
                  $this->upc,
                  $this->jan,
                  $this->model,
-             ],
+             ], fn($item) => !empty($item)),
 
              /* String fields */
              'title' => $this->title,

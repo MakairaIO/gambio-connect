@@ -57,33 +57,33 @@ class MakairaCategory extends MakairaEntity
     private int $depth = 0;
     private int $sort = 0;
 
-    private string $categoryTitle;
+    private string $categoryTitle = '';
 
-    private string $categoryDescription;
+    private string $categoryDescription = '';
 
-    private string $categoryDescriptionBottom;
+    private string $categoryDescriptionBottom = '';
 
-    private string $categoryHeadingTitle;
+    private string $categoryHeadingTitle = '';
 
-    private string $gm_alt_text;
+    private string $gm_alt_text = '';
 
-    private bool $showSubCategories;
+    private bool $showSubCategories = false;
 
-    private bool $showSubCategoriesImages;
+    private bool $showSubCategoriesImages = false;
 
-    private bool $showSubCategoriesNames;
+    private bool $showSubCategoriesNames = false;
 
-    private bool $showCategoriesImageInDescription;
+    private bool $showCategoriesImageInDescription = false;
 
-    private bool $showSubProducts;
+    private bool $showSubProducts = false;
 
-    private string $categoriesTemplate;
+    private string $categoriesTemplate = '';
 
     private string $categoriesId;
 
-    private bool $viewModeTiled;
+    private bool $viewModeTiled = false;
 
-    private string $categoriesImage;
+    private string $categoriesImage  = '';
 
     private string $hierarchy = '';
     private ?string $url = null;
@@ -112,7 +112,7 @@ class MakairaCategory extends MakairaEntity
                 'show_categories_image_in_description' => $this->isShowCategoriesImageInDescription(),
                 'show_sub_products' => $this->isShowSubProducts(),
                 'categories_template' => $this->getCategoriesTemplate(),
-                'categories_id' => $this->getCategoriesId(),
+                'categories_id' => $this->getId(),
                 'view_mode_tiled' => $this->isViewModeTiled(),
                 'categories_image' => $this->getCategoriesImage(),
                 'depth' => $this->getDepth(),
