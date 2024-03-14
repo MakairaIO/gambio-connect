@@ -180,7 +180,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->execute()
             ->fetchAll(FetchMode::ASSOCIATIVE);
         if (empty($hierarchy)) {
-            $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
+            $hierarchy = $category['categories_id'];
         } else {
             $hierarchy = $parentCategory['categories_id'] . '//' . $hierarchy;
         }

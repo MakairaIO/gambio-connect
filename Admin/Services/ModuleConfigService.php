@@ -220,7 +220,7 @@ class ModuleConfigService
 
     public function setMakairaCronJobInterval(): void
     {
-        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_INTERVAL, '*/4 * * * *');
+        $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_INTERVAL, '*/1 * * * *');
     }
 
     private function getConfigValue(string $key): string

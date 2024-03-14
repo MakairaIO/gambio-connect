@@ -146,6 +146,8 @@ class GambioConnectService implements GambioConnectServiceInterface
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
 
+        $this->logger->debug("Makaira Documents for Debug", $data);
+
         return $data;
     }
 
