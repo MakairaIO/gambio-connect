@@ -30,8 +30,8 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
             'categories_id' => $resultCategory->id,
         ];
 
-        $this->subcategories = $resultCategory->fields->subcategories;
-        $this->mapMakairaFieldsToGambio($resultCategory);
+        $this->subcategories = $resultCategory->fields->subcategories ?? [];
+        $this->mapMakairaFieldsToGambio((object)$resultCategory);
     }
 
     private function mapMakairaFieldsToGambio(object $resultCategory, string $targetArray = 'categoryArray')
