@@ -201,15 +201,7 @@ class MakairaProduct extends MakairaEntity
              /* Array fields */
              'attributes' => $this->attributes,
              'category' => $this->categories,
-             'ean' => array_filter([
-                 $this->ean,
-                 $this->mpn,
-                 $this->isbn,
-                 $this->upc,
-                 $this->jan,
-                 $this->model,
-             ], fn($item) => !empty($item)),
-
+             'ean' => $this->buildCodes(),
              /* String fields */
              'title' => $this->title,
 
@@ -746,5 +738,16 @@ class MakairaProduct extends MakairaEntity
     {
         $this->model = $model;
         return $this;
+    }
+
+    private function buildCodes() {
+        $codes = [];
+        foreach(['ean', 'mpn', 'isbn', 'upc', 'jan', 'model'] as $code) {
+            if(!empty($this->$code)) {
+                $codes[] = $this->$code;
+            }
+        }
+
+        return $codes;
     }
 }
