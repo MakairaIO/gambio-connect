@@ -145,7 +145,6 @@ class GambioConnectService implements GambioConnectServiceInterface
         foreach ($documents as $document) {
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
-        $this->logger->debug("Makaira Documents for Debug", $data);
 
         $this->logger->debug("Makaira Documents for Debug", $data);
 
