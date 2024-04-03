@@ -1,0 +1,72 @@
+{
+  "name": "Makaira Gambio Connect",
+  "repositoryName": "gambio-connect",
+  "shopIdentifier": "gambio-connect",
+  "type": "module",
+  "version": "1.0.7",
+  "title": {
+    "en": "Makaira Gambio Connect",
+    "de": "Makaira Gambio Connect"
+  },
+  "description": {
+    "en": "You can use Makaira with this module.",
+    "de": "Mit diesem Module können sie Makaira nutzen."
+  },
+  "vendor": {
+    "name": "marmalade GmbH",
+    "url": "https://makaira.io/",
+    "avatar": "",
+    "gitlabGroupName": "makaira"
+  },
+  "displayImage": {
+    "en": "/images/placeholder.png",
+    "de": "/images/placeholder.png"
+  },
+  "highlights": [
+    {
+      "title": {
+        "en": "Basic module for developers",
+        "de": "Basis Modul fÃ¼r Entwickler"
+      }
+    },
+    {
+      "title": {
+        "en": "Easy to extend",
+        "de": "Leicht zu erweitern"
+      }
+    },
+    {
+      "title": {
+        "en": "With translation examples",
+        "de": "Mit Ãœbersetzungsbeispielen"
+      }
+    }
+  ],
+  "migrations": {
+    "up": [],
+    "down": []
+  },
+  "requirements": {
+    "needed": {
+      "shop": {
+        "shopVersions": [">=4.9.2.1"]
+      },
+      "server": {
+        "phpVersions": [">=5.6"],
+        "mysqlVersions": [">=5.5"]
+      },
+      "themes": [],
+      "receiptFiles": []
+    },
+    "hidden": {
+      "shop": {
+        "shopVersions": []
+      },
+      "server": {
+        "phpVersions": [],
+        "mysqlVersions": []
+      },
+      "themes": []
+    }
+  }
+}
