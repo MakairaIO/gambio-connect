@@ -60,6 +60,7 @@ class MakairaDataMapper
         if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
                 ->setId($data['categories_id'])
+                ->setCategoriesId($data['categories_id'])
                 ->setDelete(true);
         }
 
@@ -77,16 +78,16 @@ class MakairaDataMapper
             ->setHierarchy($hierarchy['hierarchy'])
             ->setSubCategories($subCategories)
             ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()))
-            ->setCategoryDescription($data['categories_description'])
-            ->setCategoryDescriptionBottom($data['categories_description_bottom'])
-            ->setCategoryHeadingTitle($data['categories_heading_title'])
-            ->setGmAltText($data['gm_alt_text'])
+            ->setCategoryDescription($data['categories_description'] ?? '')
+            ->setCategoryDescriptionBottom($data['categories_description_bottom'] ?? '')
+            ->setCategoryHeadingTitle($data['categories_heading_title'] ?? '')
+            ->setGmAltText($data['gm_alt_text'] ?? '')
             ->setShowSubCategories($data['show_sub_categories'] ?? false)
             ->setShowSubCategoriesImages($data['show_sub_categories_images'] ?? false)
             ->setShowSubCategoriesNames($data['show_sub_categories_names'] ?? false)
             ->setShowCategoriesImageInDescription($data['show_sub_categories_image_in_description'] ?? false)
             ->setShowSubProducts($data['show_sub_products'] ?? false)
-            ->setCategoriesTemplate($data['categories_template'])
+            ->setCategoriesTemplate($data['categories_template'] ?? '')
             ->setCategoriesId($data['categories_id'])
             ->setViewModeTiled($data['view_mode_tiled'])
             ->setCategoriesImage($data['categories_image'] ?? '')
@@ -160,6 +161,7 @@ class MakairaDataMapper
             ->setIsbn($data['products_item_codes']['code_isbn'] ?? '')
             ->setUpc($data['products_item_codes']['code_upc'] ?? '')
             ->setJan($data['products_item_codes']['code_jan'] ?? '')
+            ->setModel($data['products_model'])
             ->setDateAdded($data['products_date_added'] ?? '')
             ->setDateAvailable($data['products_date_available'] ?? '')
             ->setShortDescription($data['products_description']['products_short_description'])
