@@ -17,8 +17,17 @@
           "package.json",
           "store.json"
         ],
-        "message": "chore(release): ${nextRelease.version} [skip ci] \n\n${nextRelease.notes}"
+        "message": "chore(release): Package.json ${nextRelease.version} [skip ci] \n\n${nextRelease.notes}"
       }
+    ],
+    [
+      "@semantic-release/git",
+            {
+              "assets": [
+                "store.json"
+              ],
+              "message": "chore(release): Store.json ${nextRelease.version} [skip ci] \n\n${nextRelease.notes}"
+            }
     ]
   ]
 }
