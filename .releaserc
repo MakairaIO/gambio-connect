@@ -14,7 +14,8 @@
       "@semantic-release/git",
       {
         "assets": [
-          "package.json"
+          "package.json",
+          "store.json"
         ],
         "message": "chore(release): Package.json ${nextRelease.version} [skip ci] \n\n${nextRelease.notes}"
       }
