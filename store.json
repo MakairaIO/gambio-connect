@@ -1,12 +1,12 @@
 {
-  "name": "Makaira Gambio Connect",
+  "name": "Makaira Connect",
   "repositoryName": "gambio-connect",
   "shopIdentifier": "gambio-connect",
   "type": "module",
   "version": "1.0.7",
   "title": {
-    "en": "Makaira Gambio Connect",
-    "de": "Makaira Gambio Connect"
+    "en": "Makaira Connect",
+    "de": "Makaira Connect"
   },
   "description": {
     "en": "You can use Makaira with this module.",
@@ -25,20 +25,20 @@
   "highlights": [
     {
       "title": {
-        "en": "Basic module for developers",
-        "de": "Basis Modul fÃ¼r Entwickler"
+        "en": "Search & Filtering",
+        "de": "Suche & Filter"
       }
     },
     {
       "title": {
-        "en": "Easy to extend",
-        "de": "Leicht zu erweitern"
+        "en": "Advertising Spaces and Banners",
+        "de": "Werbeplätze & Banner"
       }
     },
     {
       "title": {
-        "en": "With translation examples",
-        "de": "Mit Ãœbersetzungsbeispielen"
+        "en": "Recommendations",
+        "de": "Recommendations"
       }
     }
   ],
