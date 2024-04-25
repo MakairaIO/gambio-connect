@@ -1,0 +1,13 @@
+default:
+  tags:
+    - makaira-build
+
+types:
+  - test
+
+execute_tests:
+  type: test
+  script:
+    - composer install
+    - php vendor/bin/phpunit --coverage-text
+    - php vendor/bin/phpcs --standard=PSR2 src/
