@@ -26,5 +26,10 @@
       "@phpcs",
       "@phpunit"
     ]
+  },
+  "config": {
+    "platform": {
+        "php": "8.0"
+    }
   }
 }
