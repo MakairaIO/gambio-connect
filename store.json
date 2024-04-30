@@ -85,6 +85,25 @@
         "orderTotal": [],
         "moduleCenter": []
       }
+    },
+    "forbidden": {
+      "shop": {
+        "shopKeys": [],
+        "shopUrls": [],
+        "shopVersions": []
+      },
+      "server": {
+        "phpVersions": [],
+        "mysqlVersions": []
+      },
+      "themes": [],
+      "modules": {
+        "hub": [],
+        "payment": [],
+        "shipping": [],
+        "orderTotal": [],
+        "moduleCenter": []
+      }
     }
   }
 }
