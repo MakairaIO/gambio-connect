@@ -47,15 +47,15 @@
     "down": []
   },
   "requirements": {
-    "needed": {
+    "hidden": {
       "shop": {
         "shopKeys": [],
         "shopUrls": [],
-        "shopVersions": [">=4.9.2.1"]
+        "shopVersions": []
       },
       "server": {
-        "phpVersions": ["8.0"],
-        "mysqlVersions": [">=5.5"]
+        "phpVersions": [],
+        "mysqlVersions": []
       },
       "themes": [],
       "modules": {
@@ -67,14 +67,18 @@
       },
       "receiptFiles": []
     },
-    "hidden": {
+    "needed": {
       "shop": {
         "shopKeys": [],
         "shopUrls": [],
-        "shopVersions": []
+        "shopVersions": [
+          "v4.9.*"
+        ]
       },
       "server": {
-        "phpVersions": [],
+        "phpVersions": [
+          ">=8.0"
+        ],
         "mysqlVersions": []
       },
       "themes": [],
