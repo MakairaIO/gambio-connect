@@ -50,6 +50,7 @@
     "needed": {
       "shop": {
         "shopKeys": [],
+        "shopUrls": [],
         "shopVersions": [">=4.9.2.1"]
       },
       "server": {
@@ -62,6 +63,7 @@
     "hidden": {
       "shop": {
         "shopKeys": [],
+        "shopUrls": [],
         "shopVersions": []
       },
       "server": {
