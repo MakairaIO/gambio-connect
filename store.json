@@ -58,6 +58,13 @@
         "mysqlVersions": [">=5.5"]
       },
       "themes": [],
+      "modules": {
+        "hub": [],
+        "payment": [],
+        "shipping": [],
+        "orderTotal": [],
+        "moduleCenter": []
+      },
       "receiptFiles": []
     },
     "hidden": {
@@ -70,7 +77,14 @@
         "phpVersions": [],
         "mysqlVersions": []
       },
-      "themes": []
+      "themes": [],
+      "modules": {
+        "hub": [],
+        "payment": [],
+        "shipping": [],
+        "orderTotal": [],
+        "moduleCenter": []
+      }
     }
   }
 }
