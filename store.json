@@ -84,7 +84,8 @@
         "shipping": [],
         "orderTotal": [],
         "moduleCenter": []
-      }
+      },
+      "receiptFiles": []
     },
     "forbidden": {
       "shop": {
@@ -103,7 +104,8 @@
         "shipping": [],
         "orderTotal": [],
         "moduleCenter": []
-      }
+      },
+      "receiptFiles": []
     }
   }
 }
