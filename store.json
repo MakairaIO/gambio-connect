@@ -49,6 +49,7 @@
   "requirements": {
     "needed": {
       "shop": {
+        "shopKeys": [],
         "shopVersions": [">=4.9.2.1"]
       },
       "server": {
@@ -60,6 +61,7 @@
     },
     "hidden": {
       "shop": {
+        "shopKeys": [],
         "shopVersions": []
       },
       "server": {
