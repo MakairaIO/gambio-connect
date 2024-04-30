@@ -57,9 +57,9 @@ class MakairaInstallationServiceController extends HttpViewController
         
         $gambioConnectService = new GambioConnectService($makairaClient, $languageService, $connection, $makairaLogger);
         
-        //$gambioConnectService->getManufacturerService()->prepareExport();
+        $gambioConnectService->getManufacturerService()->prepareExport();
         
-        //$gambioConnectService->getCategoryService()->prepareExport();
+        $gambioConnectService->getCategoryService()->prepareExport();
         
         $gambioConnectService->getProductService()->prepareExport();
         
