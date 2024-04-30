@@ -1,0 +1,115 @@
+{load_language_text section="gambio_connect_search" name="text"}
+{if MAKAIRA_ACTIVE_SEARCH == true && 'ENABLE_LIVE_SEARCH'|gm_get_conf == 'true' }
+{block name="header_live_search"}
+{if $result.products|@count > 0 }
+<span id="live-search-head">
+                {$text.search_suggestion_products}:
+            </span>
+<ul class="search-result">
+    {foreach from=$result.products item=product}
+    <li>
+        {if $product.fields.picture_url_main != ''}
+        <img class="img-responsive product-image" src="{$product.fields.picture_url_main}" width="25" height="25" />
+        {else}
+        <div class="product-image fa fa-picture-o">&nbsp;</div>
+        {/if}
+        <a href="{$product.fields.url}" title="{$product.fields.title}">
+                        <span>
+                            {$product.fields.title}
+                        </span>
+        </a>
+    </li>
+    {/foreach}
+</ul>
+{/if}
+{if $result.categories|@count > 0 }
+<span id="live-search-head">
+                {$text.search_suggestion_categories}:
+            </span>
+<ul class="search-result">
+    {foreach from=$result.categories item=category}
+    <li>
+        {if $category.fields.images|@count > 0}
+        <img class="img-responsive product-image" src="{$category.fields.images[0]}" width="25" height="25" />
+        {else}
+        <div class="product-image fa fa-picture-o">&nbsp;</div>
+        {/if}
+        <a href="{$category.fields.url}" title="{$category.fields.category_title}">
+                        <span>
+                            {$category.fields.category_title}
+                        </span>
+        </a>
+    </li>
+    {/foreach}
+</ul>
+{/if}
+{if $result.manufacturers|@count > 0 }
+<span id="live-search-head">
+                {$text.search_suggestion_manufacturers}:
+            </span>
+<ul class="search-result">
+    {foreach from=$result.manufacturers item=manufacturer}
+    <li>
+        {if $manufacturer.fields.images|@count > 0}
+        <img class="img-responsive product-image" src="{$manufacturer.fields.images[0]}" width="25" height="25" />
+        {else}
+        <div class="product-image fa fa-picture-o">&nbsp;</div>
+        {/if}
+        <a href="{$manufacturer.fields.url}" title="{$manufacturer.fields.manufacturer_title}">
+                        <span>
+                            {$manufacturer.fields.manufacturer_title}
+                        </span>
+        </a>
+    </li>
+    {/foreach}
+</ul>
+{/if}
+{if $result.links|@count > 0 }
+<span id="live-search-head">
+                {$text.search_suggestion_links}:
+            </span>
+<ul class="search-result">
+    {foreach from=$result.links item=link}
+    <li>
+        <div class="product-image fa fa-picture-o">&nbsp;</div>
+        {if $link.fields.isexternal == true}
+        {if !$link.fields.url|strstr:"http"}
+        {assign var='linkUrl' value="https:\\`$link.fields.url`"}
+        {else}
+        {assign var='linkUrl' value=$link.fields.url}
+        {/if}
+        <a href="{$linkUrl}" title="{$link.fields.title}" target="_blank">
+                            <span>
+                                {$link.fields.title}
+                            </span>
+        </a>
+        {else}
+        <a href="{$link.fields.url}" title="{$link.fields.title}">
+                            <span>
+                                {$link.fields.title}
+                            </span>
+        </a>
+        {/if}
+
+    </li>
+    {/foreach}
+</ul>
+{/if}
+{if $result.pages|@count > 0 }
+<span id="live-search-head">
+                {$text.search_suggestion_pages}:
+            </span>
+<ul class="search-result">
+    {foreach from=$result.pages item=page}
+    <li>
+        <a href="{$page.fields.url}" title="{$page.fields.title}">
+                        <span>
+                            {$page.fields.title}
+                        </span>
+        </a>
+    </li>
+    {/foreach}
+</ul>
+{/if}
+{/block}
+{/if}

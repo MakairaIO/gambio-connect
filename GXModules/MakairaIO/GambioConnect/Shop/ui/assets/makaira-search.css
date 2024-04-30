@@ -1,0 +1,24 @@
+.makaira-autosuggestion__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.makaira-autosuggestion__submit > i {
+  display: none;
+  color: white;
+  font-size: 16px;
+}
+
+.search-loading .makaira-autosuggestion__submit {
+  opacity: .6;
+  user-select: none;
+}
+
+.search-loading .makaira-autosuggestion__submit > svg {
+  display: none;
+}
+
+.search-loading .makaira-autosuggestion__submit > i {
+  display: inline-block;
+}
