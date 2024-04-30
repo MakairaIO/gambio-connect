@@ -2,25 +2,25 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/kore/data-object" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/makaira/shared-libs" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/pdepend/pdepend" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/phpmd/phpmd" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/psr/container" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/psr/log" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/respect/stringifier" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/respect/validation" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/squizlabs/php_codesniffer" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/stripe/stripe-php" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/config" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/dependency-injection" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/deprecation-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/filesystem" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/polyfill-ctype" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/service-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/var-exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/kore/data-object" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/makaira/shared-libs" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/pdepend/pdepend" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/phpmd/phpmd" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/respect/stringifier" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/respect/validation" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/squizlabs/php_codesniffer" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/stripe/stripe-php" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/dependency-injection" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/GambioConnect/vendor/symfony/var-exporter" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

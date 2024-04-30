@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\GambioConnect\Controller;
+namespace Controller;
 
 use ContentViewInterface;
 use Gambio\Core\Language\Services\LanguageService;
