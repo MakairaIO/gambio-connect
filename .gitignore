@@ -1,4 +1,4 @@
-GXModules/MakairaIO/GambioConnect/Build/
+Build/
 .DS_Store
-GXModules/MakairaIO/GambioConnect/vendor/
+Vendor/
 /.php-cs-fixer.cache
