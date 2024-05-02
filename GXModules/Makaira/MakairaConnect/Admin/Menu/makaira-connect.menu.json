@@ -3,7 +3,7 @@
     "id": "makaira_connect",
     "sort": 3,
     "class": "fa fa-hand-sparkles",
-    "title": "makaira_connect_general.title",
+    "title": "Makaira Connect",
     "if": {
       "filter": "isInstalledFilter",
       "args": [true]
@@ -12,7 +12,7 @@
       {
         "sort": 10,
         "link": "makaira/welcome",
-        "title": "makaira_connect_general.welcome",
+        "title": "Willkommen",
         "if": {
           "filter": "isSetUpFilter",
           "args": [false]
@@ -21,7 +21,7 @@
       {
         "sort": 30,
         "link": "makaira/account",
-        "title": "makaira_connect_general.my_account",
+        "title": "Mein Account",
         "if": {
           "filter": "isSetUpFilter",
           "args": [true]
