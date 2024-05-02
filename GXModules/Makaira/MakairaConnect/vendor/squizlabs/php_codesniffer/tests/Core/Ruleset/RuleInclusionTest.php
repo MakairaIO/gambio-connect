@@ -53,7 +53,7 @@ final class RuleInclusionTest extends TestCase
      */
     public static function initializeConfigAndRuleset()
     {
-        $standard       = __DIR__ . 'RuleInclusionTest.php/' .basename(__FILE__, '.php').'.xml';
+        $standard       = __DIR__.'/'.basename(__FILE__, '.php').'.xml';
         self::$standard = $standard;
 
         // On-the-fly adjust the ruleset test file to be able to test

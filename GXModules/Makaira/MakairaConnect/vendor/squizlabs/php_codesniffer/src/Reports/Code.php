@@ -9,8 +9,10 @@
 
 namespace PHP_CodeSniffer\Reports;
 
+use Exception;
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util;
+use PHP_CodeSniffer\Util\Common;
+use PHP_CodeSniffer\Util\Timing;
 
 class Code implements Report
 {
@@ -52,7 +54,7 @@ class Code implements Report
 
             try {
                 $phpcsFile->parse();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // This is a second parse, so ignore exceptions.
                 // They would have been added to the file's error list already.
             }
@@ -172,7 +174,7 @@ class Code implements Report
         }
 
         echo "\033[0m".PHP_EOL;
-        echo Code . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
         echo "\033[1m".'FOUND '.$report['errors'].' ERROR';
         if ($report['errors'] !== 1) {
@@ -235,7 +237,7 @@ class Code implements Report
                         $tokenContent = $token['content'];
                     }
 
-                    $tokenContent = Util\Common::prepareForOutput($tokenContent, ["\r", "\n", "\t"]);
+                    $tokenContent = Common::prepareForOutput($tokenContent, ["\r", "\n", "\t"]);
                     $tokenContent = str_replace("\000", ' ', $tokenContent);
 
                     $underline = false;
@@ -260,7 +262,7 @@ class Code implements Report
                 }//end for
             }//end if
 
-            echo Code . phpstr_repeat('-', $width) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
 
             foreach ($lineErrors as $column => $colErrors) {
                 foreach ($colErrors as $error) {
@@ -304,14 +306,14 @@ class Code implements Report
                 }//end foreach
             }//end foreach
 
-            echo Code . phpstr_repeat('-', $width) . PHP_EOL;
-            echo Code . phprtrim($snippet) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
+            echo rtrim($snippet).PHP_EOL;
         }//end foreach
 
-        echo Code . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         if ($report['fixable'] > 0) {
             echo "\033[1m".'PHPCBF CAN FIX THE '.$report['fixable'].' MARKED SNIFF VIOLATIONS AUTOMATICALLY'."\033[0m".PHP_EOL;
-            echo Code . phpstr_repeat('-', $width) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
         }
 
         return true;
@@ -353,7 +355,7 @@ class Code implements Report
         echo $cachedData;
 
         if ($toScreen === true && $interactive === false) {
-            Util\Timing::printRunTime();
+            Timing::printRunTime();
         }
 
     }//end generate()

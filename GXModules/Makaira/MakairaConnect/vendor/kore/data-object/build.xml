@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Data Object" basedir="/" default="install-and-run">
+<project name="Data Object" basedir="./" default="install-and-run">
 
     <!--
         Include local project properties.

@@ -76,7 +76,7 @@ final class ThrowableStringifier implements Stringifier
             'code' => $throwable->getCode(),
             'file' => sprintf(
                 '%s:%d',
-                str_replace(getcwd() . 'ThrowableStringifier.php/', '', $throwable->getFile()),
+                str_replace(getcwd().'/', '', $throwable->getFile()),
                 $throwable->getLine()
             ),
         ];

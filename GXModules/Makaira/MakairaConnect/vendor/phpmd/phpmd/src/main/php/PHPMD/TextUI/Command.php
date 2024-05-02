@@ -76,7 +76,7 @@ class Command
     public function run(CommandLineOptions $opts, RuleSetFactory $ruleSetFactory)
     {
         if ($opts->hasVersion()) {
-            fwrite(STDOUT, Command . phpsprintf('PHPMD %s', $this->getVersion()) . PHP_EOL);
+            fwrite(STDOUT, sprintf('PHPMD %s', $this->getVersion()) . PHP_EOL);
 
             return self::EXIT_SUCCESS;
         }

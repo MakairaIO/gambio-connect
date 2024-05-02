@@ -443,7 +443,7 @@ class CouplingAnalyzer extends AbstractAnalyzer implements AnalyzerNodeAware, An
             foreach ($parents as $parent) {
                 $child = $parent->getChild(0);
                 if ($child !== $invocation) {
-                    $image .= $child->getImage() . 'Analyzer';
+                    $image .= $child->getImage() . '.';
                 }
             }
             $image .= $invocation->getImage() . '()';

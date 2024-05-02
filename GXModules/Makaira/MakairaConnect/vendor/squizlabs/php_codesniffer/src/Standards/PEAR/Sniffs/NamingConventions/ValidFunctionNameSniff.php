@@ -245,7 +245,7 @@ class ValidFunctionNameSniff extends AbstractScopeSniff
         // Every function must have a camel caps part, so check that first.
         if (Common::isCamelCaps($camelCapsPart, false, true, false) === false) {
             $validName        = false;
-            $newCamelCapsPart = ValidFunctionNameSniff . phpstrtolower($camelCapsPart[0]) . substr($camelCapsPart, 1);
+            $newCamelCapsPart = strtolower($camelCapsPart[0]).substr($camelCapsPart, 1);
         }
 
         if ($packagePart !== '') {
@@ -256,7 +256,7 @@ class ValidFunctionNameSniff extends AbstractScopeSniff
                 if ($bit[0] !== strtoupper($bit[0])) {
                     $newPackagePart = '';
                     foreach ($nameBits as $bit) {
-                        $newPackagePart .= ValidFunctionNameSniff . phpstrtoupper($bit[0]) . substr($bit, 1) .'_';
+                        $newPackagePart .= strtoupper($bit[0]).substr($bit, 1).'_';
                     }
 
                     $validName = false;

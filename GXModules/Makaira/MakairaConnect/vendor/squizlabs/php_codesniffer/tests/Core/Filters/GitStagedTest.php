@@ -175,8 +175,8 @@ final class GitStagedTest extends AbstractFilterTestCase
                     '.yamllint.yml',
                     'autoload.php',
                     'src/Standards/Squiz/Sniffs/WhiteSpace/OperatorSpacingSniff.php',
-                    'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.inc',
-                    'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.inc.fixed',
+                    'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.1.inc',
+                    'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.1.inc.fixed',
                     'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.js',
                     'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.js.fixed',
                     'src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.php',
@@ -191,7 +191,7 @@ final class GitStagedTest extends AbstractFilterTestCase
                     $basedir.'/src/Standards/Squiz/Sniffs/WhiteSpace/OperatorSpacingSniff.php',
                     $basedir.'/src/Standards/Squiz/Tests',
                     $basedir.'/src/Standards/Squiz/Tests/WhiteSpace',
-                    $basedir.'/src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.inc',
+                    $basedir.'/src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.1.inc',
                     $basedir.'/src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.js',
                     $basedir.'/src/Standards/Squiz/Tests/WhiteSpace/OperatorSpacingUnitTest.php',
                 ],
@@ -248,11 +248,11 @@ final class GitStagedTest extends AbstractFilterTestCase
             'valid command which won\'t have any output unless files in the bin dir have been modified & staged' => [
                 // Largely using the command used in the filter, but only checking the bin dir.
                 // This should prevent the test unexpectedly failing during local development (in most cases).
-                'cmd'      => 'git diff --cached --name-only -- '.escapeshellarg(self::getBaseDir() . '/bin'),
+                'cmd'      => 'git diff --cached --name-only -- '.escapeshellarg(self::getBaseDir().'/bin'),
                 'expected' => [],
             ],
             'valid command which will have output'                                                               => [
-                'cmd'      => 'git ls-files --exclude-standard -- '.escapeshellarg(self::getBaseDir() . '/bin'),
+                'cmd'      => 'git ls-files --exclude-standard -- '.escapeshellarg(self::getBaseDir().'/bin'),
                 'expected' => [
                     'bin/phpcbf',
                     'bin/phpcbf.bat',

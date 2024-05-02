@@ -599,6 +599,6 @@ class HTMLRenderer extends AbstractRenderer
      */
     protected static function reduceWhitespace($input, $eol = true)
     {
-        return HTMLRenderer . phppreg_replace("#\s+#", " ", $input) . ($eol ? PHP_EOL : null);
+        return preg_replace("#\s+#", " ", $input) . ($eol ? PHP_EOL : null);
     }
 }

@@ -9,9 +9,9 @@
 
 namespace PHP_CodeSniffer\Tests\Core;
 
-use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Files\DummyFile;
 use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Tests\ConfigDouble;
 use PHPUnit\Framework\TestCase;
 
@@ -57,7 +57,8 @@ abstract class AbstractMethodUnitTest extends TestCase
      */
     public static function initializeFile()
     {
-        $config = new ConfigDouble();
+        $_SERVER['argv'] = [];
+        $config          = new ConfigDouble();
         // Also set a tab-width to enable testing tab-replaced vs `orig_content`.
         $config->tabWidth = static::$tabWidth;
 
@@ -66,14 +67,14 @@ abstract class AbstractMethodUnitTest extends TestCase
         // Default to a file with the same name as the test class. Extension is property based.
         $relativeCN     = str_replace(__NAMESPACE__, '', get_called_class());
         $relativePath   = str_replace('\\', DIRECTORY_SEPARATOR, $relativeCN);
-        $pathToTestFile = realpath(__DIR__) . $relativePath . 'Core' .static::$fileExtension;
+        $pathToTestFile = realpath(__DIR__).$relativePath.'.'.static::$fileExtension;
 
         // Make sure the file gets parsed correctly based on the file type.
         $contents  = 'phpcs_input_file: '.$pathToTestFile.PHP_EOL;
         $contents .= file_get_contents($pathToTestFile);
 
         self::$phpcsFile = new DummyFile($contents, $ruleset, $config);
-        self::$phpcsFile->process();
+        self::$phpcsFile->parse();
 
     }//end initializeFile()
 

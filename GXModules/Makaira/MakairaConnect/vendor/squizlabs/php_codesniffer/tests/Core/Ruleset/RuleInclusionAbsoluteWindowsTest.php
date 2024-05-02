@@ -56,7 +56,7 @@ final class RuleInclusionAbsoluteWindowsTest extends TestCase
             $this->markTestSkipped('Windows specific test');
         }
 
-        $this->standard = __DIR__ . 'RuleInclusionAbsoluteWindowsTest.php/' .basename(__FILE__, '.php').'.xml';
+        $this->standard = __DIR__.'/'.basename(__FILE__, '.php').'.xml';
         $repoRootDir    = dirname(dirname(dirname(__DIR__)));
 
         // On-the-fly adjust the ruleset test file to be able to test sniffs included with absolute paths.

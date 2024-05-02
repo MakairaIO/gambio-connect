@@ -274,7 +274,7 @@ class FileCacheDriver implements CacheDriver
     protected function getCacheFile($key)
     {
         $cacheFile = $this->getCacheFileWithoutExtension($key) .
-            'Driver' . $this->version .
+                     '.' . $this->version .
                      '.' . $this->type;
 
         $this->type = self::ENTRY_TYPE;

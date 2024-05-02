@@ -20,23 +20,26 @@ namespace Symfony\Component\Config\Builder;
  */
 class ClassBuilder
 {
-    private string $namespace;
-    private string $name;
+    /** @var string */
+    private $namespace;
+
+    /** @var string */
+    private $name;
 
     /** @var Property[] */
-    private array $properties = [];
+    private $properties = [];
 
     /** @var Method[] */
-    private array $methods = [];
-    private array $require = [];
-    private array $use = [];
-    private array $implements = [];
-    private bool $allowExtraKeys = false;
+    private $methods = [];
+    private $require = [];
+    private $use = [];
+    private $implements = [];
+    private $allowExtraKeys = false;
 
     public function __construct(string $namespace, string $name)
     {
         $this->namespace = $namespace;
-        $this->name = ucfirst($this->camelCase($name)) . 'Config';
+        $this->name = ucfirst($this->camelCase($name)).'Config';
     }
 
     public function getDirectory(): string

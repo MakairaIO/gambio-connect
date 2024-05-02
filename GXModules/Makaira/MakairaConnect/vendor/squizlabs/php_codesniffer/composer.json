@@ -39,9 +39,12 @@
         "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.3.4"
     },
     "bin": [
-      "bin/phpcbf",
+        "bin/phpcbf",
         "bin/phpcs"
     ],
+    "config": {
+        "lock": false
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "3.x-dev"
@@ -49,22 +52,22 @@
     },
     "scripts": {
         "cs": [
-          "@php bin/phpcs"
+            "@php ./bin/phpcs"
         ],
         "cbf": [
-          "@php bin/phpcbf"
+            "@php ./bin/phpcbf"
         ],
         "test": [
             "Composer\\Config::disableProcessTimeout",
-          "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php --no-coverage"
+            "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php --no-coverage"
         ],
         "coverage": [
             "Composer\\Config::disableProcessTimeout",
-          "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php -d max_execution_time=0"
+            "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php -d max_execution_time=0"
         ],
         "coverage-local": [
             "Composer\\Config::disableProcessTimeout",
-          "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php --coverage-html ./build/coverage-html -d max_execution_time=0"
+            "@php ./vendor/phpunit/phpunit/phpunit tests/AllTests.php --coverage-html ./build/coverage-html -d max_execution_time=0"
         ],
         "build": [
             "Composer\\Config::disableProcessTimeout",

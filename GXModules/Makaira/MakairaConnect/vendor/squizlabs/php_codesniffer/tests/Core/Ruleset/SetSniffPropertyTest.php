@@ -146,7 +146,7 @@ final class SetSniffPropertyTest extends TestCase
         }
 
         // Set up the ruleset.
-        $standard = __DIR__ . '/SetPropertyThrowsErrorOnInvalidPropertyTest.xml';
+        $standard = __DIR__.'/SetPropertyThrowsErrorOnInvalidPropertyTest.xml';
         $config   = new ConfigDouble(["--standard=$standard"]);
         $ruleset  = new Ruleset($config);
 
@@ -173,7 +173,7 @@ final class SetSniffPropertyTest extends TestCase
         }
 
         // Set up the ruleset.
-        $standard = __DIR__ . '/SetPropertyNotAllowedViaAttributeTest.xml';
+        $standard = __DIR__.'/SetPropertyNotAllowedViaAttributeTest.xml';
         $config   = new ConfigDouble(["--standard=$standard"]);
         $ruleset  = new Ruleset($config);
 

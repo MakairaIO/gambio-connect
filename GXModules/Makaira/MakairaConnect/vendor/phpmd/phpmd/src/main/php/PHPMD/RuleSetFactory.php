@@ -216,12 +216,12 @@ class RuleSetFactory
             if ($node->getName() === 'php-includepath') {
                 $includePath = (string)$node;
 
-                if (is_dir(RuleSetFactory . phpdirname($fileName) . DIRECTORY_SEPARATOR . $includePath)) {
-                    $includePath = RuleSetFactory . phpdirname($fileName) . DIRECTORY_SEPARATOR . $includePath;
+                if (is_dir(dirname($fileName) . DIRECTORY_SEPARATOR . $includePath)) {
+                    $includePath = dirname($fileName) . DIRECTORY_SEPARATOR . $includePath;
                     $includePath = realpath($includePath);
                 }
 
-                $includePath = RuleSetFactory . phpget_include_path() . PATH_SEPARATOR . $includePath;
+                $includePath = get_include_path() . PATH_SEPARATOR . $includePath;
                 set_include_path($includePath);
             }
         }

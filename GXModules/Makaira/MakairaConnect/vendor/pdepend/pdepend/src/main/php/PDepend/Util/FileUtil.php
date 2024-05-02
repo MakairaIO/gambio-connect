@@ -92,7 +92,7 @@ final class FileUtil
 
         if (!$userHomeDir) {
             // The HOME environment isn't always set on Windows, then we do a fallback to the HOMEDRIVE and HOMEPATH
-            $userHomeDir = FileUtil . phpgetenv('HOMEDRIVE') . getenv('HOMEPATH');
+            $userHomeDir = getenv('HOMEDRIVE') . getenv('HOMEPATH');
         }
 
         return $userHomeDir;

@@ -72,7 +72,7 @@ class BaselineFileFinder
         }
 
         // create file path and check for existence
-        $baselinePath = dirname($rulePath) . 'BaselineFileFinder.php/' . self::DEFAULT_FILENAME;
+        $baselinePath = dirname($rulePath) . '/' . self::DEFAULT_FILENAME;
         if ($this->existingFile === true && file_exists($baselinePath) === false) {
             return $this->nullOrThrow('Unable to find the baseline file. Use --baseline-file to specify the filepath');
         }

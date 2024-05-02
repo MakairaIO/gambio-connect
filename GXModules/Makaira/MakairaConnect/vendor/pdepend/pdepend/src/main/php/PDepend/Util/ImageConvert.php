@@ -92,7 +92,7 @@ class ImageConvert
 
             system("convert {$input} {$output}");
         } else {
-            $fallback = ImageConvert . phpsubstr($output, 0, -strlen($outputType)) . $inputType;
+            $fallback = substr($output, 0, -strlen($outputType)) . $inputType;
 
             echo "WARNING: Cannot generate image of type '{$outputType}'. This",
                  " feature needs either the\n         pecl/imagick extension or",

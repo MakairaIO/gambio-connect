@@ -9,6 +9,7 @@
 
 namespace PHP_CodeSniffer\Util;
 
+use DirectoryIterator;
 use PHP_CodeSniffer\Config;
 
 class Standards
@@ -26,7 +27,7 @@ class Standards
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        $installedPaths = [dirname(dirname(__DIR__)) . $ds . 'src' . $ds . 'Standards'];
+        $installedPaths = [dirname(dirname(__DIR__)).$ds.'src'.$ds.'Standards'];
         $configPaths    = Config::getConfigData('installed_paths');
         if ($configPaths !== null) {
             $installedPaths = array_merge($installedPaths, explode(',', $configPaths));
@@ -35,7 +36,7 @@ class Standards
         $resolvedInstalledPaths = [];
         foreach ($installedPaths as $installedPath) {
             if (substr($installedPath, 0, 1) === '.') {
-                $installedPath = Common::realPath(__DIR__ . $ds . '..' . $ds . 'src' .$ds.$installedPath);
+                $installedPath = Common::realPath(__DIR__.$ds.'..'.$ds.'..'.$ds.$installedPath);
                 if ($installedPath === false) {
                     continue;
                 }
@@ -99,7 +100,7 @@ class Standards
                 continue;
             }
 
-            $di = new \DirectoryIterator($standardsDir);
+            $di = new DirectoryIterator($standardsDir);
             foreach ($di as $file) {
                 if ($file->isDir() === true && $file->isDot() === false) {
                     $filename = $file->getFilename();
@@ -190,7 +191,7 @@ class Standards
                 continue;
             }
 
-            $di = new \DirectoryIterator($standardsDir);
+            $di = new DirectoryIterator($standardsDir);
             $standardsInDir = [];
             foreach ($di as $file) {
                 if ($file->isDir() === true && $file->isDot() === false) {
@@ -254,7 +255,7 @@ class Standards
 
             // If it is a directory with a ruleset.xml file in it,
             // it is a standard.
-            $ruleset = Standards . phprtrim($standard, ' /\\') . DIRECTORY_SEPARATOR .'ruleset.xml';
+            $ruleset = rtrim($standard, ' /\\').DIRECTORY_SEPARATOR.'ruleset.xml';
             if (is_file($ruleset) === true) {
                 return true;
             }

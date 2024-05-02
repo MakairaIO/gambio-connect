@@ -69,7 +69,7 @@ abstract class AbstractQuery extends DataObject
     public function verify()
     {
         foreach ($this->getMandatoryConstraints() as $key => $label) {
-            if (!isset($this->constraints[$key])) {
+            if (empty($this->constraints[$key])) {
                 throw new DomainException(sprintf('Missing mandatory %s constraint.', $label));
             }
         }

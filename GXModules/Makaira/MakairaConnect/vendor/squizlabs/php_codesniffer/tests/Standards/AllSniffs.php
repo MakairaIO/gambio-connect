@@ -9,10 +9,12 @@
 
 namespace PHP_CodeSniffer\Tests\Standards;
 
-use PHP_CodeSniffer\Util\Standards;
 use PHP_CodeSniffer\Autoload;
-use PHPUnit\TextUI\TestRunner;
+use PHP_CodeSniffer\Util\Standards;
 use PHPUnit\Framework\TestSuite;
+use PHPUnit\TextUI\TestRunner;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class AllSniffs
 {
@@ -46,7 +48,7 @@ class AllSniffs
 
         $suite = new TestSuite('PHP CodeSniffer Standards');
 
-        $isInstalled = !is_file(__DIR__ . '/../../autoload.php');
+        $isInstalled = !is_file(__DIR__.'/../../autoload.php');
 
         // Optionally allow for ignoring the tests for one or more standards.
         $ignoreTestsForStandards = getenv('PHPCS_IGNORE_TESTS');
@@ -71,7 +73,7 @@ class AllSniffs
                 continue;
             }
 
-            $di = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($testsDir));
+            $di = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($testsDir));
 
             foreach ($di as $file) {
                 // Skip hidden files.

@@ -122,18 +122,18 @@ class FileCommentSniff implements Sniff
 
         if ($tokens[$commentStart]['code'] === T_CLOSE_TAG) {
             // We are only interested if this is the first open tag.
-            return ($phpcsFile->numTokens + 1);
+            return $phpcsFile->numTokens;
         } else if ($tokens[$commentStart]['code'] === T_COMMENT) {
             $error = 'You must use "/**" style comments for a file comment';
             $phpcsFile->addError($error, $errorToken, 'WrongStyle');
             $phpcsFile->recordMetric($stackPtr, 'File has doc comment', 'yes');
-            return ($phpcsFile->numTokens + 1);
+            return $phpcsFile->numTokens;
         } else if ($commentStart === false
             || $tokens[$commentStart]['code'] !== T_DOC_COMMENT_OPEN_TAG
         ) {
             $phpcsFile->addError('Missing file doc comment', $errorToken, 'Missing');
             $phpcsFile->recordMetric($stackPtr, 'File has doc comment', 'no');
-            return ($phpcsFile->numTokens + 1);
+            return $phpcsFile->numTokens;
         }
 
         $commentEnd = $tokens[$commentStart]['comment_closer'];
@@ -178,7 +178,7 @@ class FileCommentSniff implements Sniff
         if (in_array($tokens[$nextToken]['code'], $ignore, true) === true) {
             $phpcsFile->addError('Missing file doc comment', $stackPtr, 'Missing');
             $phpcsFile->recordMetric($stackPtr, 'File has doc comment', 'no');
-            return ($phpcsFile->numTokens + 1);
+            return $phpcsFile->numTokens;
         }
 
         $phpcsFile->recordMetric($stackPtr, 'File has doc comment', 'yes');
@@ -205,7 +205,7 @@ class FileCommentSniff implements Sniff
         $this->processTags($phpcsFile, $stackPtr, $commentStart);
 
         // Ignore the rest of the file.
-        return ($phpcsFile->numTokens + 1);
+        return $phpcsFile->numTokens;
 
     }//end process()
 
@@ -384,10 +384,10 @@ class FileCommentSniff implements Sniff
             } else {
                 $nameBits = explode('_', $newContent);
                 $firstBit = array_shift($nameBits);
-                $newName  = FileCommentSniff . phpstrtoupper($firstBit[0]) . substr($firstBit, 1) .'_';
+                $newName  = strtoupper($firstBit[0]).substr($firstBit, 1).'_';
                 foreach ($nameBits as $bit) {
                     if ($bit !== '') {
-                        $newName .= FileCommentSniff . phpstrtoupper($bit[0]) . substr($bit, 1) .'_';
+                        $newName .= strtoupper($bit[0]).substr($bit, 1).'_';
                     }
                 }
 
@@ -429,10 +429,10 @@ class FileCommentSniff implements Sniff
             $newContent = str_replace(' ', '_', $content);
             $nameBits   = explode('_', $newContent);
             $firstBit   = array_shift($nameBits);
-            $newName    = FileCommentSniff . phpstrtoupper($firstBit[0]) . substr($firstBit, 1) .'_';
+            $newName    = strtoupper($firstBit[0]).substr($firstBit, 1).'_';
             foreach ($nameBits as $bit) {
                 if ($bit !== '') {
-                    $newName .= FileCommentSniff . phpstrtoupper($bit[0]) . substr($bit, 1) .'_';
+                    $newName .= strtoupper($bit[0]).substr($bit, 1).'_';
                 }
             }
 

@@ -112,9 +112,9 @@ class Performance implements Report
         arsort($totalTimes);
 
         echo PHP_EOL."\033[1m".'PHP CODE SNIFFER SNIFF PERFORMANCE REPORT'."\033[0m".PHP_EOL;
-        echo Performance . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         echo "\033[1m".'SNIFF'.str_repeat(' ', ($width - 31)).'TIME TAKEN (SECS)     (%)'."\033[0m".PHP_EOL;
-        echo Performance . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
         // Mark sniffs which take more than twice as long as the average processing time per sniff
         // in orange and when they take more than three times as long as the average,
@@ -140,7 +140,7 @@ class Performance implements Report
             }
         }
 
-        echo Performance . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         printf($formatBold, 'TOTAL SNIFF PROCESSING TIME', $totalSniffTime, 100);
 
         $runTime   = (Timing::getDuration() / 1000);
@@ -150,9 +150,9 @@ class Performance implements Report
         printf($format, 'Time taken by sniffs', $totalSniffTime, round((($totalSniffTime / $runTime) * 100), 1));
         printf($format, 'Time taken by PHPCS runner', $phpcsTime, round((($phpcsTime / $runTime) * 100), 1));
 
-        echo Performance . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         printf($formatBold, 'TOTAL RUN TIME', $runTime, 100);
-        echo Performance . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
     }//end generate()
 

@@ -460,9 +460,7 @@ class EmbeddedPhpSniff implements Sniff
                 } else if ($tokens[($closeTag - 1)]['code'] === T_COMMENT
                     || isset(Tokens::$phpcsCommentTokens[$tokens[($closeTag - 1)]['code']]) === true
                 ) {
-                    $phpcsFile->fixer->replaceToken(($closeTag - 1),
-                        rtrim($tokens[($closeTag - 1)]['content']) . ' EmbeddedPhpSniff.php'
-                    );
+                    $phpcsFile->fixer->replaceToken(($closeTag - 1), rtrim($tokens[($closeTag - 1)]['content']).' ');
                 } else {
                     $phpcsFile->fixer->replaceToken(($closeTag - 1), ' ');
                 }

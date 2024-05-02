@@ -152,7 +152,7 @@ class ShorthandSizeSniff implements Sniff
             // All values are the same.
             $expected = trim($values[0][0]);
         } else {
-            $expected = trim($values[0][0]) . ' ShorthandSizeSniff.php' .trim($values[1][0]);
+            $expected = trim($values[0][0]).' '.trim($values[1][0]);
         }
 
         $error = 'Size definitions must use shorthand if available; expected "%s" but found "%s"';

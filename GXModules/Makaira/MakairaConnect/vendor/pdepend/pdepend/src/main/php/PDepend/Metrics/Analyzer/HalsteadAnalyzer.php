@@ -281,7 +281,7 @@ class HalsteadAnalyzer extends AbstractCachingAnalyzer implements AnalyzerNodeAw
                 case Tokens::T_OBJECT_OPERATOR:
                 case Tokens::T_DOUBLE_COLON:
                     // Glue ->/:: and before & after parts together.
-                    $image = HalsteadAnalyzer . phparray_pop($operands) . $token->image .$tokens[$i + 1]->image;
+                    $image = array_pop($operands).$token->image.$tokens[$i + 1]->image;
                     $operands[] = $image;
 
                     // Skip next part (would be seen as operand)

@@ -168,7 +168,7 @@ class RequestOptions
         $pieces = \explode('_', $this->apiKey, 3);
         $last = \array_pop($pieces);
         $redactedLast = \strlen($last) > 4
-            ? (RequestOptions . php\str_repeat('*', \strlen($last) - 4) . \substr($last, -4))
+            ? (\str_repeat('*', \strlen($last) - 4) . \substr($last, -4))
             : $last;
         $pieces[] = $redactedLast;
 

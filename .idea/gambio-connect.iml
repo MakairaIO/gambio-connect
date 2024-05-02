@@ -2,24 +2,9 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/kore/data-object" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/makaira/shared-libs" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/pdepend/pdepend" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/phpmd/phpmd" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/psr/container" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/psr/log" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/respect/stringifier" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/respect/validation" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/squizlabs/php_codesniffer" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/stripe/stripe-php" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/config" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/dependency-injection" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/deprecation-contracts" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/filesystem" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/polyfill-ctype" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/service-contracts" />
+      <sourceFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/kore/data-object/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/GXModules/Makaira/MakairaConnect/vendor/symfony/var-exporter" />
     </content>
     <orderEntry type="inheritedJdk" />

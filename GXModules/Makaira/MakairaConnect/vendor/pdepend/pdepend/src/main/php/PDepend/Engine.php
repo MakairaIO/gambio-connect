@@ -724,7 +724,7 @@ class Engine
     {
         $analyzers = $this->analyzerFactory->createRequiredForGenerators($this->generators);
 
-        $cacheKey = md5(Engine . phpserialize($this->files) . serialize($this->directories));
+        $cacheKey = md5(serialize($this->files) . serialize($this->directories));
         $cache = $this->cacheFactory->create($cacheKey);
 
         foreach ($analyzers as $analyzer) {

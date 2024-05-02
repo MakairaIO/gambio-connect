@@ -209,9 +209,7 @@ class SuperfluousWhitespaceSniff implements Sniff
                 if ($tokenContent !== rtrim($tokenContent)) {
                     $fix = $phpcsFile->addFixableError('Whitespace found at end of line', $stackPtr, 'EndLine');
                     if ($fix === true) {
-                        $phpcsFile->fixer->replaceToken($stackPtr,
-                            SuperfluousWhitespaceSniff . phprtrim($tokenContent) . $phpcsFile->eolChar
-                        );
+                        $phpcsFile->fixer->replaceToken($stackPtr, rtrim($tokenContent).$phpcsFile->eolChar);
                     }
                 }
             } else if ($tokens[($stackPtr - 1)]['content'] !== rtrim($tokens[($stackPtr - 1)]['content'])

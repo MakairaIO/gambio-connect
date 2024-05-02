@@ -58,10 +58,7 @@ class ArrayBracketSpacingSniff implements Sniff
         if ($prevType === T_WHITESPACE) {
             $nonSpace = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 2), null, true);
             $expected = $tokens[$nonSpace]['content'].$tokens[$stackPtr]['content'];
-            $found    = $phpcsFile->getTokensAsString(
-                    $nonSpace,
-                    ($stackPtr - $nonSpace)
-                ) . $tokens[$stackPtr]['content'];
+            $found    = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)).$tokens[$stackPtr]['content'];
             $error    = 'Space found before square bracket; expected "%s" but found "%s"';
             $data     = [
                 $expected,

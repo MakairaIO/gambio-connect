@@ -42,9 +42,12 @@ final class Path
      *
      * @var array<string, string>
      */
-    private static array $buffer = [];
+    private static $buffer = [];
 
-    private static int $bufferSize = 0;
+    /**
+     * @var int
+     */
+    private static $bufferSize = 0;
 
     /**
      * Canonicalizes the given path.
@@ -78,7 +81,7 @@ final class Path
 
         // Replace "~" with user's home directory.
         if ('~' === $path[0]) {
-            $path = Path . phpself::getHomeDirectory() . substr($path, 1);
+            $path = self::getHomeDirectory().substr($path, 1);
         }
 
         $path = self::normalize($path);
@@ -195,7 +198,7 @@ final class Path
 
         // For >= Windows8 support
         if (getenv('HOMEDRIVE') && getenv('HOMEPATH')) {
-            return self::canonicalize(Path . phpgetenv('HOMEDRIVE') . getenv('HOMEPATH'));
+            return self::canonicalize(getenv('HOMEDRIVE').getenv('HOMEPATH'));
         }
 
         throw new RuntimeException("Cannot find the home directory path: Your environment or operating system isn't supported.");
@@ -355,7 +358,7 @@ final class Path
             return $path.('.' === substr($path, -1) ? '' : '.').$extension;
         }
 
-        return Path . phpsubstr($path, 0, -\strlen($actualExtension)) . $extension;
+        return substr($path, 0, -\strlen($actualExtension)).$extension;
     }
 
     public static function isAbsolute(string $path): bool
@@ -455,7 +458,7 @@ final class Path
             $scheme = '';
         }
 
-        return $scheme.self::canonicalize(rtrim($basePath, '/\\') . 'Path.php/' .$path);
+        return $scheme.self::canonicalize(rtrim($basePath, '/\\').'/'.$path);
     }
 
     /**
@@ -571,7 +574,7 @@ final class Path
      */
     public static function isLocal(string $path): bool
     {
-        return '' !== $path && !str_contains($path, '://');
+        return '' !== $path && false === strpos($path, '://');
     }
 
     /**
@@ -635,7 +638,7 @@ final class Path
 
                 // Prevent false positives for common prefixes
                 // see isBasePath()
-                if (str_starts_with($path.'/', $basePath.'/')) {
+                if (0 === strpos($path.'/', $basePath.'/')) {
                     // next path
                     continue 2;
                 }
@@ -663,7 +666,7 @@ final class Path
             if (null === $finalPath) {
                 // For first part we keep slashes, like '/top', 'C:\' or 'phar://'
                 $finalPath = $path;
-                $wasScheme = str_contains($path, '://');
+                $wasScheme = (false !== strpos($path, '://'));
                 continue;
             }
 
@@ -714,7 +717,7 @@ final class Path
         // Don't append a slash for the root "/", because then that root
         // won't be discovered as common prefix ("//" is not a prefix of
         // "/foobar/").
-        return str_starts_with($ofPath.'/', rtrim($basePath, '/') . 'Path.php/');
+        return 0 === strpos($ofPath.'/', rtrim($basePath, '/').'/');
     }
 
     /**
@@ -783,7 +786,7 @@ final class Path
         $length = \strlen($path);
 
         // Remove and remember root directory
-        if (str_starts_with($path, '/')) {
+        if (0 === strpos($path, '/')) {
             $root .= '/';
             $path = $length > 1 ? substr($path, 1) : '';
         } elseif ($length > 1 && ctype_alpha($path[0]) && ':' === $path[1]) {

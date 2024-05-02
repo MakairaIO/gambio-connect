@@ -486,7 +486,7 @@ return [
 ];
 
 $methods .=
-    FunctionCallSignatureUnitTest . incstr_replace(
+    str_replace(
         array_keys($replacements),
         array_values($replacements),
         $methodTemplate

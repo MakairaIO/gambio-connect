@@ -389,7 +389,7 @@ class JS extends Tokenizer
                         $tokens[] = [
                             'code'    => T_CONSTANT_ENCAPSED_STRING,
                             'type'    => 'T_CONSTANT_ENCAPSED_STRING',
-                            'content' => JS . phpstr_replace("\n", $this->eolChar, $buffer) . $char,
+                            'content' => str_replace("\n", $this->eolChar, $buffer).$char,
                         ];
 
                         if (PHP_CODESNIFFER_VERBOSITY > 1) {

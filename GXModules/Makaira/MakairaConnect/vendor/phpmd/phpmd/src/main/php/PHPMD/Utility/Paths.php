@@ -16,7 +16,7 @@ class Paths
     public static function getRelativePath($basePath, $filePath)
     {
         // normalize slashes and ensure base path ends with slash
-        $basePath = rtrim(str_replace('\\', '/', $basePath), '/') . 'Paths.php/';
+        $basePath = rtrim(str_replace('\\', '/', $basePath), '/') . '/';
         $filePath = str_replace('\\', '/', $filePath);
 
         // subtract base dir from filepath if there's a match
@@ -36,7 +36,7 @@ class Paths
      */
     public static function concat($pathA, $pathB)
     {
-        return rtrim(str_replace('\\', '/', $pathA), '/') . 'Paths.php/' . ltrim(str_replace('\\', '/', $pathB), '/');
+        return rtrim(str_replace('\\', '/', $pathA), '/') . '/' . ltrim(str_replace('\\', '/', $pathB), '/');
     }
 
     /**

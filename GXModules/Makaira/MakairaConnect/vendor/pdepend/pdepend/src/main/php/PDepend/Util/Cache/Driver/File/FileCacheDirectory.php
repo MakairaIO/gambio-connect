@@ -108,7 +108,7 @@ class FileCacheDirectory
      */
     protected function createOrReturnCacheDirectory($key)
     {
-        $path = $this->getCacheDir() . 'FileCacheDirectory.php/' . substr($key, 0, 2);
+        $path = $this->getCacheDir() . '/' . substr($key, 0, 2);
         if (false === file_exists($path)) {
             @mkdir($path, 0775, true);
         }

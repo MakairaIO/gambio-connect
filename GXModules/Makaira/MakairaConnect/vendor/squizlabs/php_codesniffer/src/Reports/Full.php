@@ -10,7 +10,7 @@
 namespace PHP_CodeSniffer\Reports;
 
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util;
+use PHP_CodeSniffer\Util\Timing;
 
 class Full implements Report
 {
@@ -103,7 +103,7 @@ class Full implements Report
         }
 
         echo "\033[0m".PHP_EOL;
-        echo Full . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
         echo "\033[1m".'FOUND '.$report['errors'].' ERROR';
         if ($report['errors'] !== 1) {
@@ -123,7 +123,7 @@ class Full implements Report
         }
 
         echo "\033[0m".PHP_EOL;
-        echo Full . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
         // The maximum amount of space an error message can use.
         $maxErrorSpace = ($width - $paddingLength - 1);
@@ -204,10 +204,10 @@ class Full implements Report
             }//end foreach
         }//end foreach
 
-        echo Full . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         if ($report['fixable'] > 0) {
             echo "\033[1m".'PHPCBF CAN FIX THE '.$report['fixable'].' MARKED SNIFF VIOLATIONS AUTOMATICALLY'."\033[0m".PHP_EOL;
-            echo Full . phpstr_repeat('-', $width) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
         }
 
         echo PHP_EOL;
@@ -250,7 +250,7 @@ class Full implements Report
         echo $cachedData;
 
         if ($toScreen === true && $interactive === false) {
-            Util\Timing::printRunTime();
+            Timing::printRunTime();
         }
 
     }//end generate()

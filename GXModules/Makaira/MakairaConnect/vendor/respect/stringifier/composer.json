@@ -24,7 +24,7 @@
             "Respect\\Stringifier\\": "src/"
         },
         "files": [
-          "src/stringify.php"
+            "src/stringify.php"
         ]
     },
     "scripts": {

@@ -12,8 +12,8 @@
 
 namespace PHP_CodeSniffer\Tests\Core\Tokenizer;
 
-use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Files\DummyFile;
+use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Tests\ConfigDouble;
 use PHP_CodeSniffer\Tests\Core\AbstractMethodUnitTest;
 use PHPUnit\Framework\TestCase;
@@ -62,7 +62,9 @@ abstract class AbstractTokenizerTestCase extends TestCase
     protected function initializeFile()
     {
         if (isset($this->phpcsFile) === false) {
-            $config = new ConfigDouble();
+            $_SERVER['argv'] = [];
+            $config          = new ConfigDouble();
+
             // Also set a tab-width to enable testing tab-replaced vs `orig_content`.
             $config->tabWidth = $this->tabWidth;
 
@@ -71,15 +73,15 @@ abstract class AbstractTokenizerTestCase extends TestCase
             // Default to a file with the same name as the test class. Extension is property based.
             $relativeCN     = str_replace(__NAMESPACE__, '', get_called_class());
             $relativePath   = str_replace('\\', DIRECTORY_SEPARATOR, $relativeCN);
-            $pathToTestFile = realpath(__DIR__) . $relativePath . 'Tokenizer' .$this->fileExtension;
+            $pathToTestFile = realpath(__DIR__).$relativePath.'.'.$this->fileExtension;
 
             // Make sure the file gets parsed correctly based on the file type.
             $contents  = 'phpcs_input_file: '.$pathToTestFile.PHP_EOL;
             $contents .= file_get_contents($pathToTestFile);
 
             $this->phpcsFile = new DummyFile($contents, $ruleset, $config);
-            $this->phpcsFile->process();
-        }
+            $this->phpcsFile->parse();
+        }//end if
 
     }//end initializeFile()
 

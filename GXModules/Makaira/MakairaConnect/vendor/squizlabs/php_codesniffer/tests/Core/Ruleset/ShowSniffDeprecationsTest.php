@@ -58,7 +58,7 @@ final class ShowSniffDeprecationsTest extends TestCase
                 'expected' => false,
             ],
             'Standard using deprecated sniffs: Test Fixture' => [
-                'standard' => __DIR__ . '/ShowSniffDeprecationsTest.xml',
+                'standard' => __DIR__.'/ShowSniffDeprecationsTest.xml',
                 'expected' => true,
             ],
         ];
@@ -106,15 +106,15 @@ final class ShowSniffDeprecationsTest extends TestCase
                 'standard' => 'PSR1',
             ],
             'Standard using deprecated sniffs; explain mode'               => [
-                'standard'       => __DIR__ . '/ShowSniffDeprecationsTest.xml',
+                'standard'       => __DIR__.'/ShowSniffDeprecationsTest.xml',
                 'additionalArgs' => ['-e'],
             ],
             'Standard using deprecated sniffs; quiet mode'                 => [
-                'standard'       => __DIR__ . '/ShowSniffDeprecationsTest.xml',
+                'standard'       => __DIR__.'/ShowSniffDeprecationsTest.xml',
                 'additionalArgs' => ['-q'],
             ],
             'Standard using deprecated sniffs; documentation is requested' => [
-                'standard'       => __DIR__ . '/ShowSniffDeprecationsTest.xml',
+                'standard'       => __DIR__.'/ShowSniffDeprecationsTest.xml',
                 'additionalArgs' => ['--generator=text'],
             ],
         ];
@@ -130,7 +130,7 @@ final class ShowSniffDeprecationsTest extends TestCase
      */
     public function testDeprecatedSniffsListDoesNotShowWhenSelectedSniffsAreNotDeprecated()
     {
-        $standard = __DIR__ . '/ShowSniffDeprecationsTest.xml';
+        $standard = __DIR__.'/ShowSniffDeprecationsTest.xml';
         $config   = new ConfigDouble(['.', "--standard=$standard"]);
         $ruleset  = new Ruleset($config);
 
@@ -176,7 +176,7 @@ final class ShowSniffDeprecationsTest extends TestCase
      */
     public function testDeprecatedSniffsListDoesNotShowWhenAllDeprecatedSniffsAreExcluded()
     {
-        $standard = __DIR__ . '/ShowSniffDeprecationsTest.xml';
+        $standard = __DIR__.'/ShowSniffDeprecationsTest.xml';
         $config   = new ConfigDouble(['.', "--standard=$standard"]);
         $ruleset  = new Ruleset($config);
 
@@ -230,7 +230,7 @@ final class ShowSniffDeprecationsTest extends TestCase
      */
     public function testDeprecatedSniffsWarning()
     {
-        $standard = __DIR__ . '/ShowSniffDeprecationsTest.xml';
+        $standard = __DIR__.'/ShowSniffDeprecationsTest.xml';
         $config   = new ConfigDouble(["--standard=$standard", '--no-colors']);
         $ruleset  = new Ruleset($config);
 
@@ -301,7 +301,7 @@ final class ShowSniffDeprecationsTest extends TestCase
     public function testReportWidthIsRespected($reportWidth, $expectedOutput)
     {
         // Set up the ruleset.
-        $standard = __DIR__ . '/ShowSniffDeprecationsReportWidthTest.xml';
+        $standard = __DIR__.'/ShowSniffDeprecationsReportWidthTest.xml';
         $config   = new ConfigDouble(['.', "--standard=$standard", "--report-width=$reportWidth", '--no-colors']);
         $ruleset  = new Ruleset($config);
 
@@ -405,7 +405,7 @@ final class ShowSniffDeprecationsTest extends TestCase
     public function testDeprecatedSniffsAreListedAlphabetically()
     {
         // Set up the ruleset.
-        $standard = __DIR__ . '/ShowSniffDeprecationsOrderTest.xml';
+        $standard = __DIR__.'/ShowSniffDeprecationsOrderTest.xml';
         $config   = new ConfigDouble(["--standard=$standard", '--no-colors']);
         $ruleset  = new Ruleset($config);
 
@@ -463,7 +463,7 @@ final class ShowSniffDeprecationsTest extends TestCase
         }
 
         // Set up the ruleset.
-        $standard = __DIR__ . 'ShowSniffDeprecationsTest.php/' .$standard;
+        $standard = __DIR__.'/'.$standard;
         $config   = new ConfigDouble(["--standard=$standard"]);
         $ruleset  = new Ruleset($config);
 

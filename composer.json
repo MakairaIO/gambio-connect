@@ -14,13 +14,13 @@
       "phpunit"
     ],
     "phpcs": [
-      "php vendor/bin/phpcbf"
+      "php GXModules/Makaira/MakairaConnect/vendor/bin/phpcbf"
     ],
     "phpcbf": [
-      "php vendor/bin/phpcbf"
+      "php GXModules/Makaira/MakairaConnect/vendor/bin/phpcbf"
     ],
     "phpmd": [
-      "php vendor/bin/phpmd ../../.. text  codesize,design --exclude 'tests/*,vendor/*'"
+      "php GXModules/Makaira/MakairaConnect/vendor/bin/phpmd ../../.. text  codesize,design --exclude 'tests/*,vendor/*'"
     ],
     "test": [
       "@phpcs",

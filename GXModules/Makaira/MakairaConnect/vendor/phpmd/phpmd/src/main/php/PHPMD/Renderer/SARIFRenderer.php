@@ -51,7 +51,7 @@ class SARIFRenderer extends JSONRenderer
                     ),
                     'originalUriBaseIds' => array(
                         'WORKINGDIR' => array(
-                            'uri' => static::pathToUri(getcwd()) . 'SARIFRenderer.php/',
+                            'uri' => static::pathToUri(getcwd()) . '/',
                         ),
                     ),
                     'results' => array(),
@@ -78,7 +78,7 @@ class SARIFRenderer extends JSONRenderer
         /** @var RuleViolation $violation */
         foreach ($report->getRuleViolations() as $violation) {
             $rule = $violation->getRule();
-            $ruleRef = str_replace(' ', '', $rule->getRuleSetName()) . 'SARIFRenderer.php/' . $rule->getName();
+            $ruleRef = str_replace(' ', '', $rule->getRuleSetName()) . '/' . $rule->getName();
 
             if (!isset($ruleIndices[$ruleRef])) {
                 $ruleIndices[$ruleRef] = count($rules);

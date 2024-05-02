@@ -98,7 +98,7 @@ class Info implements Report
         ksort($metrics);
 
         echo PHP_EOL."\033[1m".'PHP CODE SNIFFER INFORMATION REPORT'."\033[0m".PHP_EOL;
-        echo Info . phpstr_repeat('-', 70) . PHP_EOL;
+        echo str_repeat('-', 70).PHP_EOL;
 
         foreach ($metrics as $metric => $values) {
             if (count($values) === 1) {
@@ -160,7 +160,7 @@ class Info implements Report
             echo PHP_EOL;
         }//end foreach
 
-        echo Info . phpstr_repeat('-', 70) . PHP_EOL;
+        echo str_repeat('-', 70).PHP_EOL;
 
         if ($toScreen === true && $interactive === false) {
             Timing::printRunTime();

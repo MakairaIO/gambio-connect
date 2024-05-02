@@ -134,7 +134,7 @@ class Command
             $configurationFile = $this->options['--configuration'];
 
             if (false === file_exists($configurationFile)) {
-                $configurationFile = getcwd() . 'Command.php/' . $configurationFile;
+                $configurationFile = getcwd() . '/' . $configurationFile;
             }
             if (false === file_exists($configurationFile)) {
                 $configurationFile = $this->options['--configuration'];

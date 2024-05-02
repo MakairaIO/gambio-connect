@@ -235,13 +235,13 @@ abstract class VersionControl implements Report
         arsort($authorCache);
 
         echo PHP_EOL."\033[1m".'PHP CODE SNIFFER '.$this->reportName.' BLAME SUMMARY'."\033[0m".PHP_EOL;
-        echo VersionControl . phpstr_repeat('-', $width) . PHP_EOL ."\033[1m";
+        echo str_repeat('-', $width).PHP_EOL."\033[1m";
         if ($showSources === true) {
             echo 'AUTHOR   SOURCE'.str_repeat(' ', ($width - 43)).'(Author %) (Overall %) COUNT'.PHP_EOL;
-            echo VersionControl . phpstr_repeat('-', $width) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
         } else {
             echo 'AUTHOR'.str_repeat(' ', ($width - 34)).'(Author %) (Overall %) COUNT'.PHP_EOL;
-            echo VersionControl . phpstr_repeat('-', $width) . PHP_EOL;
+            echo str_repeat('-', $width).PHP_EOL;
         }
 
         echo "\033[0m";
@@ -266,9 +266,9 @@ abstract class VersionControl implements Report
 
             $overallPercent = '('.round((($count / $errorsShown) * 100), 2).')';
             $authorPercent  = '('.$percent.')';
-            $line           = VersionControl . phpstr_repeat(' ', (6 - strlen($count))) . $count;
-            $line           = VersionControl . phpstr_repeat(' ', (12 - strlen($overallPercent))) . $overallPercent .$line;
-            $line           = VersionControl . phpstr_repeat(' ', (11 - strlen($authorPercent))) . $authorPercent .$line;
+            $line           = str_repeat(' ', (6 - strlen($count))).$count;
+            $line           = str_repeat(' ', (12 - strlen($overallPercent))).$overallPercent.$line;
+            $line           = str_repeat(' ', (11 - strlen($authorPercent))).$authorPercent.$line;
             $line           = $author.str_repeat(' ', ($width - strlen($author) - strlen($line))).$line;
 
             if ($showSources === true) {
@@ -294,7 +294,7 @@ abstract class VersionControl implements Report
                         $source = substr($source, 0, $maxSniffWidth);
                     }
 
-                    $line = VersionControl . phpstr_repeat(' ', (5 - strlen($count))) . $count;
+                    $line = str_repeat(' ', (5 - strlen($count))).$count;
 
                     echo '         ';
                     if ($totalFixable > 0) {
@@ -321,7 +321,7 @@ abstract class VersionControl implements Report
             }//end if
         }//end foreach
 
-        echo VersionControl . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         echo "\033[1m".'A TOTAL OF '.$errorsShown.' SNIFF VIOLATION';
         if ($errorsShown !== 1) {
             echo 'S';

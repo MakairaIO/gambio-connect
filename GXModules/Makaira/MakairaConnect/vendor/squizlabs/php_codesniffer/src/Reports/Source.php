@@ -161,7 +161,7 @@ class Source implements Report
         array_multisort($counts, SORT_DESC, $sourceCodes, SORT_ASC, SORT_NATURAL, $sources);
 
         echo PHP_EOL."\033[1mPHP CODE SNIFFER VIOLATION SOURCE SUMMARY\033[0m".PHP_EOL;
-        echo Source . phpstr_repeat('-', $width) . PHP_EOL ."\033[1m";
+        echo str_repeat('-', $width).PHP_EOL."\033[1m";
         if ($showSources === true) {
             if ($totalFixable > 0) {
                 echo '    SOURCE'.str_repeat(' ', ($width - 15)).'COUNT'.PHP_EOL;
@@ -245,7 +245,7 @@ class Source implements Report
             echo $sourceData['count'].PHP_EOL;
         }//end foreach
 
-        echo Source . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         echo "\033[1m".'A TOTAL OF '.($totalErrors + $totalWarnings).' SNIFF VIOLATION';
         if (($totalErrors + $totalWarnings) > 1) {
             echo 'S';

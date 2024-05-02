@@ -34,7 +34,7 @@ final class AcceptTest extends AbstractFilterTestCase
      */
     public static function initializeConfigAndRuleset()
     {
-        $standard      = __DIR__ . 'AcceptTest.php/' .basename(__FILE__, '.php').'.xml';
+        $standard      = __DIR__.'/'.basename(__FILE__, '.php').'.xml';
         self::$config  = new ConfigDouble(["--standard=$standard", '--ignore=*/somethingelse/*']);
         self::$ruleset = new Ruleset(self::$config);
 

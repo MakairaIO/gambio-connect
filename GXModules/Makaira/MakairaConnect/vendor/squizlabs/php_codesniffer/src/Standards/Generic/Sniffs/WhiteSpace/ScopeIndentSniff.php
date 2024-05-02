@@ -1528,7 +1528,7 @@ class ScopeIndentSniff implements Sniff
                 $numTabs = floor($length / $this->tabWidth);
                 if ($numTabs > 0) {
                     $numSpaces = ($length - ($numTabs * $this->tabWidth));
-                    $padding   = ScopeIndentSniff . phpstr_repeat("\t", $numTabs) . str_repeat(' ', $numSpaces);
+                    $padding   = str_repeat("\t", $numTabs).str_repeat(' ', $numSpaces);
                 }
             } else {
                 $padding = str_repeat(' ', $length);
@@ -1565,7 +1565,7 @@ class ScopeIndentSniff implements Sniff
                     if ($this->tabIndent === true) {
                         $numTabs   = floor($padding / $this->tabWidth);
                         $numSpaces = ($padding - ($numTabs * $this->tabWidth));
-                        $padding   = ScopeIndentSniff . phpstr_repeat("\t", $numTabs) . str_repeat(' ', $numSpaces);
+                        $padding   = str_repeat("\t", $numTabs).str_repeat(' ', $numSpaces);
                     } else {
                         $padding = str_repeat(' ', $padding);
                     }

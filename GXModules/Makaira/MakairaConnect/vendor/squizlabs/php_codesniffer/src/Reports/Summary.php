@@ -10,7 +10,7 @@
 namespace PHP_CodeSniffer\Reports;
 
 use PHP_CodeSniffer\Files\File;
-use PHP_CodeSniffer\Util;
+use PHP_CodeSniffer\Util\Timing;
 
 class Summary implements Report
 {
@@ -120,9 +120,9 @@ class Summary implements Report
         $width = max($width, 70);
 
         echo PHP_EOL."\033[1m".'PHP CODE SNIFFER REPORT SUMMARY'."\033[0m".PHP_EOL;
-        echo Summary . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         echo "\033[1m".'FILE'.str_repeat(' ', ($width - 20)).'ERRORS  WARNINGS'."\033[0m".PHP_EOL;
-        echo Summary . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
 
         foreach ($reportFiles as $file => $data) {
             $padding = ($width - 18 - $data['strlen']);
@@ -148,7 +148,7 @@ class Summary implements Report
             echo PHP_EOL;
         }//end foreach
 
-        echo Summary . phpstr_repeat('-', $width) . PHP_EOL;
+        echo str_repeat('-', $width).PHP_EOL;
         echo "\033[1mA TOTAL OF $totalErrors ERROR";
         if ($totalErrors !== 1) {
             echo 'S';
@@ -174,7 +174,7 @@ class Summary implements Report
         echo PHP_EOL.str_repeat('-', $width).PHP_EOL.PHP_EOL;
 
         if ($toScreen === true && $interactive === false) {
-            Util\Timing::printRunTime();
+            Timing::printRunTime();
         }
 
     }//end generate()
