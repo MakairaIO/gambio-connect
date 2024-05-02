@@ -10,16 +10,16 @@ use Gambio\Admin\Modules\Language\Model\Collections\Languages;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\ChangesService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaLogger;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectCategoryService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectImporterConfigService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectManufacturerService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectProductService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectPublicFieldsService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Service\GambioConnectService as GambioConnectServiceInterface;
+use GXModules\Makaira\MakairaConnect\App\ChangesService;
+use GXModules\Makaira\MakairaConnect\App\MakairaClient;
+use GXModules\Makaira\MakairaConnect\App\MakairaLogger;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
+use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
 
 /**
  * Class GambioConnectService

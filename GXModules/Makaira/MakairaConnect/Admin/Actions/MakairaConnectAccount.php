@@ -9,7 +9,7 @@ use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleStatusService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\ChangesService;
+use GXModules\Makaira\MakairaConnect\App\ChangesService;
 use Respect\Validation\Validator as v;
 
 /**s
