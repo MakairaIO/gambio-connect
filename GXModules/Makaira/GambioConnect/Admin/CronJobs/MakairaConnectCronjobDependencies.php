@@ -2,7 +2,7 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
+class MakairaConnectCronjobDependencies extends AbstractCronjobDependencies
 {
     /**
      * @inheritDoc
@@ -34,7 +34,7 @@ class GambioConnectCronjobDependencies extends AbstractCronjobDependencies
             'MakairaLogger' => $makairaLogger,
             'ModuleConfigService' => $moduleConfigService,
             'productVariantsRepository' => $productVariantsReadService,
-            'active' => $this->storage->get('GambioConnect', 'active')
+            'active' => $this->storage->get('MakairaGambioConnect', 'active')
         ];
     }
 }

@@ -10,11 +10,11 @@ use Gambio\Core\Application\Http\Response;
 use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 
 /**s
- * Class GambioConnectEntry
+ * Class MakairaConnectEntry
  *
  * @package GXModules\Makaira\GambioConnect\Admin\Actions
  */
-class GambioConnectEntry extends AdminModuleAction
+class MakairaConnectEntry extends AdminModuleAction
 {
     public function __construct(protected ModuleStatusService $moduleStatusService)
     {

@@ -12,7 +12,7 @@ use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectManufa
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\Makaira\GambioConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
-class GambioConnectCronjobTask extends AbstractCronjobTask
+class MakairaConnectCronjobTask extends AbstractCronjobTask
 {
     protected GambioConnectManufacturerService $gambioConnectManufacturerService;
     protected GambioConnectCategoryService $gambioConnectCategoryService;

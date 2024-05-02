@@ -11,11 +11,11 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleConfigService;
 use Respect\Validation\Validator as v;
 
 /**s
- * Class GambioConnectManualSetup
+ * Class MakairaConnectManualSetup
  *
  * @package GXModules\Makaira\GambioConnect\Admin\Actions
  */
-class GambioConnectManualSetup extends AdminModuleAction
+class MakairaConnectManualSetup extends AdminModuleAction
 {
     private $templatePath = __DIR__ . '/../ui/template/manual-setup.html';
     private $title = 'manual_setup';

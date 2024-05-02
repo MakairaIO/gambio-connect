@@ -2,7 +2,7 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-class GambioConnectCronjobLogger extends AbstractCronjobLogger
+class MakairaConnectCronjobLogger extends AbstractCronjobLogger
 {
     /**
      * @inheritDoc

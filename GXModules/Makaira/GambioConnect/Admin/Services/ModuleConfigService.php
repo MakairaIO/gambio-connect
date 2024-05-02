@@ -32,9 +32,9 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_STRIPE_OVERRIDE = 'stripeOverride';
 
-    public const CONFIG_MAKAIRA_CRONJOB_ACTIVE = 'cronjobs/GambioConnect/active';
+    public const CONFIG_MAKAIRA_CRONJOB_ACTIVE = 'cronjobs/MakairaGambioConnect/active';
 
-    public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/GambioConnect/interval';
+    public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/MakairaGambioConnect/interval';
 
     public const CONFIG_MAKAIRA_RECO_CROSS_SELLING = 'recoCrossSelling';
 

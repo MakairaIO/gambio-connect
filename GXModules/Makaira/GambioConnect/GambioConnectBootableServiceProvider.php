@@ -10,10 +10,10 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRead
 use Gambio\Core\Application\DependencyInjection\AbstractBootableServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectAccount;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectEntry;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectManualSetup;
-use GXModules\Makaira\GambioConnect\Admin\Actions\GambioConnectWelcome;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaConnectAccount;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaConnectEntry;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaConnectManualSetup;
+use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaConnectWelcome;
 use GXModules\Makaira\GambioConnect\Admin\Actions\MakairaCheckoutAction;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutCancelCallback;
 use GXModules\Makaira\GambioConnect\Admin\Actions\StripeCheckoutSuccessCallback;
@@ -63,10 +63,10 @@ class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvid
             StripeCheckoutSuccessCallback::class,
             StripeCheckoutCancelCallback::class,
             GambioConnectInstaller::class,
-            GambioConnectEntry::class,
-            GambioConnectManualSetup::class,
-            GambioConnectWelcome::class,
-            GambioConnectAccount::class,
+            MakairaConnectEntry::class,
+            MakairaConnectManualSetup::class,
+            MakairaConnectWelcome::class,
+            MakairaConnectAccount::class,
             Export::class,
             VariantUpdateEventListener::class,
             LanguageService::class,
@@ -94,15 +94,15 @@ class GambioConnectBootableServiceProvider extends AbstractBootableServiceProvid
         $this->application->registerShared(StripeCheckoutCancelCallback::class)
             ->addArgument($this->application);
 
-        $this->application->registerShared(GambioConnectEntry::class)
+        $this->application->registerShared(MakairaConnectEntry::class)
             ->addArgument(ModuleStatusService::class);
 
-        $this->application->registerShared(GambioConnectManualSetup::class)
+        $this->application->registerShared(MakairaConnectManualSetup::class)
             ->addArgument(ModuleConfigService::class);
 
-        $this->application->registerShared(GambioConnectWelcome::class)
+        $this->application->registerShared(MakairaConnectWelcome::class)
             ->addArgument(ModuleStatusService::class);
-        $this->application->registerShared(GambioConnectAccount::class)
+        $this->application->registerShared(MakairaConnectAccount::class)
             ->addArgument(ModuleStatusService::class)
             ->addArgument(ModuleConfigService::class)
             ->addArgument(ChangesService::class);

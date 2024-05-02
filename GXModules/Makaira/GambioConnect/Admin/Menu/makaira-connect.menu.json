@@ -1,9 +1,9 @@
 [
   {
-    "id": "makaira_gambio_connect",
+    "id": "makaira_connect",
     "sort": 3,
     "class": "fa fa-hand-sparkles",
-    "title": "gambio_connect_general.title",
+    "title": "makaira_connect_general.title",
     "if": {
       "filter": "isInstalledFilter",
       "args": [true]
@@ -12,7 +12,7 @@
       {
         "sort": 10,
         "link": "makaira/welcome",
-        "title": "gambio_connect_general.welcome",
+        "title": "makaira_connect_general.welcome",
         "if": {
           "filter": "isSetUpFilter",
           "args": [false]
@@ -21,7 +21,7 @@
       {
         "sort": 30,
         "link": "makaira/account",
-        "title": "gambio_connect_general.my_account",
+        "title": "makaira_connect_general.my_account",
         "if": {
           "filter": "isSetUpFilter",
           "args": [true]

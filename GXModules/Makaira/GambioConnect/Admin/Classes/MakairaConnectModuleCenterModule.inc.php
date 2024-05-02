@@ -9,8 +9,8 @@ class GambioConnectModuleCenterModule extends AbstractModuleCenterModule
     // phpcs:ignore
     protected function _init()
     {
-        $this->title       = $this->languageTextManager->get_text('title', 'gambio_connect_general');
-        $this->description = $this->languageTextManager->get_text('description', 'gambio_connect_general');
+        $this->title       = $this->languageTextManager->get_text('title', 'makaira_connect_general');
+        $this->description = $this->languageTextManager->get_text('description', 'makaira_connect_general');
         $this->sortOrder   = 1;
     }
 

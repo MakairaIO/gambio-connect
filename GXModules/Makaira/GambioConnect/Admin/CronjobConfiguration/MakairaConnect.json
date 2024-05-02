@@ -1,50 +1,50 @@
 {
-    "name": "Gambio Connect Makaira Export",
-    "title": "cronjob_gambio_connect.cronjob_title",
+    "name": "Makaira Connect Export",
+    "title": "cronjob_makaira_connect.cronjob_title",
     "configuration": {
         "active": {
             "name": "active",
             "type": "checkbox",
-            "label": "cronjob_gambio_connect.cronjob_label_active",
+            "label": "cronjob_makaira_connect.cronjob_label_active",
             "defaultValue": true
         },
         "interval": {
             "name": "interval",
             "type": "select",
-            "label": "cronjob_gambio_connect.cronjob_label_interval",
+            "label": "cronjob_makaira_connect.cronjob_label_interval",
             "defaultValue": "0 */1 * * *",
             "values": [
                 {
                     "value": "*/1 * * * *",
-                    "text": "cronjob_gambio_connect.every_1_minutes"
+                    "text": "cronjob_makaira_connect.every_1_minutes"
                 },
                 {
                     "value": "*/5 * * * *",
-                    "text": "cronjob_gambio_connect.every_5_minutes"
+                    "text": "cronjob_makaira_connect.every_5_minutes"
                 },
                 {
                     "value": "*/15 * * * *",
-                    "text": "cronjob_gambio_connect.every_15_minutes"
+                    "text": "cronjob_makaira_connect.every_15_minutes"
                 },
                 {
                     "value": "0 */1 * * *",
-                    "text": "cronjob_gambio_connect.every_hour"
+                    "text": "cronjob_makaira_connect.every_hour"
                 },
                 {
                     "value": "0 */3 * * *",
-                    "text": "cronjob_gambio_connect.every_3_hours"
+                    "text": "cronjob_makaira_connect.every_3_hours"
                 },
                 {
                     "value": "0 */6 * * *",
-                    "text": "cronjob_gambio_connect.every_6_hours"
+                    "text": "cronjob_makaira_connect.every_6_hours"
                 },
                 {
                     "value": "0 */12 * * *",
-                    "text": "cronjob_gambio_connect.every_12_hours"
+                    "text": "cronjob_makaira_connect.every_12_hours"
                 },
                 {
                     "value": "0 0 * * *",
-                    "text": "cronjob_gambio_connect.every_24_hours"
+                    "text": "cronjob_makaira_connect.every_24_hours"
                 }
             ]
         },

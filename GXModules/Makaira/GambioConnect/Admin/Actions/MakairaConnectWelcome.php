@@ -11,11 +11,11 @@ use GXModules\Makaira\GambioConnect\Admin\Services\ModuleStatusService;
 use GXModules\Makaira\GambioConnect\Admin\Services\StripeService;
 
 /**
- * Class GambioConnectWelcome
+ * Class MakairaConnectWelcome
  *
  * @package GXModules\Makaira\GambioConnect\App\Actions
  */
-class GambioConnectWelcome extends AdminModuleAction
+class MakairaConnectWelcome extends AdminModuleAction
 {
     public function __construct(protected ModuleStatusService $moduleStatusService)
     {

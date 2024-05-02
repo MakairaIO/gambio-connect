@@ -13,11 +13,11 @@ use GXModules\Makaira\GambioConnect\App\ChangesService;
 use Respect\Validation\Validator as v;
 
 /**s
- * Class GambioConnectAccount
+ * Class MakairaConnectAccount
  *
  * @package GXModules\Makaira\GambioConnect\Admin\Actions
  */
-class GambioConnectAccount extends AdminModuleAction
+class MakairaConnectAccount extends AdminModuleAction
 {
     private $templatePath = __DIR__ . '/../ui/template/account.html';
     private $templatePathInSetup = __DIR__ . '/../ui/template/in-setup.html';
