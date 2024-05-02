@@ -12,7 +12,7 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
 
-        $this->makairaClient = new \GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient($configurationService);
+        $this->makairaClient = new \GXModules\Makaira\MakairaConnect\App\MakairaClient($configurationService);
     }
 
     public function prepare_data()
