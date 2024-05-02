@@ -4,7 +4,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 {
     private \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
 
-    private \GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient $makairaClient;
+    private \GXModules\Makaira\MakairaConnect\App\MakairaClient $makairaClient;
 
     private $products = [];
 
