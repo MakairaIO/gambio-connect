@@ -4,7 +4,7 @@
 
 use GXModules\Makaira\MakairaConnect\MakairaConnectInstaller;
 
-class GambioConnectModuleCenterModule extends AbstractModuleCenterModule
+class MakairaConnectModuleCenterModule extends AbstractModuleCenterModule
 {
     // phpcs:ignore
     protected function _init()

@@ -1,7 +1,7 @@
 <?php
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
-class GambioConnectModuleCenterModuleController extends AbstractModuleCenterModuleController
+class MakairaConnectModuleCenterModuleController extends AbstractModuleCenterModuleController
 {
     // phpcs:ignore
     protected function _init()
