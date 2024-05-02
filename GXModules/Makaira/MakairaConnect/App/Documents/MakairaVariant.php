@@ -6,7 +6,8 @@ namespace GXModules\Makaira\MakairaConnect\App\Documents;
 
 use DateTime;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
 
 class MakairaVariant extends MakairaEntity
 {
@@ -66,28 +67,28 @@ class MakairaVariant extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-            /* Makaira fields */
+        /* Makaira fields */
             parent::toArray(),
             [
 
 
-             /* Product fields */
+                /* Product fields */
 
-             'id' => $this->getId(),
-             'type' => $this->getType(),
-             'parent' => $this->getParent(),
-             'shop' => $this->getShop(),
-             'ean' => $this->getEan(),
-             'isVariant' => $this->isVariant(),
-             'active' => $this->isActive(),
-             'stock' => $this->getStock(),
-             'onstock' => $this->isOnstock(),
-             'title' => $this->getTitle(),
-             'shortdesc' => $this->getShortdesc(),
-             'longdesc' => $this->getLongdesc(),
-             'price' => $this->getPrice(),
-             'meta_keywords' => $this->getMetaKeywords(),
-             'meta_description' => $this->getMetaDescription()
+                'id' => $this->getId(),
+                'type' => $this->getType(),
+                'parent' => $this->getParent(),
+                'shop' => $this->getShop(),
+                'ean' => $this->getEan(),
+                'isVariant' => $this->isVariant(),
+                'active' => $this->isActive(),
+                'stock' => $this->getStock(),
+                'onstock' => $this->isOnstock(),
+                'title' => $this->getTitle(),
+                'shortdesc' => $this->getShortdesc(),
+                'longdesc' => $this->getLongdesc(),
+                'price' => $this->getPrice(),
+                'meta_keywords' => $this->getMetaKeywords(),
+                'meta_description' => $this->getMetaDescription()
             ]
         );
     }
@@ -315,7 +316,7 @@ class MakairaVariant extends MakairaEntity
     {
         return [
             'items' => $this->makairaDocument,
-            'import_timestamp' =>  $this->now,
+            'import_timestamp' => $this->now,
             'source_identifier' => 'gambio'
         ];
     }

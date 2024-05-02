@@ -5,7 +5,7 @@ namespace GXModules\Makaira\MakairaConnect\Admin\MenuFilter;
 use Gambio\Admin\Layout\Menu\Filter\FilterConditionArguments;
 use Gambio\Admin\Layout\Menu\Filter\FilterInterface;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleStatusService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaLogger;
+use GXModules\Makaira\MakairaConnect\App\MakairaLogger;
 
 class IsSetUpFilter implements FilterInterface
 {

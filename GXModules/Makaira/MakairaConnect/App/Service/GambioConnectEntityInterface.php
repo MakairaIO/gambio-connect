@@ -3,7 +3,7 @@
 namespace GXModules\Makaira\MakairaConnect\App\Service;
 
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
 
 interface GambioConnectEntityInterface
 {

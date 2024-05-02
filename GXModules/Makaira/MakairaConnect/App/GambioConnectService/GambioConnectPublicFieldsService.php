@@ -2,9 +2,9 @@
 
 namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaProduct;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
 class GambioConnectPublicFieldsService extends GambioConnectService
 {

@@ -4,8 +4,8 @@ namespace GXModules\Makaira\MakairaConnect\App\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Core\RequestBuilder;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient;
+use GXModules\Makaira\MakairaConnect\App\Core\RequestBuilder;
+use GXModules\Makaira\MakairaConnect\App\MakairaClient;
 use Makaira\Constraints;
 use Makaira\Query;
 

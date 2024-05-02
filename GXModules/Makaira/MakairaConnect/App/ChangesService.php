@@ -21,7 +21,7 @@ class ChangesService
     public function dispatch(string $gambioId, string $type, string $comment = ""): bool
     {
         $sql = '
-                INSERT INTO ' . self::TABLE_NAME . ' (gabio_id, type, comment)
+                INSERT INTO ' . self::TABLE_NAME . ' (gambio_id, type, comment)
                 VALUES (:gambioId, :type, :comment)
                 ON DUPLICATE KEY UPDATE
                     gambio_id = VALUES(gambioId),

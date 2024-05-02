@@ -2,7 +2,8 @@
 
 namespace GXModules\Makaira\MakairaConnect\App\Documents;
 
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;use Psr\Log\LoggerInterface;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use Psr\Log\LoggerInterface;
 
 class MakairaCategory extends MakairaEntity
 {
@@ -83,7 +84,7 @@ class MakairaCategory extends MakairaEntity
 
     private bool $viewModeTiled = false;
 
-    private string $categoriesImage  = '';
+    private string $categoriesImage = '';
 
     private string $hierarchy = '';
     private ?string $url = null;
@@ -97,7 +98,7 @@ class MakairaCategory extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-            /* Makaira fields */
+        /* Makaira fields */
             parent::toArray(),
             [
                 /* Category fields */

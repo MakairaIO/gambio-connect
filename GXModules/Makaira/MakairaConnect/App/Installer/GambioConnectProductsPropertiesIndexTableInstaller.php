@@ -2,29 +2,36 @@
 
 namespace GXModules\Makaira\MakairaConnect\App\Installer;
 
-use CI_DB_query_builder;use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Installer\GambioConnectTableInstallerInterface;
+use CI_DB_query_builder;
+use GXModules\Makaira\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
 
 class GambioConnectProductsPropertiesIndexTableInstaller implements GambioConnectTableInstallerInterface
 {
     public static function install(CI_DB_query_builder $db): void
     {
-        $db->query("
+        $db->query(
+            "
             CREATE TRIGGER makaira_connect_products_properties_index_create_trigger AFTER INSERT on products_properties_index
             FOR EACH ROW
             CALL makairaChange(NEW.products_id, 'product')
-        ");
+        "
+        );
 
-        $db->query("
+        $db->query(
+            "
             CREATE TRIGGER makaira_connect_products_properties_index_update_trigger AFTER UPDATE on products_properties_index
             FOR EACH ROW
             CALL makairaChange(NEW.products_id, 'product')
-        ");
+        "
+        );
 
-        $db->query("
+        $db->query(
+            "
             CREATE TRIGGER makaira_connect_products_properties_index_delete_trigger AFTER DELETE on products_properties_index
             FOR EACH ROW
             CALL makairaChange(OLD.products_id, 'product')
-        ");
+        "
+        );
     }
 
     public static function uninstall(CI_DB_query_builder $db): void

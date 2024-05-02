@@ -5,12 +5,12 @@
 use GXModules\Makaira\MakairaConnect\Admin\Services\MakairaInstallationService;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\Makaira\MakairaConnect\Admin\Services\StripeService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectCategoryService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectImporterConfigService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectManufacturerService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectProductService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService\GambioConnectPublicFieldsService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
 class MakairaConnectCronjobTask extends AbstractCronjobTask
 {

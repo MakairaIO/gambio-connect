@@ -8,9 +8,9 @@ use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepo
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaLogger;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\MakairaClient;
+use GXModules\Makaira\MakairaConnect\App\MakairaLogger;
 use HttpContextReaderInterface;
 use HttpResponseProcessorInterface;
 use HttpViewController;

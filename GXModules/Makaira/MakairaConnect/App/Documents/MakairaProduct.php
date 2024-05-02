@@ -6,7 +6,8 @@ namespace GXModules\Makaira\MakairaConnect\App\Documents;
 
 use DateTime;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
 
 class MakairaProduct extends MakairaEntity
 {
@@ -180,52 +181,52 @@ class MakairaProduct extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-            /* Makaira fields */
+        /* Makaira fields */
             parent::toArray(),
             [
 
-             /* Integer fields */
-             'stock' => $this->stock,
-             'price' => $this->price,
-             'tax_class_id' => $this->taxClassId,
-             'products_vpe' => $this->productsVpe,
-             'products_vpe_status' => $this->productsVpeStatus,
-             'products_vpe_value' => $this->productsVpeValue,
-             'shipping_number_of_days' => $this->shippingNumberOfDays,
+                /* Integer fields */
+                'stock' => $this->stock,
+                'price' => $this->price,
+                'tax_class_id' => $this->taxClassId,
+                'products_vpe' => $this->productsVpe,
+                'products_vpe_status' => $this->productsVpeStatus,
+                'products_vpe_value' => $this->productsVpeValue,
+                'shipping_number_of_days' => $this->shippingNumberOfDays,
 
-             /* Boolean fields */
-             'is_variant' => $this->isVariant,
-             'onstock' => $this->getStock() > 0,
-             'fsk_18' => $this->fsk18,
+                /* Boolean fields */
+                'is_variant' => $this->isVariant,
+                'onstock' => $this->getStock() > 0,
+                'fsk_18' => $this->fsk18,
 
-             /* Array fields */
-             'attributes' => $this->attributes,
-             'category' => $this->categories,
-             'ean' => $this->buildCodes(),
-             /* String fields */
-             'title' => $this->title,
+                /* Array fields */
+                'attributes' => $this->attributes,
+                'category' => $this->categories,
+                'ean' => $this->buildCodes(),
+                /* String fields */
+                'title' => $this->title,
 
-             'products_date_added' => $this->dateAdded,
-             'products_date_available' => $this->dateAvailable,
+                'products_date_added' => $this->dateAdded,
+                'products_date_available' => $this->dateAvailable,
 
-             'shortdesc' => $this->shortDescription,
-             'longdesc' => $this->longDescription,
-             'soldamount' => $this->soldAmount,
-             'url' => $this->url,
-             'searchkeys' => $this->searchKeys,
-             'maincategory' => $this->mainCategory,
-             'maincategoryurl' => $this->mainCategoryUrl,
-             'manufacturerid' => $this->manufacturerId,
-             'manufacturer_title' => $this->manufacturerTitle,
-             'gm_alt_text' => $this->gmAltText,
-             'picture_url_main' => $this->getPictureUrlMain(),
+                'shortdesc' => $this->shortDescription,
+                'longdesc' => $this->longDescription,
+                'soldamount' => $this->soldAmount,
+                'url' => $this->url,
+                'searchkeys' => $this->searchKeys,
+                'maincategory' => $this->mainCategory,
+                'maincategoryurl' => $this->mainCategoryUrl,
+                'manufacturerid' => $this->manufacturerId,
+                'manufacturer_title' => $this->manufacturerTitle,
+                'gm_alt_text' => $this->gmAltText,
+                'picture_url_main' => $this->getPictureUrlMain(),
 
-             /* Special makaira fields */
-             'mak_boost_norm_insert' => $this->makBoostNormInsert,
-             'mak_boost_norm_sold' => $this->makBoostNormSold,
-             'mak_boost_norm_rating' => $this->makBoostNormRating,
-             'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
-             'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
+                /* Special makaira fields */
+                'mak_boost_norm_insert' => $this->makBoostNormInsert,
+                'mak_boost_norm_sold' => $this->makBoostNormSold,
+                'mak_boost_norm_rating' => $this->makBoostNormRating,
+                'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
+                'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
             ]
         );
     }
@@ -238,40 +239,40 @@ class MakairaProduct extends MakairaEntity
         }
 
         $document = [
-            'data' =>  [
-                'type'                         => self::DOC_TYPE,
-                'id'                           => $this->product['products_id'],
-                'parent'                       => '',
-                'shop'                         => 1,
-                'ean'                          => $this->product['products_ean'],
-                'activeto'                     => '',
-                'activefrom'                   => '',
-                'isVariant'                    => false,
-                'active'                       => $this->getActive(),
-                'sort'                         => 0,
-                'stock'                        => $this->getStock(),
-                'onstock'                      => $this->getStock() > 0,
-                'picture_url_main'             => $this->product['products_image'],
-                'title'                        => $this->product['products_name'],
-                'shortdesc'                    => $this->product['products_short_description'],
-                'longdesc'                     => $this->product['products_description'],
-                'price'                        => $this->product['products_price'],
-                'soldamount'                   => "",
-                'searchable'                   => true,
-                'searchkeys'                   => $this->product['products_keywords'] ?? '',
-                'url'                          => $this->getUrl(),
-                'maincategory'                 => $this->product['main_category_id'],
-                'maincategoryurl'              => "",
-                'category'                     => [],
-                'attributes'                   => [],
-                'mak_boost_norm_insert'        => 0.0,
-                'mak_boost_norm_sold'          => 0.0,
-                'mak_boost_norm_rating'        => 0.0,
-                'mak_boost_norm_revenue'       => 0.0,
+            'data' => [
+                'type' => self::DOC_TYPE,
+                'id' => $this->product['products_id'],
+                'parent' => '',
+                'shop' => 1,
+                'ean' => $this->product['products_ean'],
+                'activeto' => '',
+                'activefrom' => '',
+                'isVariant' => false,
+                'active' => $this->getActive(),
+                'sort' => 0,
+                'stock' => $this->getStock(),
+                'onstock' => $this->getStock() > 0,
+                'picture_url_main' => $this->product['products_image'],
+                'title' => $this->product['products_name'],
+                'shortdesc' => $this->product['products_short_description'],
+                'longdesc' => $this->product['products_description'],
+                'price' => $this->product['products_price'],
+                'soldamount' => "",
+                'searchable' => true,
+                'searchkeys' => $this->product['products_keywords'] ?? '',
+                'url' => $this->getUrl(),
+                'maincategory' => $this->product['main_category_id'],
+                'maincategoryurl' => "",
+                'category' => [],
+                'attributes' => [],
+                'mak_boost_norm_insert' => 0.0,
+                'mak_boost_norm_sold' => 0.0,
+                'mak_boost_norm_rating' => 0.0,
+                'mak_boost_norm_revenue' => 0.0,
                 'mak_boost_norm_profit_margin' => 0.0,
-                'timestamp'                    => $this->now,
-                'manufacturerid'               => $this->product['manufacturers_id'],
-                'manufacturer_title'           => '',
+                'timestamp' => $this->now,
+                'manufacturerid' => $this->product['manufacturers_id'],
+                'manufacturer_title' => '',
             ],
             'source_revision' => 1,
             'language_id' => $this->getLanguage()
@@ -740,10 +741,11 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
-    private function buildCodes() {
+    private function buildCodes()
+    {
         $codes = [];
-        foreach(['ean', 'mpn', 'isbn', 'upc', 'jan', 'model'] as $code) {
-            if(!empty($this->$code)) {
+        foreach (['ean', 'mpn', 'isbn', 'upc', 'jan', 'model'] as $code) {
+            if (!empty($this->$code)) {
                 $codes[] = $this->$code;
             }
         }

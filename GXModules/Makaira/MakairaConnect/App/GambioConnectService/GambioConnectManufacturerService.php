@@ -5,10 +5,10 @@ namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Service\GambioConnectEntityInterface;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\Mapper\MakairaDataMapper;
+use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectManufacturerService extends GambioConnectService implements GambioConnectEntityInterface
 {
@@ -55,7 +55,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                         ];
                     } else {
                         $manufacturers[] = array_merge(
-                            $this->getQuery($language, [$eyport])[0],
+                            $this->getQuery($language, [$export])[0],
                             [
                                 'manufacturers_id' => $export['gambio_id'],
                                 'delete' => false

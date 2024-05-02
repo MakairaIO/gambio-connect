@@ -3,7 +3,7 @@
 namespace GXModules\Makaira\MakairaConnect\App\EventListeners;
 
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
 class VariantUpdateEventListener
 {

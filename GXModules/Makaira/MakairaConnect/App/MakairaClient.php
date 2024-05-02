@@ -7,9 +7,9 @@ use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Core\RequestBuilder;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaProduct;
+use GXModules\Makaira\MakairaConnect\App\Core\RequestBuilder;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
 use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 
@@ -109,8 +109,12 @@ class MakairaClient
         return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
     }
 
-    public function setPublicField(string $field, bool $showOnDetailPage = true, bool $showOnLandingPage = true, bool $showOnListingPage = true): \Psr\Http\Message\ResponseInterface
-    {
+    public function setPublicField(
+        string $field,
+        bool $showOnDetailPage = true,
+        bool $showOnLandingPage = true,
+        bool $showOnListingPage = true
+    ): \Psr\Http\Message\ResponseInterface {
         return $this->doRequest('POST', 'publicfield', [
             'field' => $field,
             'fieldName' => $field,
@@ -253,8 +257,12 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [])
-    {
+    public function search(
+        string $searchkey,
+        int $maxSearchResults = 8,
+        int|null $pageNumber = null,
+        array $sorting = []
+    ) {
         if (empty($searchkey)) {
             return [];
         }

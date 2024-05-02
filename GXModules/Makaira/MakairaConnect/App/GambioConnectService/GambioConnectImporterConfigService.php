@@ -2,7 +2,7 @@
 
 namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
 class GambioConnectImporterConfigService extends GambioConnectService
 {

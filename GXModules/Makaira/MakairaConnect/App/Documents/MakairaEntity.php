@@ -18,7 +18,7 @@ class MakairaEntity
     private bool $searchable = true;
     private bool $hidden = false;
 
-    private bool $delete = false;
+    protected bool $delete = false;
 
     private string $pictureUrlMain = '';
 

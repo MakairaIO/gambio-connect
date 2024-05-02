@@ -5,7 +5,7 @@ namespace GXModules\Makaira\MakairaConnect\App\Actions;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 
 class SwitchAction extends AbstractAction
 {

@@ -5,10 +5,10 @@ namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\ProductVariant\Model\ValueObjects\ProductId;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Documents\MakairaEntity;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\App\Service\GambioConnectEntityInterface;
+use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\Makaira\MakairaConnect\App\Mapper\MakairaDataMapper;
+use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {

@@ -24,7 +24,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             $configurationService
         );
 
-        $this->makairaClient = new \GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient($configurationService);
+        $this->makairaClient = new \GXModules\Makaira\MakairaConnect\App\MakairaClient($configurationService);
 
         $this->product_listing_view = MainFactory::create('MakairaProductListingThemeContentView');
     }

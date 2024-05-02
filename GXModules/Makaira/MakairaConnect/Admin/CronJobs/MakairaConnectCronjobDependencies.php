@@ -10,10 +10,10 @@ class MakairaConnectCronjobDependencies extends AbstractCronjobDependencies
     public function getDependencies()
     {
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
-        $makairaClient = new \GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaClient($configurationService);
+        $makairaClient = new \GXModules\Makaira\MakairaConnect\App\MakairaClient($configurationService);
         $connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
         $languageReadService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
-        $makairaLogger = new \GXModules\Makaira\MakairaConnect\Admin\Actions\App\MakairaLogger();
+        $makairaLogger = new \GXModules\Makaira\MakairaConnect\App\MakairaLogger();
         $productVariantsReadService = new \Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository(
             new \Gambio\Admin\Modules\Product\Submodules\Variant\App\Data\ProductVariantsReader($connection),
             new \Gambio\Admin\Modules\Product\Submodules\Variant\App\Data\ProductVariantsDeleter($connection),
