@@ -138,7 +138,9 @@ class Query extends AbstractQuery
      */
     public function sanitize()
     {
-        $this->aggregations = array_filter($this->aggregations);
+        $this->aggregations = array_filter($this->aggregations, static function ($value) {
+            return $value !== null && $value !== '';
+        });
 
         return $this;
     }
