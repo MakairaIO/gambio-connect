@@ -25,12 +25,13 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
     protected function _buildCategoryArray()
     {
         $result = $this->makairaClient->getCategory($this->currentCategoryId);
-        $resultCategory = $result->category->items[0] ?? [];
+
+        $resultCategory = $result->category->items[0] ?? new stdClass();
         $this->categoryArray = [
             'categories_id' => $resultCategory->id,
         ];
 
-        $this->subcategories = $resultCategory->fields->subcategories;
+        $this->subcategories = $resultCategory->fields->subcategories ?? [];
         $this->mapMakairaFieldsToGambio($resultCategory);
     }
 
@@ -51,7 +52,7 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
             $categoryArray = array_merge(
                 [
                     'categories_id' => $resultCategory->id,
-                    ],
+                ],
                 (array)$resultCategory->fields
             );
             $this->subcategoriesArray[] = [

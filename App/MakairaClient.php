@@ -200,7 +200,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [])
+    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [], array $aggregations = [])
     {
         $requestBuilder = new RequestBuilder($this->language);
 
@@ -208,7 +208,7 @@ class MakairaClient
             'searchPhrase' => $categoryId,
             'isSearch' => false,
             'enableAggregations' => true,
-            'aggregations' => [],
+            'aggregations' => $aggregations,
             'sorting' => $sorting,
             'fields' => [],
             'count' => $maxResults,
@@ -222,7 +222,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
+    public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [], array $aggregations = [])
     {
         if (empty($id)) {
             return [];
@@ -233,8 +233,8 @@ class MakairaClient
             'searchPhrase' => $id,
             'isSearch' => true,
             'enableAggregations' => true,
-            'aggregations' => [],
-            'sorting' => [],
+            'aggregations' => $aggregations,
+            'sorting' => $sorting,
             'fields' => array_merge(
                 MakairaCategory::FIELDS,
                 [
@@ -253,7 +253,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [])
+    public function search(string $searchkey, int $maxSearchResults = 8, int|null $pageNumber = null, array $sorting = [], array $aggregations = [])
     {
         if (empty($searchkey)) {
             return [];
@@ -263,7 +263,7 @@ class MakairaClient
             'searchPhrase' => $searchkey,
             'isSearch' => true,
             'enableAggregations' => true,
-            'aggregations' => [],
+            'aggregations' => $aggregations,
             'sorting' => $sorting,
             'fields' => MakairaProduct::FIELDS,
             'count' => $maxSearchResults,
@@ -272,6 +272,7 @@ class MakairaClient
         ];
 
         $url = $this->makairaUrl . '/search/';
+
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 }

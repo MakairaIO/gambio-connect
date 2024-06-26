@@ -107,7 +107,7 @@ class MakairaDataMapper
             ->setParent($product['products_id'])
             ->setLongdesc($product['products_description']['products_description'])
             ->setShortdesc($product['products_description']['products_short_description'])
-            ->setPrice((float)$product['products_price'])
+            ->setPrice((float)$product['products_price']) // TODO NETTO/BRUTTO
             ->setTitle($product['products_description']['products_name'])
             ->setEan($product['products_item_codes']['products_mpn'] ?? '')
             ->setIsVariant(true)

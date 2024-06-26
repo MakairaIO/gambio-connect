@@ -1,0 +1,103 @@
+.makaira-filter__header {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.makaira-form {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+.makaira-filter__filter-headline {
+  text-transform: uppercase;
+  border-bottom: 1px solid #000;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.makaira-filter__filter {
+  width: 195px;
+  margin: 0 15px 20px;
+}
+.makaira-filter__button {
+  background-color: #fff;
+  border: none;
+  font-style: italic;
+  line-height: 25px;
+  padding-left: 0;
+}
+.makaira-filter__button:focus {
+  outline: none;
+}
+.makaira-filter__list {
+  list-style-type: none;
+  padding: 0;
+}
+.makaira-filter__list .makaira-filter__list {
+  padding-left: 10px;
+}
+.makaira-filter__item {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+.makaira-filter__item--hidden {
+  display: none;
+}
+.makaira-filter__item:nth-child(n + 7) {
+  display: none;
+}
+.makaira-filter__list--expanded .makaira-filter__item:nth-child(n + 7) {
+  display: list-item;
+}
+.makaira-filter__list--inner .makaira-filter__item {
+  display: list-item;
+}
+.makaira-filter__label {
+  position: relative;
+  padding-left: 20px;
+}
+.makaira-filter__label:hover {
+  cursor: pointer;
+}
+.makaira-filter__filter--list .makaira-filter__label {
+  padding-left: 0;
+}
+.makaira-filter__filter--list
+  .makaira-filter__item--active
+  .makaira-filter__label {
+  font-weight: bold;
+}
+.makaira-input--checkbox {
+  position: absolute;
+  left: 0;
+}
+.makaira-filter__filter--list .makaira-input--checkbox {
+  display: none;
+}
+.makaira-filter__slider-values {
+  text-align: center;
+}
+.noUi-horizontal {
+  height: 14px;
+}
+.noUi-horizontal .noUi-handle {
+  width: 26px;
+  height: 22px;
+  top: -5px;
+}
+.noUi-handle:after,
+.noUi-handle:before {
+  height: 10px;
+  left: 9px;
+  top: 5px;
+}
+.noUi-handle:after {
+  left: 14px;
+}
+.noUi-horizontal .noUi-handle-lower {
+  left: -1px;
+}
+.noUi-horizontal .noUi-handle-upper {
+  left: -25px;
+}
+.noUi-connect {
+  background-color: #bbb;
+}

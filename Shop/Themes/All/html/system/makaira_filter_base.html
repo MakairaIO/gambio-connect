@@ -1,0 +1,37 @@
+{* TODO fix for different page types *}
+
+
+{assign var="activeClass" value="active"}
+{assign var="topActiveClass" value="top_active"}
+{assign var="blShowDocCount" value=true}
+{assign var="showResetAll" value=false}
+
+{assign var="filterParamName" value="mak_filter"}
+
+
+<aside class="makaira-filter">
+    <form class="makaira-form" action="{$basepath}" method="post">
+        <input type="hidden" name="fnc" value="redirectMakairaFilter">
+        {* {if $topActiveClass == "search" }
+        <input type="hidden" name="cl" value="{$topActiveClass}">
+        {/if} *}
+
+        <input type="hidden" name="isFilterAction" value="1">
+        {foreach from=$aggregations key="key" item="aggregation"}
+        {assign var="filterTitle" value=$aggregation->title}
+
+        <section class="makaira-filter__filter makaira-filter__filter--{$aggregation->type}">
+            <header class="makaira-filter__filter-headline">{$filterTitle}</header>
+            {include file="get_usermod:{$tpl_path}makaira_filter_{$aggregation->type}.html" step=1
+            blShowDocCount=$aggregation->showDocCount}
+            {if !empty($aggregation->selectedValues)}
+            {assign var="showResetAll" value=true}
+            {/if}
+        </section>
+        {/foreach}
+
+        {if $showResetAll}
+        <a href="{$basepath}">MAKAIRA_FILTER_RESET_ALL</a>
+        {/if}
+    </form>
+</aside>

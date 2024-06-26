@@ -1,4 +1,3 @@
-{if $content_data.MAKAIRA_ACTIVE_SEARCH == true && 'ENABLE_LIVE_SEARCH'|gm_get_conf == 'true' }
 {block name="layout_secondary_navigation_search"}
 <div class="navbar-search collapse">
     <form action="{$content_data.FORM_ACTION_URL}" method="get" class="makaira-autosuggestion__form">
@@ -16,4 +15,3 @@
 <link type="text/css" rel="stylesheet" href="{$content_data.makaira_search_css_path}">
 <script async type="text/javascript" src='{$content_data.makaira_search_js_path}'></script>
 {/block}
-{/if}

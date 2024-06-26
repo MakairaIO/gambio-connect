@@ -7,14 +7,16 @@ class MakairaProductListingContentControl extends ProductListingContentControl
     private \GXModules\Makaira\GambioConnect\App\MakairaClient $makairaClient;
 
     private $products = [];
-
     private $totalProducts = 0;
-
     private $category;
+    private $makaira_aggregations;
 
     public function __construct()
     {
         parent::__construct();
+
+        $this->validation_rules_array['makaira_aggregations'] = array('type' => 'array');
+
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(
             \Gambio\Core\Configuration\Services\ConfigurationService::class
@@ -34,15 +36,88 @@ class MakairaProductListingContentControl extends ProductListingContentControl
         return (bool)$this->search_keywords;
     }
 
+    private function getFilterFromRequest()
+    {
+
+        $filter = [];
+
+        $postData = $this->v_data_array['POST'];
+
+        if (isset($postData['fnc']) && $postData['fnc'] === 'redirectMakairaFilter') {
+            $filter = $postData['mak_filter'];
+
+
+
+            foreach ($filter as $key => $value) {
+                if (substr($key, -3) === '_to') {
+                    $rangemax_key = substr($key, 0, -3) . '_rangemax';
+                    if (array_key_exists($rangemax_key, $filter) && $filter[$rangemax_key] === $value) {
+                        unset($filter[$key]);
+                    }
+                    unset($filter[$rangemax_key]);
+                }
+
+                if (substr($key, -5) === '_from') {
+                    $rangemin_key = substr($key, 0, -5) . '_rangemin';
+                    if (array_key_exists($rangemin_key, $filter) && $filter[$rangemin_key] === $value) {
+                        unset($filter[$key]);
+                    }
+                    unset($filter[$rangemin_key]);
+                }
+            }
+        }
+
+        return $filter;
+    }
+
     private function getCategory($categoryId)
     {
+
+        $filter = $this->getFilterFromRequest();
+
+        $filterValues = [];
+
+
+        if (count($filter) > 0) {
+
+
+
+            $path = "";
+            $query = [];
+
+            if ($this->current_page != "index.php") {
+                $path = $this->current_page;
+            }
+
+            if ($this->cat) {
+                $query["cat"] = $this->cat;
+            }
+
+            if ($this->search_keywords) {
+                $query["keywords"] = $this->search_keywords;
+            }
+
+            $query["mak_filter"] = $filter;
+            $this->set_redirect_url("/" . $path . "?" . http_build_query($query));
+            return true;
+        }
+
+        if (isset($this->v_data_array['GET']) && isset($this->v_data_array['GET']['mak_filter'])) {
+            $filterValues = $this->v_data_array['GET']['mak_filter'];
+        }
+
+
+
         if ($this->isSearch()) {
+
             $result = $this->makairaClient->search(
                 $this->search_keywords,
                 $this->determine_max_display_search_results(),
                 $this->page_number ?? 0,
-                $this->prepareSortingForMakaira()
+                $this->prepareSortingForMakaira(),
+                $filterValues
             );
+
 
             $this->category = $result->category->items;
 
@@ -54,13 +129,14 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
             $this->totalProducts = 0;
         } else {
-            $category = $this->makairaClient->getCategory($categoryId);
+            //  $category = $this->makairaClient->getCategory($categoryId);
 
             $result = $this->makairaClient->getProducts(
                 $categoryId,
                 $this->determine_max_display_search_results(),
                 $this->page_number ?? 0,
-                $this->prepareSortingForMakaira()
+                $this->prepareSortingForMakaira(),
+                $filterValues
             );
 
             $banners = $result->banners;
@@ -84,14 +160,21 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 $this->products[] = $product;
             }
 
-            $this->category = $category->category->items[0];
+            //$this->category = $category->category->items[0];
 
             $this->totalProducts = $result->product->total;
+        }
+
+        if ($result) {
+            $this->makaira_aggregations = $result->product->aggregations;
         }
     }
 
     public function proceed($p_action = 'default')
+
     {
+
+
         $this->getCategory($this->categories_id);
 
         $t_html_output = '';
@@ -116,15 +199,20 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $coo_filter_selection_content_view->set_('language_id', $_SESSION['languages_id']);
                     $this->filter_selection_html = $coo_filter_selection_content_view->get_html();
 
+                    // START CUSTOM MAKAIRA CODE
+
+                    // dd($this->v_data_array['POST']);
+                    $makaira_filter = MainFactory::create_object('MakairaFilterThemeContentView');
+                    $makaira_filter->set_('aggregations', array_values((array) $this->makaira_aggregations));
+                    $makaira_filter->set_('basepath', $this->current_page);
+
+                    $makaira_filer_html = $makaira_filter->get_html();
+                    $this->filter_selection_html .= $makaira_filer_html;
+
+
                     $this->build_search_result_sql();
 
-                    $result = $this->makairaClient->search(
-                        $this->search_keywords,
-                        $this->determine_max_display_search_results(),
-                        $this->page_number ?? 0,
-                        $this->prepareSortingForMakaira()
-                    );
-                    $this->products = $result->product->items;
+                    // END CUSTOM MAKAIRA CODE
 
                     break;
                 default:
@@ -137,6 +225,12 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                     $this->init_feature_filter();
                     $t_category_depth = $this->determine_category_depth();
+
+                    $makaira_filter = MainFactory::create_object('MakairaFilterThemeContentView');
+                    $makaira_filter->set_('aggregations', array_values((array) $this->makaira_aggregations));
+                    $makaira_filter->set_('basepath', "?cat=" . $this->cat);
+                    $makaira_filer_html = $makaira_filter->get_html();
+                    $this->filter_selection_html .= $makaira_filer_html;
 
                     switch ($t_category_depth) {
                         case 'top':
@@ -213,7 +307,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $GLOBALS['xtPrice']->showFrom_Attributes = true;
                     if (
                         ((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
-                                && isset($t_category_data_array['gm_show_attributes']) == false)
+                            && isset($t_category_data_array['gm_show_attributes']) == false)
                             || (isset($t_category_data_array['gm_show_attributes'])
                                 && $t_category_data_array['gm_show_attributes'] == '1'))
                         && $t_product_has_properties == false
@@ -247,7 +341,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $t_attributes_html = '';
                     if (
                         ((gm_get_conf('MAIN_SHOW_ATTRIBUTES') == 'true'
-                                && isset($t_category_data_array['gm_show_attributes']) == false)
+                            && isset($t_category_data_array['gm_show_attributes']) == false)
                             || (isset($t_category_data_array['gm_show_attributes'])
                                 && $t_category_data_array['gm_show_attributes'] == '1'))
                         && $t_product_has_properties == false
@@ -257,7 +351,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
                         // SET TEMPLATE
                         $t_filepath = DIR_FS_CATALOG . StaticGXCoreLoader::getThemeControl()
-                                ->getGmProductOptionsTemplatePath();
+                            ->getGmProductOptionsTemplatePath();
 
                         $c_template = $coo_product_attributes->get_default_template(
                             $t_filepath,
@@ -293,7 +387,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     }
 
                     $t_products_array[sizeof($t_products_array)
-                    - 1] = array_merge($t_products_array[sizeof($t_products_array) - 1], array(
+                        - 1] = array_merge($t_products_array[sizeof($t_products_array) - 1], array(
                         'GM_ATTRIBUTES' => $t_attributes_html,
                         'GM_GRADUATED_PRICES' => $t_graduated_prices_html,
                         'GM_HAS_ATTRIBUTES' => $gm_has_attributes
@@ -306,7 +400,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                                 && $coo_product->data['use_properties_combis_quantity'] == '0'))
                     ) {
                         $t_products_array[sizeof($t_products_array)
-                        - 1] = array_merge(
+                            - 1] = array_merge(
                             $t_products_array[sizeof($t_products_array) - 1],
                             array('UNIT' => $coo_product->data['unit_name'])
                         );
@@ -321,7 +415,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                                         || $coo_product->data['use_properties_combis_quantity'] === '1')))
                         ) {
                             $t_products_array[sizeof($t_products_array)
-                            - 1] = array_merge(
+                                - 1] = array_merge(
                                 $t_products_array[sizeof($t_products_array) - 1],
                                 array('PRODUCTS_QUANTITY' => $coo_product->data['products_quantity'])
                             );
@@ -334,7 +428,7 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     }
 
                     $t_products_array[sizeof($t_products_array)
-                    - 1] = array_merge(
+                        - 1] = array_merge(
                         $t_products_array[sizeof($t_products_array) - 1],
                         array('ABROAD_SHIPPING_INFO_LINK' => main::get_abroad_shipping_info_link())
                     );
@@ -458,6 +552,9 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                     $t_html_output = '';
                 }
 
+                //        dd($this->product_listing_view);
+
+
                 $t_html_output .= $this->product_listing_view->get_html();
             } elseif (
                 !defined('GM_CAT_COUNT')
@@ -482,10 +579,12 @@ class MakairaProductListingContentControl extends ProductListingContentControl
         } else {
             trigger_error(
                 "Variable(s) " . implode(', ', $t_uninitialized_array) . " do(es) not exist in class "
-                . get_class($this) . " or is/are null",
+                    . get_class($this) . " or is/are null",
                 E_USER_ERROR
             );
         }
+
+
 
         $this->v_output_buffer = $t_html_output;
     }
@@ -538,8 +637,8 @@ class MakairaProductListingContentControl extends ProductListingContentControl
                 break;
             case 'date':
                 return [
-                  'products_date_added' => $sort[1],
-                  'products_date_available' => $sort[1]
+                    'products_date_added' => $sort[1],
+                    'products_date_available' => $sort[1]
                 ];
             case 'shipping':
                 $type = 'shipping_number_of_days';
