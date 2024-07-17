@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\App;
+namespace GXModules\MakairaIO\MakairaConnect\App;
 
 use Psr\Log\LoggerInterface;
 
@@ -11,7 +11,7 @@ use function Gambio\Core\Logging\logger;
 /**
  * Class MakairaLogger
  *
- * @package GXModules\Makaira\MakairaConnect\App
+ * @package GXModules\MakairaIO\MakairaConnect\App
  */
 class MakairaLogger implements LoggerInterface
 {

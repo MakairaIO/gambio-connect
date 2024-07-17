@@ -4,7 +4,7 @@ namespace Controller;
 
 use ContentViewInterface;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\MakairaConnect\App\Core\MakairaRequest;
+use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest;
 use HttpContextReaderInterface;
 use HttpControllerResponse;
 use HttpResponseProcessorInterface;

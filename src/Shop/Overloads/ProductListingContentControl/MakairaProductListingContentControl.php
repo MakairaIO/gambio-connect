@@ -2,9 +2,9 @@
 
 class MakairaProductListingContentControl extends ProductListingContentControl
 {
-    private \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
+    private \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
 
-    private \GXModules\Makaira\MakairaConnect\App\MakairaClient $makairaClient;
+    private \GXModules\MakairaIO\MakairaConnect\App\MakairaClient $makairaClient;
 
     private $products = [];
 
@@ -20,11 +20,11 @@ class MakairaProductListingContentControl extends ProductListingContentControl
             \Gambio\Core\Configuration\Services\ConfigurationService::class
         );
 
-        $this->moduleConfigService = new \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService(
+        $this->moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService(
             $configurationService
         );
 
-        $this->makairaClient = new \GXModules\Makaira\MakairaConnect\App\MakairaClient($configurationService);
+        $this->makairaClient = new \GXModules\MakairaIO\MakairaConnect\App\MakairaClient($configurationService);
 
         $this->product_listing_view = MainFactory::create('MakairaProductListingThemeContentView');
     }

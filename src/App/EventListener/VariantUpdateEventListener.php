@@ -1,9 +1,9 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\EventListeners;
+namespace GXModules\MakairaIO\MakairaConnect\App\EventListeners;
 
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 class VariantUpdateEventListener
 {

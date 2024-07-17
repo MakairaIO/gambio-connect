@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\App\Actions;
+namespace GXModules\MakairaIO\MakairaConnect\App\Actions;
 
 use Exception;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\MakairaConnectInstaller;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 /**
  * Class Export
  *
- * @package GXModules\Makaira\MakairaConnect\App\Actions
+ * @package GXModules\MakairaIO\MakairaConnect\App\Actions
  */
 class Export extends AbstractAction
 {

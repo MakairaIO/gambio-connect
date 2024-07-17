@@ -2,7 +2,7 @@
 
 class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
 {
-    private \GXModules\Makaira\MakairaConnect\App\Core\MakairaRequest $makairaRequest;
+    private \GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest $makairaRequest;
 
     public function proceed()
     {
@@ -12,9 +12,9 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
 
-        $moduleConfigService = new \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
+        $moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
 
-        $this->makairaRequest = new \GXModules\Makaira\MakairaConnect\App\Core\MakairaRequest($moduleConfigService->getMakairaUrl(), $moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $moduleConfigService->getMakairaSecret());
+        $this->makairaRequest = new \GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest($moduleConfigService->getMakairaUrl(), $moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $moduleConfigService->getMakairaSecret());
 
         $keywords = trim($this->v_data_array['GET']['needle']);
 

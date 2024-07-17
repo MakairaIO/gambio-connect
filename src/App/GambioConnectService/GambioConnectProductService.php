@@ -1,14 +1,14 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\ProductVariant\Model\ValueObjects\ProductId;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectEntityInterface;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
+use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {

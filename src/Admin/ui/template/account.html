@@ -1,22 +1,20 @@
 {extends file="layout.html"}
 {block name="content"}
-{load_language_text section="gambio_connect_general"}
+{load_language_text section="makaira_connect_general"}
 
 <h2>
-    {$txt.account_title}
+    {$txt.account}
 </h2>
 
-<a href="{$makairaLink}" role="button" class="my-2 btn btn-primary">{$txt.goto_makaira}</a>
+<a href="{$makairaLink}" target="_blank" role="button" class="my-2 btn btn-primary">{$txt.goto_makaira}</a>
 
 
 <form class="w-50" action="{$gambio_connect_form_url}/makaira/account" method="post">
 
-
     {include './components/form-input.html' name="makairaUrl" label="{$txt.makaira_url}" type="label"}
     {include './components/form-input.html' name="makairaInstance" label="{$txt.makaira_instance}" type="label"}
-    {include './components/form-input.html' name="cornStatus" label="{$txt.corn_status}" type="label"}
+    {include './components/form-input.html' name="cronStatus" label="{$txt.cron_status}" type="label"}
     {include './components/form-input.html' name="queueLength" label="{$txt.queue_length}" type="label"}
-    {include './components/form-input.html' name="lastSync" label="{$txt.last_sync}" type="label"}
 
     <fieldset>
         <h2>

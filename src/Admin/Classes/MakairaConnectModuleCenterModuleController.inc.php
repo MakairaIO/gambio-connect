@@ -6,6 +6,6 @@ class MakairaConnectModuleCenterModuleController extends AbstractModuleCenterMod
     // phpcs:ignore
     protected function _init()
     {
-        $this->redirectUrl = xtc_href_link('makaira/welcome');
+        $this->redirectUrl = xtc_href_link('makaira/account');
     }
 }

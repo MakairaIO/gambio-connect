@@ -1,9 +1,9 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Service;
+namespace GXModules\MakairaIO\MakairaConnect\App\Service;
 
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 
 interface GambioConnectEntityInterface
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 class GambioConnectPublicFieldsService extends GambioConnectService
 {

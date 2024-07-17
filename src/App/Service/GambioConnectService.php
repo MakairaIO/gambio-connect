@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\App\Service;
+namespace GXModules\MakairaIO\MakairaConnect\App\Service;
 
 /**
  * Interface GambioConnectService
  *
- * @package GXModules\Makaira\MakairaConnect\Service
+ * @package GXModules\MakairaIO\MakairaConnect\Service
  */
 interface GambioConnectService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\Admin\Services;
+namespace GXModules\MakairaIO\MakairaConnect\Admin\Services;
 
 class ModuleStatusService
 {

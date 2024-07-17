@@ -1,12 +1,12 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\Admin\Services;
+namespace GXModules\MakairaIO\MakairaConnect\Admin\Services;
 
 use Gambio\Core\Configuration\Services\ConfigurationService;
 
 class ModuleConfigService
 {
-    private const CONFIG_PREFIX = 'modules/MakairaGambioConnect/';
+    private const CONFIG_PREFIX = 'modules/MakairaConnect/';
 
     public const CONFIG_MAKAIRA_URL = 'makairaUrl';
 
@@ -26,9 +26,9 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_ACTIVE_SEARCH = 'makairaActiveSearch';
 
-    public const CONFIG_MAKAIRA_CRONJOB_ACTIVE = 'cronjobs/MakairaGambioConnect/active';
+    public const CONFIG_MAKAIRA_CRONJOB_ACTIVE = 'cronjobs/MakairaConnect/active';
 
-    public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/MakairaGambioConnect/interval';
+    public const CONFIG_MAKAIRA_CRONJOB_INTERVAL = 'cronjobs/MakairaConnect/interval';
 
     public const CONFIG_MAKAIRA_RECO_CROSS_SELLING = 'recoCrossSelling';
 
@@ -46,82 +46,82 @@ class ModuleConfigService
 
     public function getMakairaUrl(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_URL);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL);
     }
 
     public function setMakairaUrl(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_URL, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL, $value);
         return $this;
     }
 
     public function getMakairaInstance(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_INSTANCE);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE);
     }
 
     public function setMakairaInstance(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_INSTANCE, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE, $value);
         return $this;
     }
 
     public function getMakairaSecret(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_SECRET);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET);
     }
 
     public function setMakairaSecret(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_SECRET, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET, $value);
         return $this;
     }
 
     public function getStatus(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_STATUS);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STATUS);
     }
 
     public function setStatus(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_STATUS, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STATUS, $value);
         return $this;
     }
 
 
     public function getIsInstalled(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_MAKAIRA_INSTALLED)?->value();
+        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLED)?->value();
     }
 
     public function isPublicFieldsSetupDone(): bool
     {
-        return (bool)$this->getConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
+        return (bool)$this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
     }
 
     public function setPublicFieldsSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
     }
 
     public function getRecoCrossSelling(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
     }
 
     public function setRecoCrossSelling(string $recoCrossSelling = ''): void
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
     }
 
     public function getRecoReverseCrossSelling(): string
     {
-        return $this->getConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
+        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
     }
 
     public function setRecoReverseCrossSelling(string $recoReverseCrossSelling = ''): void
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
     }
 
     public function getCronjobStatus(): bool
@@ -151,12 +151,12 @@ class ModuleConfigService
 
     private function getConfigValue(string $key): string
     {
-        return $this->configurationService->find(self::CONFIG_PREFIX . $key)?->value() ?? '';
+        return $this->configurationService->find($key)?->value() ?? '';
     }
 
     private function setConfigValue(string $key, string $value): void
     {
-        $this->configurationService->save(self::CONFIG_PREFIX . $key, $value);
+        $this->configurationService->save($key, $value);
     }
 
     public static function getModuleConfigKeys(): array

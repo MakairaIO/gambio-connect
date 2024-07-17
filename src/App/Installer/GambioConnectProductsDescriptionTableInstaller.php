@@ -1,9 +1,9 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Installer;
+namespace GXModules\MakairaIO\MakairaConnect\App\Installer;
 
 use CI_DB_query_builder;
-use GXModules\Makaira\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
+use GXModules\MakairaIO\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
 
 class GambioConnectProductsDescriptionTableInstaller implements GambioConnectTableInstallerInterface
 {

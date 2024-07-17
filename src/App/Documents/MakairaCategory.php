@@ -1,8 +1,8 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Documents;
+namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use Psr\Log\LoggerInterface;
 
 class MakairaCategory extends MakairaEntity

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\Admin\Actions;
+namespace GXModules\MakairaIO\MakairaConnect\Admin\Actions;
 
 use Gambio\Admin\Application\Http\AdminModuleAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use Respect\Validation\Validator as v;
 
 /**s
  * Class MakairaConnectManualSetup
  *
- * @package GXModules\Makaira\MakairaConnect\Admin\Actions
+ * @package GXModules\MakairaIO\MakairaConnect\Admin\Actions
  */
 class MakairaConnectManualSetup extends AdminModuleAction
 {
@@ -44,7 +44,7 @@ class MakairaConnectManualSetup extends AdminModuleAction
 
 
         $template = $this->render(
-            $this->translate($this->title, 'gambio_connect_general'),
+            $this->translate($this->title, 'makaira_connect_general'),
             $this->templatePath,
             [
                 'gambio_connect_form_url' => $this->url->admin(),
@@ -74,7 +74,7 @@ class MakairaConnectManualSetup extends AdminModuleAction
 
 
         $template = $this->render(
-            $this->translate($this->title, 'gambio_connect_general'),
+            $this->translate($this->title, 'makaira_connect_general'),
             $this->templatePath,
             [
                 'gambio_connect_form_url' => $this->url->admin(),
@@ -92,9 +92,9 @@ class MakairaConnectManualSetup extends AdminModuleAction
     private function getNotification(array $invalid): array
     {
         if (empty($invalid)) {
-            return ['type' => 'success', 'message' => $this->translate('saved', 'gambio_connect_general'), 'title' => $this->translate('success', 'gambio_connect_general')];
+            return ['type' => 'success', 'message' => $this->translate('saved', 'makaira_connect_general'), 'title' => $this->translate('success', 'makaira_connect_general')];
         }
 
-        return ['type' => 'warning', 'message' => $this->translate('invalid', 'gambio_connect_general'), 'title' => $this->translate('warning', 'gambio_connect_general')];
+        return ['type' => 'warning', 'message' => $this->translate('invalid', 'makaira_connect_general'), 'title' => $this->translate('warning', 'makaira_connect_general')];
     }
 }

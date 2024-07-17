@@ -1,21 +1,12 @@
 <?php
 
-namespace Controller;
-
-use ContentViewInterface;
 use Doctrine\DBAL\Connection;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsRepository;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\App\MakairaClient;
-use GXModules\Makaira\MakairaConnect\App\MakairaLogger;
-use HttpContextReaderInterface;
-use HttpResponseProcessorInterface;
-use HttpViewController;
-use LegacyDependencyContainer;
-use MainFactory;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaLogger;
 
 /**
  *
@@ -47,22 +38,6 @@ class MakairaInstallationServiceController extends HttpViewController
     
     public function actionDefault(): \JsonHttpControllerResponse
     {
-        $makairaClient = new MakairaClient(LegacyDependencyContainer::getInstance()->get(ConfigurationService::class));
-        
-        $languageService = LegacyDependencyContainer::getInstance()->get(LanguageService::class);
-        
-        $connection = LegacyDependencyContainer::getInstance()->get(Connection::class);
-        
-        $makairaLogger = MainFactory::create(MakairaLogger::class);
-        
-        $gambioConnectService = new GambioConnectService($makairaClient, $languageService, $connection, $makairaLogger);
-        
-        $gambioConnectService->getManufacturerService()->prepareExport();
-        
-        $gambioConnectService->getCategoryService()->prepareExport();
-        
-        $gambioConnectService->getProductService()->prepareExport();
-        
         $data = json_decode(file_get_contents('php://input'), true);
         
         $this->logger->debug("Makaira Installation Service Callback", [
@@ -74,6 +49,10 @@ class MakairaInstallationServiceController extends HttpViewController
         $this->moduleConfigService->setMakairaInstance($data['instance']);
 
         $this->moduleConfigService->setMakairaSecret($data['sharedSecret']);
+
+        $this->moduleConfigService->setMakairaCronJobActive();
+
+        $this->moduleConfigService->setMakairaCronJobInterval();
 
         $makairaClient = new MakairaClient(LegacyDependencyContainer::getInstance()
             ->get(ConfigurationService::class));

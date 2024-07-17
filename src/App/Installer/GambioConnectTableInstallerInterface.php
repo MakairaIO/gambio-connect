@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Installer;
+namespace GXModules\MakairaIO\MakairaConnect\App\Installer;
 
 use CI_DB_query_builder;
 

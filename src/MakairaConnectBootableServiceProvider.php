@@ -1,39 +1,34 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect;
+namespace GXModules\MakairaIO\MakairaConnect;
 
 use Doctrine\DBAL\Connection;
 use Gambio\Admin\Layout\Menu\Filter\FilterFactory;
 use Gambio\Admin\Modules\Language\Services\LanguageReadService;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Events\UpdatedProductVariantsStock;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Services\ProductVariantsReadService;
 use Gambio\Core\Application\DependencyInjection\AbstractBootableServiceProvider;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\Makaira\MakairaConnect\App\Actions\Export;
-use GXModules\Makaira\MakairaConnect\App\Actions\ReplaceAction;
-use GXModules\Makaira\MakairaConnect\App\ChangesService;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
-use GXModules\Makaira\MakairaConnect\App\EventListener\VariantUpdateEventListener;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
-use GXModules\Makaira\MakairaConnect\App\MakairaClient;
-use GXModules\Makaira\MakairaConnect\App\MakairaLogger;
-use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\MakairaCheckoutAction;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\MakairaConnectAccount;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\MakairaConnectEntry;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\MakairaConnectManualSetup;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\MakairaConnectWelcome;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\StripeCheckoutCancelCallback;
-use GXModules\Makaira\MakairaConnect\Admin\Actions\StripeCheckoutSuccessCallback;
-use GXModules\Makaira\MakairaConnect\Admin\MenuFilter\IsInstalledFilter;
-use GXModules\Makaira\MakairaConnect\Admin\MenuFilter\IsSetUpFilter;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleStatusService;
-use GXModules\Makaira\MakairaConnect\App\Core\MakairaRequest;
+use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectAccount;
+use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectEntry;
+use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectManualSetup;
+use GXModules\MakairaIO\MakairaConnect\Admin\MakairaConnectInstaller;
+use GXModules\MakairaIO\MakairaConnect\Admin\MenuFilter\IsInstalledFilter;
+use GXModules\MakairaIO\MakairaConnect\Admin\MenuFilter\IsSetUpFilter;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleStatusService;
+use GXModules\MakairaIO\MakairaConnect\App\Actions\Export;
+use GXModules\MakairaIO\MakairaConnect\App\Actions\ReplaceAction;
+use GXModules\MakairaIO\MakairaConnect\App\ChangesService;
+use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaLogger;
+use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectService;
 
 class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvider
 {
@@ -50,7 +45,6 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
         $this->application->inflect(FilterFactory::class)->invokeMethod('addFilter', ['isSetUpFilter', new IsSetUpFilter(
             $moduleStatusService
         )]);
-        $this->application->attachEventListener(UpdatedProductVariantsStock::class, VariantUpdateEventListener::class);
     }
 
     /**
@@ -59,16 +53,10 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
     public function provides(): array
     {
         return [
-            MakairaCheckoutAction::class,
-            StripeCheckoutSuccessCallback::class,
-            StripeCheckoutCancelCallback::class,
-            MakairaConnectInstaller::class,
             MakairaConnectEntry::class,
             MakairaConnectManualSetup::class,
-            MakairaConnectWelcome::class,
             MakairaConnectAccount::class,
             Export::class,
-            VariantUpdateEventListener::class,
             LanguageService::class,
             MakairaRequest::class,
             ModuleConfigService::class,
@@ -83,25 +71,12 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
      */
     public function register(): void
     {
-        $this->application->registerShared(\MakairaProductListingContentControl::class, ProductListingContentControl::class);
-
-        $this->application->registerShared(MakairaCheckoutAction::class)
-            ->addArgument($this->application);
-
-        $this->application->registerShared(StripeCheckoutSuccessCallback::class)
-            ->addArgument($this->application);
-
-        $this->application->registerShared(StripeCheckoutCancelCallback::class)
-            ->addArgument($this->application);
-
         $this->application->registerShared(MakairaConnectEntry::class)
             ->addArgument(ModuleStatusService::class);
 
         $this->application->registerShared(MakairaConnectManualSetup::class)
             ->addArgument(ModuleConfigService::class);
 
-        $this->application->registerShared(MakairaConnectWelcome::class)
-            ->addArgument(ModuleStatusService::class);
         $this->application->registerShared(MakairaConnectAccount::class)
             ->addArgument(ModuleStatusService::class)
             ->addArgument(ModuleConfigService::class)
@@ -156,14 +131,8 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
         $this->application->registerShared(ChangesService::class)
             ->addArgument(Connection::class);
 
-        $this->application->registerShared(VariantUpdateEventListener::class)
-            ->addArgument(GambioConnectService::class);
-
         $this->application->registerShared(MakairaProduct::class)
             ->addArgument(ProductVariantsReadService::class);
-
-        $this->application->registerShared(MakairaConnectInstaller::class)
-            ->addArgument(Connection::class);
 
         $this->application->registerShared(ModuleConfigService::class)
             ->addArgument(ConfigurationService::class);

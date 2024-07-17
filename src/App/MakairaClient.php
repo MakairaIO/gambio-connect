@@ -1,15 +1,15 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App;
+namespace GXModules\MakairaIO\MakairaConnect\App;
 
 use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\App\Core\RequestBuilder;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
 use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 

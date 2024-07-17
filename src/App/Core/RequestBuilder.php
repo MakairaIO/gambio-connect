@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Core;
+namespace GXModules\MakairaIO\MakairaConnect\App\Core;
 
 class RequestBuilder
 {

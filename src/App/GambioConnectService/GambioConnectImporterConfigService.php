@@ -1,8 +1,8 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 class GambioConnectImporterConfigService extends GambioConnectService
 {

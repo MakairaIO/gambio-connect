@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\App\Documents;
+namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
 use DateTime;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 
 class MakairaVariant extends MakairaEntity
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Documents;
+namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
 class MakairaEntity
 {

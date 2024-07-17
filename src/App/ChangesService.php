@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace GXModules\Makaira\MakairaConnect\App;
+namespace GXModules\MakairaIO\MakairaConnect\App;
 
 use Doctrine\DBAL\Connection;
-use GXModules\Makaira\MakairaConnect\App\Models\Change;
+use GXModules\MakairaIO\MakairaConnect\App\Models\Change;
 
 class ChangesService
 {

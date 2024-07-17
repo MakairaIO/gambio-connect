@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Mapper;
+namespace GXModules\MakairaIO\MakairaConnect\App\Mapper;
 
 use DateTime;
 use Gambio\Admin\Modules\Language\Model\Language;
@@ -8,11 +8,11 @@ use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaEntity;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaManufacturer;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaProduct;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaVariant;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaManufacturer;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaVariant;
 
 class MakairaDataMapper
 {

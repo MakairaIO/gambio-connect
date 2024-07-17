@@ -1,11 +1,11 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Core;
+namespace GXModules\MakairaIO\MakairaConnect\App\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
-use GXModules\Makaira\MakairaConnect\App\Core\RequestBuilder;
-use GXModules\Makaira\MakairaConnect\App\MakairaClient;
+use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 use Makaira\Constraints;
 use Makaira\Query;
 

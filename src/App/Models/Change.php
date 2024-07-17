@@ -1,6 +1,6 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\Models;
+namespace GXModules\MakairaIO\MakairaConnect\App\Models;
 
 class Change
 {

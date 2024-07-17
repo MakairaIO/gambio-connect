@@ -1,6 +1,6 @@
 <?php
 
-use GXModules\Makaira\MakairaConnect\App\Core\MakairaRequest;
+use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest;
 
 // phpcs:ignore
 class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
@@ -19,11 +19,11 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
             \Gambio\Core\Configuration\Services\ConfigurationService::class
         );
 
-        $this->moduleConfigService = new \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService(
+        $this->moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService(
             $configurationService
         );
 
-        $this->moduleStatusService = new \GXModules\Makaira\MakairaConnect\Admin\Services\ModuleStatusService(
+        $this->moduleStatusService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleStatusService(
             $this->moduleConfigService
         );
 

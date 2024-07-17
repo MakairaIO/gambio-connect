@@ -1,14 +1,14 @@
 <?php
 
-namespace GXModules\Makaira\MakairaConnect\App\GambioConnectService;
+namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\App\Mapper\MakairaDataMapper;
-use GXModules\Makaira\MakairaConnect\App\Service\GambioConnectEntityInterface;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
+use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectCategoryService extends GambioConnectService implements GambioConnectEntityInterface
 {

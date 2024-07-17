@@ -2,13 +2,13 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
-use GXModules\Makaira\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
+use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
 class MakairaConnectCronjobTask extends AbstractCronjobTask
 {

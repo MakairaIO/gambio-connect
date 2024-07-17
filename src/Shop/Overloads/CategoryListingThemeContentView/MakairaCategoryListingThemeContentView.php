@@ -1,8 +1,8 @@
 <?php
 
-use GXModules\Makaira\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\Makaira\MakairaConnect\App\MakairaClient;
-use GXModules\Makaira\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
+use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 
 class MakairaCategoryListingThemeContentView extends CategoryListingThemeContentView
 {

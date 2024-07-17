@@ -11,15 +11,6 @@
     "items": [
       {
         "sort": 10,
-        "link": "makaira/welcome",
-        "title": "Willkommen",
-        "if": {
-          "filter": "isSetUpFilter",
-          "args": [false]
-        }
-      },
-      {
-        "sort": 30,
         "link": "makaira/account",
         "title": "Mein Account",
         "if": {

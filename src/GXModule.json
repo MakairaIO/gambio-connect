@@ -3,11 +3,11 @@
   "description": "makaira_connect.module_description",
   "forceIncludingFiles": true,
   "install": {
-    "controller": "GXModules\\Makaira\\GambioConnect\\GambioConnectInstaller",
+    "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
     "method": "onInstallation"
   },
   "uninstall": {
-    "controller": "GXModules\\Makaira\\GambioConnect\\GambioConnectInstaller",
+    "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
     "method": "onUninstallation"
   },
   "configuration": [
@@ -30,15 +30,6 @@
           "type": "checkbox",
           "label": "makaira_connect.makaira_active_search",
           "default_value": true
-        },
-        "stripeCheckoutSession": {
-          "type": "text",
-          "label": "makaira_connect.stripe_checkout_session",
-          "readonly": true
-        },
-        "stripeOverride": {
-          "type": "checkbox",
-          "label": "makaira_connect.stripe_override"
         }
       }
     }
