@@ -22,7 +22,7 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_IMPORTER_SETUP_DONE = 'makairaImporterSetupDone';
 
-    public const CONFIG_MAKAIRA_INSTALLED = 'gm_configuration/MODULE_CENTER_GAMBIOCONNECT_INSTALLED';
+    public const CONFIG_MAKAIRA_INSTALLED = 'gm_configuration/MODULE_CENTER_MAKAIRACONNECT_INSTALLED';
 
     public const CONFIG_MAKAIRA_ACTIVE_SEARCH = 'makairaActiveSearch';
 
