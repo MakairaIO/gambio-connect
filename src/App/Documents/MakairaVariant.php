@@ -47,7 +47,6 @@ class MakairaVariant extends MakairaEntity
     private string $maincategoryurl;
 
     private ProductVariants $variants;
-    private bool $delete = false;
     private array $options = [];
     private string $now;
 
