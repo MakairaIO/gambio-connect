@@ -47,7 +47,7 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                 default => []
             };
         } else {
-            return parent::get_data();
+            return parent::get_data() ?? [];
         }
     }
 
