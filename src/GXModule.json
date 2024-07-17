@@ -1,0 +1,37 @@
+{
+  "title": "makaira_connect.module_title",
+  "description": "makaira_connect.module_description",
+  "forceIncludingFiles": true,
+  "install": {
+    "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
+    "method": "onInstallation"
+  },
+  "uninstall": {
+    "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
+    "method": "onUninstallation"
+  },
+  "configuration": [
+    {
+      "title": "makaira_connect.settings",
+      "fields": {
+        "makairaUrl": {
+          "type": "text",
+          "label": "makaira_connect.makaira_url"
+        },
+        "makairaInstance": {
+          "type": "text",
+          "label": "makaira_connect.makaira_instance"
+        },
+        "makairaSecret": {
+          "type": "password",
+          "label": "makaira_connect.makaira_secret"
+        },
+        "makairaActiveSearch": {
+          "type": "checkbox",
+          "label": "makaira_connect.makaira_active_search",
+          "default_value": true
+        }
+      }
+    }
+  ]
+}

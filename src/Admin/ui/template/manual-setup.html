@@ -1,0 +1,16 @@
+{extends file="layout.html"}
+{block name="content"}
+{load_language_text section="makaira_connect_general"}
+
+<p>{$txt.manual_setup_description}</p>
+
+<form class="w-50" action="/admin/makaira/manual-setup" method="post">
+  {include './components/form-input.html' name="makairaUrl" label="{$txt.makaira_url}" required="true"}
+  {include './components/form-input.html' name="makairaInstance" label="{$txt.makaira_instance}" required="true"}
+  {include './components/form-input.html' type="password" name="makairaSecret" label="{$txt.makaira_secret}"
+  required="true"}
+  <button type="submit" class="btn btn-primary">{$txt.save}</button>
+</form>
+
+{if isset($notification)} {include file="./components/notification.html"
+notification=$notification } {/if} {/block}

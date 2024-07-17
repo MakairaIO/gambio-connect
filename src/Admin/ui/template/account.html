@@ -1,0 +1,37 @@
+{extends file="layout.html"}
+{block name="content"}
+{load_language_text section="makaira_connect_general"}
+
+<h2>
+    {$txt.account}
+</h2>
+
+<a href="{$makairaLink}" target="_blank" role="button" class="my-2 btn btn-primary">{$txt.goto_makaira}</a>
+
+
+<form class="w-50" action="{$gambio_connect_form_url}/makaira/account" method="post">
+
+    {include './components/form-input.html' name="makairaUrl" label="{$txt.makaira_url}" type="label"}
+    {include './components/form-input.html' name="makairaInstance" label="{$txt.makaira_instance}" type="label"}
+    {include './components/form-input.html' name="cronStatus" label="{$txt.cron_status}" type="label"}
+    {include './components/form-input.html' name="queueLength" label="{$txt.queue_length}" type="label"}
+
+    <fieldset>
+        <h2>
+            {$txt.reco_title}
+        </h2>
+        <p>{$txt.reco_cross_selling_description} <a href="{$makairaLink}/recommendations"
+                class="link_underline">({$txt.goto_makaira_recos})</a></p>
+
+        {include './components/form-input.html' name="recoCrossSelling" label="{$txt.reco_cross_selling}"}
+        {include './components/form-input.html' name="recoReversCrossSelling" label="{$txt.reco_reverse_cross_selling}"}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">{$txt.save}</button>
+</form>
+
+{if isset($notification)}
+{include file="./components/notification.html" notification=$notification }
+{/if}
+
+{/block}
