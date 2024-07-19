@@ -1,6 +1,6 @@
 {
-  "title": "makaira_connect.module_title",
-  "description": "makaira_connect.module_description",
+  "title": "makaira_connect_general.title",
+  "description": "makaira_connect_general.description",
   "forceIncludingFiles": true,
   "install": {
     "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
