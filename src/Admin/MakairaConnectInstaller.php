@@ -44,7 +44,7 @@ class MakairaConnectInstaller
         );
 
         $db->query("
-        CREATE PROCEDURE makairaChange (IN id INT, IN entity_type VARCHAR(255))
+        CREATE PROCEDURE IF NOT EXISTS makairaChange (IN id INT, IN entity_type VARCHAR(255))
 	BEGIN
 		DECLARE entries INTEGER DEFAULT 0;
         
