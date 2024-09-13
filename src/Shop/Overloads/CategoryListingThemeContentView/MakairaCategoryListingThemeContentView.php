@@ -18,11 +18,16 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
 
+        $this->configurationStorage = new ModuleConfigService($configurationService);
+
         $this->makairaClient = new MakairaClient($configurationService);
     }
 
     protected function _buildCategoryArray()
     {
+        if(!$this->configurationStorage->isMakairaImporterSetupDone() || !$this->configurationStorage->isPublicFieldsSetupDone()) {
+            return parent::_buildCategoryArray();
+        }
         try {
             $result = $this->makairaClient->getCategory($this->currentCategoryId);
             $resultCategory = $result->category->items[0] ?? [];

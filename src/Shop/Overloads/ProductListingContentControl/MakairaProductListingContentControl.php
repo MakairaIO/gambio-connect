@@ -92,6 +92,10 @@ class MakairaProductListingContentControl extends ProductListingContentControl
 
     public function proceed($p_action = 'default')
     {
+        if(!$this->moduleConfigService->isPublicFieldsSetupDone() || !$this->moduleConfigService->isMakairaImporterSetupDone()) {
+            return parent::proceed();
+        }
+
         try {
             $this->getCategory($this->categories_id);
 

@@ -14,30 +14,43 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
 
         $moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
 
-        $this->makairaRequest = new \GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest($moduleConfigService->getMakairaUrl(), $moduleConfigService->getMakairaInstance(), $_SESSION['language_code'], $moduleConfigService->getMakairaSecret());
+        if(!$moduleConfigService->isMakairaImporterSetupDone() || !$moduleConfigService->isPublicFieldsSetupDone()) {
+            return parent::proceed();
+        }
 
-        $keywords = trim($this->v_data_array['GET']['needle']);
+        try {
+            $this->makairaRequest = new \GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest(
+                $moduleConfigService->getMakairaUrl(),
+                $moduleConfigService->getMakairaInstance(),
+                $_SESSION['language_code'],
+                $moduleConfigService->getMakairaSecret()
+            );
 
-        $result = $this->makairaRequest->fetchAutoSuggest($keywords);
+            $keywords = trim($this->v_data_array['GET']['needle']);
 
-        $moduleContent = [
-            'products' => $result['product']['items'] ?? [],
-            'categories' => $result['category']['items'] ?? [],
-            'manufacturers' => $result['manufacturer']['items'] ?? [],
-            'links' => $result['links']['items'] ?? [],
-            'pages' => $result['pages']['items'] ?? []
-        ];
+            $result = $this->makairaRequest->fetchAutoSuggest($keywords);
 
-        $view = MainFactory::create('SearchAutoCompleterThemeContentView');
+            $moduleContent = [
+                'products' => $result['product']['items'] ?? [],
+                'categories' => $result['category']['items'] ?? [],
+                'manufacturers' => $result['manufacturer']['items'] ?? [],
+                'links' => $result['links']['items'] ?? [],
+                'pages' => $result['pages']['items'] ?? []
+            ];
 
-        $view->set_content_data('result', $moduleContent);
+            $view = MainFactory::create('SearchAutoCompleterThemeContentView');
 
-        $view->set_template_dir(__DIR__ . '/../../ui/template');
+            $view->set_content_data('result', $moduleContent);
 
-        $view->set_content_template('autosuggest.html');
+            $view->set_template_dir(__DIR__ . '/../../ui/template');
 
-        $this->v_output_buffer = $view->get_html();
+            $view->set_content_template('autosuggest.html');
 
-        return $this->v_output_buffer;
+            $this->v_output_buffer = $view->get_html();
+
+            return $this->v_output_buffer;
+        }catch(Exception $exception) {
+            return parent::proceed();
+        }
     }
 }
