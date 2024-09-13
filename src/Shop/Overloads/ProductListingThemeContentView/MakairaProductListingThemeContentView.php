@@ -12,6 +12,8 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
 
+        $this->moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
+
         $this->makairaClient = new \GXModules\MakairaIO\MakairaConnect\App\MakairaClient($configurationService);
     }
 
@@ -19,7 +21,7 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
     {
         parent::prepare_data();
 
-
+        if($this->moduleConfigService->isMakairaImporterSetupDone() || $this->moduleConfigService->isPublicFieldsSetupDone()) {
         $this->set_content_data('CATEGORIES_ID', $this->category_id);
         $this->set_content_data('CATEGORIES_DESCRIPTION', $this->category_description);
         $this->set_content_data('CATEGORIES_DESCRIPTION_BOTTOM', $this->category_description_bottom);
@@ -110,5 +112,6 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
         );
 
         $this->add_cache_id_elements($this->cache_id_parameter_array);
+        }
     }
 }

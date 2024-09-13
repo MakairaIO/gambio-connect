@@ -91,20 +91,34 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
     private function loadCrossSelling(): array
     {
         if (empty($this->moduleConfigService->getRecoCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoCrossSelling())) {
-            return [];
+            return parent::loadCrossSelling();
         }
-        $this->set_content_template('product_info_cross_selling.html');
-        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id'], $this->moduleConfigService->getRecoCrossSelling());
-        return $this->mapMakairaResponse($requestData['items']);
+        try {
+            $this->set_content_template('product_info_cross_selling.html');
+            $requestData = $this->makairaRequest->fetchRecommendations(
+                $this->coo_product->data['products_id'],
+                $this->moduleConfigService->getRecoCrossSelling()
+            );
+            return $this->mapMakairaResponse($requestData['items']);
+        }catch(Exception $exception) {
+            return parent::loadCrossSelling();
+        }
     }
 
     private function loadReverseCrossSelling(): array
     {
         if (empty($this->moduleConfigService->getRecoReverseCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoReverseCrossSelling())) {
-            return [];
+            return parent::loadReverseCrossSelling();
         }
-        $this->set_content_template('product_info_reverse_cross_selling.html');
-        $requestData = $this->makairaRequest->fetchRecommendations($this->coo_product->data['products_id'], $this->moduleConfigService->getRecoReverseCrossSelling());
-        return $this->mapMakairaResponse($requestData['items'])[0]['PRODUCTS'];
+        try {
+            $this->set_content_template('product_info_reverse_cross_selling.html');
+            $requestData = $this->makairaRequest->fetchRecommendations(
+                $this->coo_product->data['products_id'],
+                $this->moduleConfigService->getRecoReverseCrossSelling()
+            );
+            return $this->mapMakairaResponse($requestData['items'])[0]['PRODUCTS'];
+        }catch(Exception $exception) {
+            return parent::loadReverseCrossSelling();
+        }
     }
 }
