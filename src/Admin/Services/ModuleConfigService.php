@@ -131,12 +131,12 @@ class ModuleConfigService
 
     public function setMakairaImporterSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
     }
 
     public function isMakairaImporterSetupDone(): bool
     {
-        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
+        return (bool) $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
     }
 
     public function setMakairaCronJobActive(): void
@@ -163,12 +163,7 @@ class ModuleConfigService
     {
         return [
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED,
