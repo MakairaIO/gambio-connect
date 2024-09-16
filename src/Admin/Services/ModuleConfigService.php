@@ -18,6 +18,12 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_STATUS = 'status';
 
+    public const CONFIG_MAKAIRA_SEARCH_BOOKED = 'search_booked';
+
+    public const CONFIG_MAKAIRA_RECOMMENDATION_BOOKED = 'recommendation_booked';
+
+    public const CONFIG_MAKAIRA_PROMOTION_BOOKED = 'promotion_booked';
+
     public const CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE = 'publicFieldsSetupDone';
 
     public const CONFIG_MAKAIRA_IMPORTER_SETUP_DONE = 'makairaImporterSetupDone';
@@ -149,6 +155,36 @@ class ModuleConfigService
         $this->configurationService->save(self::CONFIG_MAKAIRA_CRONJOB_INTERVAL, '*/1 * * * *');
     }
 
+    public function isMakairaSearchBooked(): bool
+    {
+        return (bool)$this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SEARCH_BOOKED);
+    }
+
+    public function isMakairaRecommendationBooked(): bool
+    {
+        return (bool)$this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECOMMENDATION_BOOKED);
+    }
+
+    public function isMakairaPromotionBooked(): bool
+    {
+        return (bool)$this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PROMOTION_BOOKED);
+    }
+
+    public function setMakairaSearchBooked(bool $booked): void
+    {
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SEARCH_BOOKED, $booked);
+    }
+
+    public function setMakairaRecommendationsBooked(bool $booked): void
+    {
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECOMMENDATION_BOOKED, $booked);
+    }
+
+    public function setMakairaPromotionBooked(bool $booked): void
+    {
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PROMOTION_BOOKED, $booked);
+    }
+
     private function getConfigValue(string $key): string
     {
         return $this->configurationService->find($key)?->value() ?? '';
@@ -169,6 +205,9 @@ class ModuleConfigService
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING,
             self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SEARCH_BOOKED,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PROMOTION_BOOKED,
+            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECOMMENDATION_BOOKED,
             self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
             self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
         ];
