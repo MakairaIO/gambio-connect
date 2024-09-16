@@ -9,6 +9,7 @@ use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImp
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 
 class MakairaConnectCronjobTask extends AbstractCronjobTask
 {
@@ -21,6 +22,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
     protected GambioConnectImporterConfigService $gambioConnectImporterConfigService;
 
     protected ModuleConfigService $moduleConfigService;
+
+    protected MakairaClient $makairaClient;
 
 
     public function getCallback($cronjobStartAsMicrotime): \Closure
@@ -83,6 +86,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                     $this->completePublicFieldsSetup();
                 }
+
+                $this->updateBookedFeatures();
             };
         }
         return function () {
@@ -154,5 +159,16 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
     public function completeImporterSetup(): void
     {
         $this->moduleConfigService->setMakairaImporterSetupDone();
+    }
+
+    private function updateBookedFeatures(): void
+    {
+        $features = $this->makairaClient->getFeatures();
+
+        $this->moduleConfigService->setMakairaSearchBooked(in_array('search', $features));
+
+        $this->moduleConfigService->setMakairaPromotionBooked(in_array('promotion', $features));
+
+        $this->moduleConfigService->setMakairaRecommendationsBooked(in_array('recommendations', $features));
     }
 }

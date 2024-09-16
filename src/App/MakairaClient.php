@@ -282,4 +282,11 @@ class MakairaClient
         $url = $this->makairaUrl . '/search/';
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
+
+    public function getFeatures()
+    {
+        $response = $this->doRequest('GET', $this->makairaUrl . '/features');
+
+        return json_decode($response->getBody()->getContents());
+    }
 }

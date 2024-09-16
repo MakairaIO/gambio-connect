@@ -14,7 +14,7 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
 
         $moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
 
-        if(!$moduleConfigService->isMakairaImporterSetupDone() || !$moduleConfigService->isPublicFieldsSetupDone()) {
+        if(!$moduleConfigService->isMakairaSearchBooked() || !$moduleConfigService->isMakairaImporterSetupDone() || !$moduleConfigService->isPublicFieldsSetupDone()) {
             return parent::proceed();
         }
 

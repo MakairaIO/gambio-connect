@@ -37,6 +37,10 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
     // phpcs:ignore
     protected function get_data(): array
     {
+        if(!$this->moduleConfigService->isMakairaRecommendationBooked()) {
+            return parent::get_data() ?? [];
+        }
+
         if (
             $this->moduleStatusService->isSetUp()
             && $this->moduleStatusService->isActive()
