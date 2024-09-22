@@ -78,6 +78,12 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $this->languageService->getAvailableLanguages();
     }
 
+    public function exportIsDoneForType(string $type){
+        $this->connection->delete(ChangesService::TABLE_NAME, [
+            'type' => $type
+        ]);
+    }
+
     protected function exportIsDone(int $gambio_id, string $type): void
     {
         $this->connection->delete(ChangesService::TABLE_NAME, [
@@ -117,6 +123,25 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $changes;
     }
 
+    protected function getCurrencyCodes(): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('code')
+            ->from('currencies')
+            ->execute()
+            ->fetchAll(FetchMode::ASSOCIATIVE);
+    }
+
+    protected function getCustomerStatusIds(): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('customers_status_id')
+            ->from('customers_status')
+            ->groupBy('customers_status_id')
+            ->execute()
+            ->fetchAll(FetchMode::ASSOCIATIVE);
+    }
+
     private function getMakairaChangesForType(string $type): array
     {
         return $this->connection->createQueryBuilder()
@@ -128,16 +153,28 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function addMakairaDocumentWrapper(MakairaEntity $document, ?Language $language = null): array
+    protected function getShippingInformation($languageId): array
+    {
+        return $this->connection->createQueryBuilder()
+            ->select('shipping_status_name, shipping_status_image, shipping_status_id, info_link_active')
+            ->groupBy('language_id')
+            ->from(TABLE_SHIPPING_STATUS)
+            ->where('language_id = :language_id')
+            ->setParameter('language_id', $languageId)
+            ->execute()
+            ->fetchAll(FetchMode::ASSOCIATIVE);
+    }
+
+    public function addMakairaDocumentWrapper(MakairaEntity $document, string $language = null): array
     {
         return [
             'data' => $document->toArray(),
-            'language_id' => $language->code(),
+            'language_id' => $language,
             'delete' => $document->isDelete()
         ];
     }
 
-    public function addMultipleMakairaDocuments(array $documents, ?Language $language = null): array
+    public function addMultipleMakairaDocuments(array $documents, string $language = null): array
     {
         $data = [
             'items' => [],

@@ -10,7 +10,6 @@ use Gambio\Core\Application\Http\Response;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleStatusService;
 use GXModules\MakairaIO\MakairaConnect\App\ChangesService;
-use Respect\Validation\Validator as v;
 
 /**s
  * Class MakairaConnectAccount
@@ -80,22 +79,18 @@ class MakairaConnectAccount extends AdminModuleAction
 
     private function handlePost(Request $request, Response $response): Response
     {
-
-        $invalid = [];
         $requestData = $request->getParsedBody();
 
         $recoCrossSelling = htmlspecialchars($requestData['recoCrossSelling']);
-        v::stringType()->validate($recoCrossSelling) ? $this->moduleConfigService->setRecoCrossSelling($recoCrossSelling) : $invalid[] = 'makairaInstance';
+        $this->moduleConfigService->setRecoCrossSelling($recoCrossSelling);
 
         $recoReversCrossSelling = htmlspecialchars($requestData['recoReversCrossSelling']);
-        v::stringType()->validate($recoReversCrossSelling) ? $this->moduleConfigService->setRecoReverseCrossSelling($recoReversCrossSelling) : $invalid[] = 'recoReversCrossSelling';
+        $this->moduleConfigService->setRecoReverseCrossSelling($recoReversCrossSelling);
 
 
         $dataValidation = [
             'recoCrossSelling' =>  $recoCrossSelling,
             'recoReversCrossSelling' => $recoReversCrossSelling,
-            'validationErrors' => $invalid,
-            'notification' => $this->getNotification($invalid),
         ];
 
         $template = $this->render(
@@ -105,14 +100,5 @@ class MakairaConnectAccount extends AdminModuleAction
         );
 
         return $response->write($template);
-    }
-
-    private function getNotification(array $invalid): array
-    {
-        if (empty($invalid)) {
-            return ['type' => 'success', 'message' => $this->translate('saved', 'makaira_connect_general'), 'title' => $this->translate('success', 'makaira_connect_general')];
-        }
-
-        return ['type' => 'warning', 'message' => $this->translate('invalid', 'makaira_connect_general'), 'title' => $this->translate('warning', 'makaira_connect_general')];
     }
 }

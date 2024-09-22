@@ -12,7 +12,9 @@ use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectCategoryService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    private Language $currentLanguage;
+    private string $currentLanguage;
+
+    private string $currentLanguageCode;
 
 
     public function prepareExport(): void
@@ -20,7 +22,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
-            $categories = $this->getQuery($language);
+            $categories = $this->getQuery($language->id());
 
             foreach ($categories as $category) {
                 $this->connection->executeQuery('CALL makairaChange(' . $category['categories_id'] . ', "category")');
@@ -32,54 +34,59 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         $makairaExports = $this->getEntitiesForExport('category');
 
+        $this->currentLanguage = $_SESSION['languages_id'];
+
+        $this->currentLanguageCode = $_SESSION['language_code'];
+
         if (!empty($makairaExports)) {
-            $languages = $this->getLanguages();
-
-            foreach ($languages as $language) {
-                $this->currentLanguage = $language;
-                $categories = [];
-                foreach ($makairaExports as $export) {
-                    if ($export['delete']) {
-                        $categories[] = [
+            $categories = [];
+            foreach ($makairaExports as $export) {
+                if ($export['delete']) {
+                    $categories[] = [
+                        'categories_id' => $export['gambio_id'],
+                        'delete' => true,
+                    ];
+                } else {
+                    $exportCategory = $this->getQuery($this->currentLanguage, [$export])[0];
+                    $categories[] = array_merge(
+                        $exportCategory ?? [],
+                        [
                             'categories_id' => $export['gambio_id'],
-                            'delete' => true,
-                        ];
-                    } else {
-                        $exportCategory = $this->getQuery($language, [$export])[0];
-                        $categories[] = array_merge(
-                            $exportCategory ?? [],
-                            [
-                                'categories_id' => $export['gambio_id'],
-                                'delete' => false
-                            ]
-                        );
-                    }
+                            'delete' => false
+                        ]
+                    );
                 }
+            }
 
-                $documents = [];
+            $documents = [];
 
-                foreach ($categories as $category) {
-                    try {
-                        $category['subcategories'] = $this->getSubCategories($language, $category['categories_id']);
-                        $documents[] = $this->pushRevision($category);
-                    } catch (Exception $exception) {
-                        $this->logger->error("Category Export to Makaira Failed", [
-                            'id' => $category['categories_id'],
-                            'message' => $exception->getMessage()
-                        ]);
+            foreach ($categories as $category) {
+                try {
+                    $category['subcategories'] = $this->getSubCategories(
+                        $this->currentLanguage,
+                        $category['categories_id']
+                    );
+                    $document = $this->pushRevision($category);
+                    if ($document->getId()) {
+                        $documents[] = $document;
                     }
+                } catch (Exception $exception) {
+                    $this->logger->error("Category Export to Makaira Failed", [
+                        'id' => $category['categories_id'],
+                        'message' => $exception->getMessage()
+                    ]);
                 }
-                $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
-                $response = $this->client->pushRevision($data);
-                $this->logger->info(
-                    'Makaira Category Documents: '
-                    . count($documents)
-                    . ' with Status Code '
-                    . $response->getStatusCode()
-                );
-                foreach ($categories as $category) {
-                    $this->exportIsDone($category['categories_id'], 'category');
-                }
+            }
+            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
+            $response = $this->client->pushRevision($data);
+            $this->logger->info(
+                'Makaira Category Documents: '
+                . count($documents)
+                . ' with Status Code '
+                . $response->getStatusCode()
+            );
+            foreach ($categories as $category) {
+                $this->exportIsDone($category['categories_id'], 'category');
             }
         }
     }
@@ -102,7 +109,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
      * @return \mixed[][]
      * @throws \Doctrine\DBAL\Exception
      */
-    public function getQuery(Language $language, array $makairaChanges = []): array
+    public function getQuery(string $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
@@ -120,7 +127,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 'categories_description.language_id = languages.languages_id'
             )
             ->where('categories_description.language_id = :languageId')
-            ->setParameter('languageId', $language->id());
+            ->setParameter('languageId', $language);
 
         if (!empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
@@ -129,11 +136,11 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         return array_filter(
             $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
-            fn (array $category) => $category['language_id'] == $language->id()
+            fn (array $category) => $category['language_id'] == $language
         );
     }
 
-    public function getSubCategories(Language $language, int $parentCategoryId): array
+    public function getSubCategories(string $language, int $parentCategoryId): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
@@ -151,13 +158,13 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 'categories_description.language_id = languages.languages_id'
             )
             ->where('categories_description.language_id = :languageId')
-            ->setParameter('languageId', $language->id())
+            ->setParameter('languageId', $language)
             ->where('categories.parent_id = :parentId')
             ->setParameter('parentId', $parentCategoryId);
 
         return array_filter(
             $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
-            fn (array $category) => $category['language_id'] == $language->id()
+            fn (array $category) => $category['language_id'] == $language
         );
     }
 

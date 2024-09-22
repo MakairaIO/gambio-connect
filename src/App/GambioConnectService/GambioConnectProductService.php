@@ -4,7 +4,7 @@ namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Language;
-use Gambio\Admin\Modules\ProductVariant\Model\ValueObjects\ProductId;
+use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
@@ -12,7 +12,13 @@ use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectEntityInterface;
 
 class GambioConnectProductService extends GambioConnectService implements GambioConnectEntityInterface
 {
-    public Language $currentLanguage;
+    public string $currentLanguage;
+
+    public string $currentLanguageCode;
+
+    protected array $currencyCodes;
+
+    protected array $customerStatusIds;
 
     public static array $productRelationTables = [
         'products_attributes',
@@ -37,7 +43,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
-            $products = $this->getQuery($language);
+            $products = $this->getQuery($language->id());
 
             foreach ($products as $product) {
                 $this->connection->executeQuery('CALL makairaChange(' . $product['products_id'] . ', "product")');
@@ -47,53 +53,62 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
     public function export(): void
     {
-        $languages = $this->getLanguages();
+        $this->currencyCodes = $this->getCurrencyCodes();
+
+        $this->customerStatusIds = $this->getCustomerStatusIds();
+
+        $this->currentLanguage = $_SESSION['languages_id'];
+
+        $this->currentLanguageCode = $_SESSION['language_code'];
 
         $makairaChanges = $this->getEntitiesForExport('product');
 
         if (!empty($makairaChanges)) {
-            foreach ($languages as $language) {
-                $this->currentLanguage = $language;
-                $products = [];
-                foreach ($makairaChanges as $change) {
-                    if ($change['delete']) {
-                        if ($change['gambio_id'] !== 0) {
-                            $products[] = [
-                                'products_id' => $change['gambio_id'],
-                                'delete' => true,
-                            ];
-                        }
-                    } else {
-                        $products[] = array_merge(
-                            $this->getQuery($language, [$change])[0],
-                            [
-                                'products_id' => $change['gambio_id'],
-                                'delete' => false,
-                            ]
-                        );
+            $products = [];
+            foreach ($makairaChanges as $change) {
+                if ($change['delete']) {
+                    if ($change['gambio_id'] !== 0) {
+                        $products[] = [
+                            'products_id' => $change['gambio_id'],
+                            'delete' => true,
+                        ];
                     }
+                } else {
+                    $products[] = [
+                        'products_id' => $change['gambio_id'],
+                        'delete' => false,
+                    ];
                 }
+            }
 
-                $documents = [];
+            $documents = [];
 
-                foreach ($products as $product) {
-                    try {
-                        $documents[] = $this->pushRevision($product);
+            foreach ($products as $product) {
+                try {
+                    $document = $this->pushRevision($product);
+                    if ($document->getId()) {
+                        $documents[] = $document;
 
                         $variants =
                             $this
-                            ->productVariantsRepository
-                            ->getProductVariantsByProductId(ProductId::create($product['products_id']));
+                                ->productVariantsRepository
+                                ->getProductVariantsByProductId(ProductId::create($product['products_id']));
 
                         $this->logger->info(
                             'Processing '
-                                . count($variants->toArray())
-                                . ' Variants for '
-                                . $product['products_id']
+                            . count($variants->toArray())
+                            . ' Variants for '
+                            . $product['products_id']
                         );
 
                         foreach ($variants as $variant) {
-                            $documents[] = MakairaDataMapper::mapVariant($product, $variant);
+                            $documents[] = MakairaDataMapper::mapVariant(
+                                $product,
+                                $this->currentLanguage,
+                                $this->currencyCodes,
+                                $this->customerStatusIds,
+                                $variant
+                            );
                         }
 
                         foreach ($documents as $document) {
@@ -101,29 +116,32 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                                 'data' => $document->getId()
                             ]);
                         }
-                    } catch (\Exception $exception) {
-                        $this->logger->error("Product Export to Makaira Failed", [
-                            'id' => $product['products_id'],
-                            'message' => $exception->getMessage()
-                        ]);
                     }
-
-                    $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
-
-                    $this->client->pushRevision($data);
-
-                    $this->exportIsDone($product['products_id'], 'product');
+                } catch (\Exception $exception) {
+                    $this->logger->error("Product Export to Makaira Failed", [
+                        'id' => $product['products_id'],
+                        'message' => $exception->getMessage()
+                    ]);
                 }
             }
+
+            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
+
+            $this->client->pushRevision($data);
         }
     }
 
     public function pushRevision(array $product): MakairaEntity
     {
-        return MakairaDataMapper::mapProduct($product);
+        return MakairaDataMapper::mapProduct(
+            $product,
+            $_SESSION['languages_id'],
+            $this->currencyCodes,
+            $this->customerStatusIds
+        );
     }
 
-    public function getQuery(Language $language, array $makairaChanges = []): array
+    public function getQuery(string $language, array $makairaChanges = []): array
     {
         $shippingStatusQuery = $this->connection->createQueryBuilder()
             ->select('*')
@@ -136,7 +154,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             ->from('products');
 
         if (!empty($makairaChanges)) {
-            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
+            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
             $productsQuery
                 ->add('where', $productsQuery->expr()->in('products.products_id', $ids), true);
         }
@@ -163,7 +181,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 if ($relationTable === 'products_description' || $relationTable === 'products_properties_index') {
                     $query
                         ->andWhere($relationTable . '.language_id = :languageId')
-                        ->setParameter('languageId', $language->id());
+                        ->setParameter('languageId', $language);
                 }
 
                 if ($relationTable === 'products_to_categories') {

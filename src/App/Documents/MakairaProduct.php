@@ -79,6 +79,8 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_DATE_AVAILABLE = 'products_date_available';
 
+    public const FIELD_COO_PRODUCT = 'coo_product';
+
 
     public const FIELD_SHIPPING_NUMBER_OF_DAYS = 'shipping_number_of_days';
 
@@ -118,6 +120,7 @@ class MakairaProduct extends MakairaEntity
         self::FIELD_DATE_ADDED,
         self::FIELD_DATE_AVAILABLE,
         self::FIELD_SHIPPING_NUMBER_OF_DAYS,
+        self::FIELD_COO_PRODUCT,
     ];
 
     private int $stock = 0;
@@ -177,6 +180,21 @@ class MakairaProduct extends MakairaEntity
     private float $makBoostNormRevenue = 0.0;
     private float $makBoostNormProfitMargin = 0.0;
 
+    private array $groups = [];
+
+
+
+    public function getGroups(): array
+    {
+        return $this->groups;
+    }
+
+    public function setGroups(array $groups): static
+    {
+        $this->groups = $groups;
+        return $this;
+    }
+
 
     public function toArray(): array
     {
@@ -192,7 +210,6 @@ class MakairaProduct extends MakairaEntity
                 'products_vpe' => $this->productsVpe,
                 'products_vpe_status' => $this->productsVpeStatus,
                 'products_vpe_value' => $this->productsVpeValue,
-                'shipping_number_of_days' => $this->shippingNumberOfDays,
 
                 /* Boolean fields */
                 'is_variant' => $this->isVariant,
@@ -227,8 +244,18 @@ class MakairaProduct extends MakairaEntity
                 'mak_boost_norm_rating' => $this->makBoostNormRating,
                 'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
                 'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
+
+                'coo_product' => $this->mapCooProduct(),
+                'groups' => $this->getGroups(),
             ]
         );
+    }
+
+    private function mapCooProduct(): array
+    {
+        $coo_product = new \product($this->getId());
+
+        return $coo_product->buildDataArray(self::toGambio($this));
     }
 
 
@@ -282,6 +309,33 @@ class MakairaProduct extends MakairaEntity
         }
 
         return $document;
+    }
+
+    public static function toGambio(object $product)
+    {
+        return [
+            'products_fsk18' => $product->fsk18,
+            'products_shippingtime' => $product->shippingNumberOfDays,
+            'products_use_properties_combis_shipping_time' => '',
+            'products_model' => $product->model,
+            'products_ean' => $product->ean,
+            'products_name' => $product->title,
+            'manufacturers_name' => $product->manufacturerTitle,
+            'products_quantity' => $product->getStock(),
+            'products_weight' => '',
+            'gm_show_weight' => '',
+            'products_short_description' => $product->shortDescription,
+            'products_description' => $product->longDescription,
+            'gm_alt_text' => $product->gmAltText,
+            'products_meta_description' => '',
+            'products_id' => $product->getId(),
+            'manufacturers_id' => $product->manufacturerId,
+            'products_price' => '',
+            'products_discount_allowed' => '',
+            'products_image' => basename($product->getPictureUrlMain()),
+            'products_image_w' => '',
+            'products_image_h' => '',
+        ];
     }
 
 

@@ -2,6 +2,8 @@
 
 // phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
@@ -12,20 +14,22 @@ use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPub
 
 class MakairaConnectCronjobTask extends AbstractCronjobTask
 {
-    protected GambioConnectManufacturerService $gambioConnectManufacturerService;
-    protected GambioConnectCategoryService $gambioConnectCategoryService;
-    protected GambioConnectProductService $gambioConnectProductService;
-
     protected GambioConnectPublicFieldsService $gambioConnectPublicFieldsService;
 
     protected GambioConnectImporterConfigService $gambioConnectImporterConfigService;
 
     protected ModuleConfigService $moduleConfigService;
 
+    protected Connection $connection;
+
 
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
+
+        $this->connection = $dependencies['Connection'];
+
+
 
         $this->moduleConfigService = $dependencies['ModuleConfigService'];
 
@@ -38,17 +42,11 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 $dependencies['productVariantsRepository']
             );
 
-            $this->gambioConnectProductService = $gambioConnectService->getProductService();
-
-            $this->gambioConnectCategoryService = $gambioConnectService->getCategoryService();
-
-            $this->gambioConnectManufacturerService = $gambioConnectService->getManufacturerService();
-
             $this->gambioConnectImporterConfigService = $gambioConnectService->getImporterConfigService();
 
             $this->gambioConnectPublicFieldsService = $gambioConnectService->getGambioConnectPublicFieldsService();
 
-            return function () {
+            return function () use($gambioConnectService) {
                 if (!$this->checkImporterSetup()) {
                     $this->logInfo("Importer was not created yet - creating it now");
                     $this->gambioConnectImporterConfigService->setUpImporter();
@@ -56,30 +54,48 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     $this->completeImporterSetUp();
                 }
 
+                $host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+
+                $languages = $this->connection->createQueryBuilder()
+                    ->select('code')
+                    ->from('languages')
+                    ->execute()
+                    ->fetchAll(FetchMode::ASSOCIATIVE);
+
                 $this->logInfo('MakairaConnect Cronjob Started');
 
-                $this->logInfo('Begin Export Manufacturers to PersistenceLayer');
+                foreach($languages as $language) {
+                    $this->logInfo('Begin Export for Language ' . $language['code']);
+                    $client = new \GuzzleHttp\Client([
+                        'base_uri' => $host . $language['code'],
+                    ]);
+                    try {
+                        $client->get('shop.php?do=MakairaCronService/doExport&language='. $language['code']);
+                    }catch(Exception $exception) {
+                        $this->logInfo('Error in Export for Language ' . $language['code']);
+                        $this->logError($exception->getMessage());
+                    }
+                    $this->logInfo('End Export for Language ' . $language['code']);
+                }
 
-                $this->gambioConnectManufacturerService->export();
+                $gambioConnectService->exportIsDoneForType('product');
 
-                $this->logInfo('Begin Export Categories to PersistenceLayer');
+                $gambioConnectService->exportIsDoneForType('manufacturer');
 
-                $this->gambioConnectCategoryService->export();
-
-                $this->logInfo('Begin Export Products to PersistenceLayer');
-
-                $this->gambioConnectProductService->export();
-
-                $this->logInfo('All Exports to PersistenceLayer Successful');
+                $gambioConnectService->exportIsDoneForType('category');
 
                 if (!$this->checkPublicFieldsSetup()) {
-                    $this->logInfo('Makaira Public Fields Setup Has Started');
+                    try {
+                        $this->logInfo('Makaira Public Fields Setup Has Started');
 
-                    $this->gambioConnectPublicFieldsService->setUpProductPublicFields();
+                        $this->gambioConnectPublicFieldsService->setUpProductPublicFields();
 
-                    $this->gambioConnectPublicFieldsService->setUpCategoryPublicFields();
+                        $this->gambioConnectPublicFieldsService->setUpCategoryPublicFields();
 
-                    $this->logInfo('Makaira Public Fields has been setup');
+                        $this->logInfo('Makaira Public Fields has been setup');
+                    }catch(Exception) {
+                        return;
+                    }
 
                     $this->completePublicFieldsSetup();
                 }
@@ -148,6 +164,12 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
     protected function checkImporterSetup(): bool
     {
+        $importers = $this->gambioConnectImporterConfigService->checkImporter();
+
+        if(count($importers) > 0 && !$this->moduleConfigService->isMakairaImporterSetupDone()) {
+            $this->moduleConfigService->setMakairaImporterSetupDone();
+        }
+
         return $this->moduleConfigService->isMakairaImporterSetupDone();
     }
 

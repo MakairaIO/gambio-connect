@@ -26,25 +26,8 @@
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/kore/data-object" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/respect/validation" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/composer" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/config" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/dependency-injection" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/makaira/shared-libs" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/pdepend/pdepend" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/var-exporter" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/stripe/stripe-php" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/phpmd/phpmd" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/respect/stringifier" />
-      <path value="$PROJECT_DIR$/GXModules/MakairaIO/GambioConnect/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/src" />
+      <path value="$PROJECT_DIR$/../gxdev/src" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">

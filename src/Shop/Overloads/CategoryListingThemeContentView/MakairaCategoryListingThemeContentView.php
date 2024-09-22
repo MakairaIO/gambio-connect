@@ -25,33 +25,11 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
 
     protected function _buildCategoryArray()
     {
-        if(!$this->configurationStorage->isMakairaImporterSetupDone() || !$this->configurationStorage->isPublicFieldsSetupDone()) {
-            return parent::_buildCategoryArray();
-        }
-        try {
-            $result = $this->makairaClient->getCategory($this->currentCategoryId);
-            $resultCategory = $result->category->items[0] ?? [];
-            $this->categoryArray = [
-                'categories_id' => $resultCategory->id,
-            ];
-
-            $this->subcategories = $resultCategory->fields->subcategories ?? [];
-            $this->mapMakairaFieldsToGambio((object)$resultCategory);
-        }catch(Exception $exception) {
-            return parent::_buildCategoryArray();
-        }
-    }
-
-    private function mapMakairaFieldsToGambio(object $resultCategory, string $targetArray = 'categoryArray')
-    {
-        foreach (MakairaCategory::FIELDS as $field) {
-            $this->$targetArray[$field] = $resultCategory->fields->$field;
-        }
+        parent::_buildCategoryArray();
     }
 
     protected function _buildSubcategoriesArray()
     {
-        try {
             $image = '';
 
             foreach ($this->subcategories as $subcategory) {
@@ -76,8 +54,5 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
             }
 
             return $image;
-        }catch(Exception $exception) {
-            return parent::_buildSubcategoriesArray();
-        }
     }
 }

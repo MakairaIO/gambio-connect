@@ -64,28 +64,6 @@ class splitPageResults
         if ($offset < 1) {
             $offset = 0;
         }
-
-        foreach ($products as $product) {
-            if (is_object($product)) {
-                $this->products[] = array_merge(
-                    [
-                        'products_id' => $product->id,
-                        'type' => 'product'
-                    ],
-                    (array)$product->fields
-                );
-            } else {
-                $fields = $product['fields'];
-                $this->products[] = [
-                    'id' => $product['id'],
-                    'type' => 'banner',
-                    'products_name' => $fields['title'],
-                    'url' => $fields['url'],
-                    'imageDesktop' => $fields['imageDesktop'] ?? '',
-                    'imageMobile' => $fields['imageMobile'] ?? ''
-                ];
-            }
-        }
     }
 
     // class functions

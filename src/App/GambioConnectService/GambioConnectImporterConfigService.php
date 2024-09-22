@@ -10,4 +10,11 @@ class GambioConnectImporterConfigService extends GambioConnectService
     {
         $this->client->createImporter();
     }
+
+    public function checkImporter(): array
+    {
+        $importer = $this->client->getImporter();
+
+        return json_decode($importer->getBody()->getContents(), true);
+    }
 }

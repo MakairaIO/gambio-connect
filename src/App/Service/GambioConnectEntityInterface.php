@@ -13,5 +13,5 @@ interface GambioConnectEntityInterface
 
     public function pushRevision(array $entity): MakairaEntity;
 
-    public function getQuery(Language $language, array $makairaChanges = []): array;
+    public function getQuery(string $language, array $makairaChanges = []): array;
 }

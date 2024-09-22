@@ -126,6 +126,11 @@ class MakairaClient
         ]);
     }
 
+    public function getImporter(): ResponseInterface
+    {
+        return $this->doRequest('GET', 'importer/configs');
+    }
+
     public function createImporter(): ResponseInterface
     {
         return $this->doRequest('POST', 'importer/config', [
@@ -204,7 +209,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [])
+    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [], string $group = '')
     {
         $requestBuilder = new RequestBuilder($this->language);
 
@@ -222,8 +227,12 @@ class MakairaClient
 
         $body['constraints']['query.category_id'] = $categoryId;
 
+        if(!empty($group)) {
+            $body['constraints']['query.group'] = $group;
+        }
+
         $url = $this->makairaUrl . '/search/';
-        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents(), true);
     }
 
     public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
@@ -235,16 +244,16 @@ class MakairaClient
 
         $body = [
             'searchPhrase' => $id,
-            'isSearch' => true,
+            'isSearch' => false,
             'enableAggregations' => true,
             'aggregations' => [],
             'sorting' => [],
             'fields' => array_merge(
-                MakairaCategory::FIELDS,
                 [
                     'subcategories'
                 ],
-                MakairaProduct::FIELDS
+                MakairaProduct::FIELDS,
+                MakairaCategory::FIELDS,
             ),
             'count' => $maxSearchResults,
             'offset' => $pageNumber ?: 0,
@@ -261,7 +270,8 @@ class MakairaClient
         string $searchkey,
         int $maxSearchResults = 8,
         int|null $pageNumber = null,
-        array $sorting = []
+        array $sorting = [],
+        string $group = ''
     ) {
         if (empty($searchkey)) {
             return [];
@@ -279,7 +289,11 @@ class MakairaClient
             'constraints' => $requestBuilder->getConstraint()
         ];
 
+        if(!empty($group)) {
+            $body['constraints']['query']['group'] = $group;
+        }
+
         $url = $this->makairaUrl . '/search/';
-        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
+        return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents(), true);
     }
 }

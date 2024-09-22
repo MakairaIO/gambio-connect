@@ -8,6 +8,7 @@ use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
+use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaXtcPrice;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaManufacturer;
@@ -53,7 +54,7 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public static function mapCategory(array $data, array $hierarchy, Language $language): MakairaCategory
+    public static function mapCategory(array $data, array $hierarchy, string $language): MakairaCategory
     {
         $transfer = new MakairaCategory();
 
@@ -77,7 +78,7 @@ class MakairaDataMapper
             ->setDepth($hierarchy['depth'])
             ->setHierarchy($hierarchy['hierarchy'])
             ->setSubCategories($subCategories)
-            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language->id()))
+            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language))
             ->setCategoryDescription($data['categories_description'] ?? '')
             ->setCategoryDescriptionBottom($data['categories_description_bottom'] ?? '')
             ->setCategoryHeadingTitle($data['categories_heading_title'] ?? '')
@@ -97,25 +98,26 @@ class MakairaDataMapper
         return $transfer;
     }
 
-    public static function mapVariant(array $product, ProductVariant $variant): MakairaVariant
+    public static function mapVariant(array $product, string $languageId, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
     {
-        $productDocument = self::mapProduct($product);
+        $product = (new \product($product['products_id'], $languageId))->data;
+        $productDocument = self::mapProduct($product, $languageId, $currencyCode, $customerStatusId);
         $variantDocument = new MakairaVariant();
         $variantDocument->setProduct($product);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
         $variantDocument->setId($variant->id())
             ->setShop(1)
-            ->setParent($product['products_id'])
-            ->setLongdesc($product['products_description']['products_description'])
-            ->setShortdesc($product['products_description']['products_short_description'])
-            ->setPrice((float)$product['products_price'])
-            ->setTitle($product['products_description']['products_name'])
-            ->setEan($product['products_item_codes']['products_mpn'] ?? '')
+            ->setParent($variant->productId())
+            ->setLongdesc($product['products_description'])
+            ->setShortdesc($product['products_short_description'])
+            ->setPrice($product['products_price'])
+            ->setTitle($product['products_name'])
+            ->setEan($variant->ean() ?? '')
             ->setIsVariant(true)
             ->setStock($variant->stock())
             ->setOnstock($variant->stock() > 1)
-            ->setMetaDescription($product['products_description']['products_meta_description'])
-            ->setMetaKeywords($product['products_description']['products_meta_keywords'])
+            ->setMetaDescription($product['products_meta_description'])
+            ->setMetaKeywords($product['products_meta_keywords'])
             ->setMaincategory($productDocument->getMainCategory())
             ->setMaincategoryurl($productDocument->getMainCategoryUrl())
             ->setPictureUrlMain($productDocument->getPictureUrlMain());
@@ -123,23 +125,27 @@ class MakairaDataMapper
         return $variantDocument;
     }
 
-    public static function mapProduct(array $data): MakairaProduct
+    public static function mapProduct(array $data, string $languageId, array $currencyCode, array $customerStatusId): MakairaProduct
     {
         $transfer = new MakairaProduct();
-
         if ($data['delete']) {
             return $transfer->setId($data['products_id'])
                 ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
                 ->setDelete(true);
         }
+        $product = new \product($data['products_id'], $languageId);
+        $cooProduct = $product->buildDataArray($product->data);
+
+        $data = $product->data;
+
+        $data['coo_product'] = $cooProduct;
 
         $stock = 1;
 
         $category = [
-            'catid' => $data['products_to_categories']['categories_id'],
+            'catid' => $data['main_category_id'],
             'shopid' => 1,
-            'path' => '?' . xtc_category_link($data['products_to_categories']['categories_id'], $data['products_to_categories']['categories_name']),
-            'title' => $data['products_to_categories']['categories_name']
+            'path' => $data['coo_product']['PRODUCTS_CATEGORY_URL'],
         ];
 
         $image = '';
@@ -148,14 +154,32 @@ class MakairaDataMapper
             $image = HTTPS_SERVER . DIR_WS_CATALOG . 'images/product_images/original_images/' . $data['products_image'];
         }
 
+        $groups = [];
+        foreach($currencyCode as $code) {
+            foreach($customerStatusId as $statusId) {
+                $groups[$languageId.'_'.$code['code'].'_'.$statusId['customers_status_id']] = [
+                    'products_price' => [
+                        'formated' => $cooProduct['PRODUCTS_PRICE'],
+                        'plain' => $data['products_price'],
+                    ],
+                    'products_shipping_name' => $data['coo_product']['PRODUCTS_SHIPPING_NAME'],
+                    'products_shipping_range' => $data['coo_product']['PRODUCTS_SHIPPING_RANGE'],
+                    'products_shipping_image' => $data['coo_product']['PRODUCTS_SHIPPING_IMAGE'],
+                    'products_shipping_link_active' => $data['coo_product']['PRODUCTS_SHIPPING_LINK_ACTIVE'],
+                    'coo_product' => $cooProduct
+                ];
+            }
+        }
+
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
             ->setId($data['products_id'])
             ->setStock($stock)
             ->setPrice($data['products_price'])
             ->setIsVariant(false)
             ->setPictureUrlMain($image)
-            ->setShippingNumberOfDays($data['shipping_status']['number_of_days'])
-            ->setTitle($data['products_description']['products_name'])
+            ->setTitle($data['products_name'])
+            ->setLongDescription($data['products_description'])
+            ->setShortDescription($data['products_short_description'])
             ->setEan($data['products_ean'] ?? '')
             ->setMpn($data['products_item_codes']['code_mpn'] ?? '')
             ->setIsbn($data['products_item_codes']['code_isbn'] ?? '')
@@ -164,21 +188,19 @@ class MakairaDataMapper
             ->setModel($data['products_model'])
             ->setDateAdded($data['products_date_added'] ?? '')
             ->setDateAvailable($data['products_date_available'] ?? '')
-            ->setShortDescription($data['products_description']['products_short_description'])
-            ->setLongDescription($data['products_description']['products_description'])
-            ->setUrl(HTTPS_SERVER . DIR_WS_CATALOG . FILENAME_PRODUCT_INFO . '?' . xtc_product_link($data['products_id'], $data['products_description']['products_name']))
-            ->setSortOrder($data['products_xsell']['sort_order'] ?? 0)
+            ->setUrl($data['coo_product']['PRODUCTS_LINK'])
             ->setTaxClassId($data['products_tax_class_id'])
-            ->setFsk18($data['fsk18'] ?? false)
+            ->setFsk18((bool)$data['products_fsk18'] ?? false)
             ->setTaxClassId($data['products_tax_class_id'])
-            ->setGmAltText($data['products_description']['gm_alt_text'] ?? '')
+            ->setGmAltText($data['gm_alt_text'] ?? '')
             ->setProductsVpe($data['products_vpe'])
             ->setProductsVpeStatus($data['products_vpe_status'])
             ->setProductsVpeValue($data['products_vpe_value'])
-            ->setSearchKeys($data['products_description']['products_keywords'] ?? '')
+            ->setSearchKeys($data['products_keywords'] ?? '')
             ->setCategories([$category])
-            ->setMainCategory($category['title'])
-            ->setMainCategoryUrl($category['path']);
+            ->setMainCategory($category['title'] ?? '')
+            ->setMainCategoryUrl($category['path'])
+            ->setGroups($groups);
 
         return $transfer;
     }
