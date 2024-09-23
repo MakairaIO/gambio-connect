@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/../SplitPageResults/makaira_split_page_results.php';
+
 class MakairaProductListingContentControl extends MakairaProductListingContentControl_parent
 {
     private \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
@@ -50,7 +52,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
 
             $this->products = array_map(function ($makairaProduct) {
                 return (array) $makairaProduct->fields;
-            }, $result->product->items);
+            }, $result['product']['items']);
         } elseif (empty($categoryId)) {
             $this->products = [];
 
@@ -64,7 +66,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                 $this->groupBy
             );
 
-            $banners = $result->banners;
+            $banners = $result['banners'];
 
             foreach ($result['product']['items'] as $index => $product) {
                 foreach ($banners as $bannerIndex => $banner) {
@@ -161,7 +163,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                     // save last listing query for ProductNavigator ($_SESSION['last_listing_sql'])
                     $this->last_listing_sql = $this->sql_query;
 
-                    $coo_listing_split = new splitPageResults($this->products, $this->page_number,
+                    $coo_listing_split = new MakairaSplitPageResults($this->products, $this->page_number,
                         $t_max_display_search_results, 'p.products_id');
                     $t_products_array = [];
 
