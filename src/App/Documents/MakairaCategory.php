@@ -2,9 +2,6 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
-use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
-use Psr\Log\LoggerInterface;
-
 class MakairaCategory extends MakairaEntity
 {
     public const FIELD_PARENT = 'parent';
@@ -52,10 +49,11 @@ class MakairaCategory extends MakairaEntity
         self::FIELD_CATEGORIES_TEMPLATE,
         self::FIELD_VIEW_MODE_TILES,
         self::FIELD_CATEGORIES_IMAGE,
-        self::FIELD_GM_SHOW_QTY_INFO
+        self::FIELD_GM_SHOW_QTY_INFO,
     ];
 
     private int $depth = 0;
+
     private int $sort = 0;
 
     private string $categoryTitle = '';
@@ -87,18 +85,19 @@ class MakairaCategory extends MakairaEntity
     private string $categoriesImage = '';
 
     private string $hierarchy = '';
+
     private ?string $url = null;
 
     private array $subCategories = [];
+
     private array $selfLinks = [];
 
     private bool $gmShowQtyInfo = false;
 
-
     public function toArray(): array
     {
         return array_merge(
-        /* Makaira fields */
+            /* Makaira fields */
             parent::toArray(),
             [
                 /* Category fields */
@@ -123,17 +122,15 @@ class MakairaCategory extends MakairaEntity
                 'url' => $this->getUrl(),
                 'subcategories' => $this->getSubCategories(),
                 'selfLinks' => $this->getSelfLinks(),
-                'gm_show_qty_info' => $this->isGmShowQtyInfo()
+                'gm_show_qty_info' => $this->isGmShowQtyInfo(),
             ]
         );
     }
-
 
     public function getDepth(): int
     {
         return $this->depth;
     }
-
 
     public function setDepth(int $depth): MakairaCategory
     {
@@ -142,12 +139,10 @@ class MakairaCategory extends MakairaEntity
         return $this;
     }
 
-
     public function getSort(): int
     {
         return $this->sort;
     }
-
 
     public function setSort(int $sort): MakairaCategory
     {
@@ -161,7 +156,6 @@ class MakairaCategory extends MakairaEntity
         return $this->categoryTitle;
     }
 
-
     public function setCategoryTitle(string $categoryTitle): MakairaCategory
     {
         $this->categoryTitle = $categoryTitle;
@@ -169,12 +163,10 @@ class MakairaCategory extends MakairaEntity
         return $this;
     }
 
-
     public function getHierarchy(): string
     {
         return $this->hierarchy;
     }
-
 
     public function setHierarchy(string $hierarchy): MakairaCategory
     {
@@ -183,12 +175,10 @@ class MakairaCategory extends MakairaEntity
         return $this;
     }
 
-
     public function getUrl(): ?string
     {
         return $this->url;
     }
-
 
     public function setUrl(?string $url): MakairaCategory
     {
@@ -197,12 +187,10 @@ class MakairaCategory extends MakairaEntity
         return $this;
     }
 
-
     public function getSubCategories(): array
     {
         return $this->subCategories;
     }
-
 
     public function setSubCategories(array $subCategories): MakairaCategory
     {
@@ -211,12 +199,10 @@ class MakairaCategory extends MakairaEntity
         return $this;
     }
 
-
     public function getSelfLinks(): array
     {
         return $this->selfLinks;
     }
-
 
     public function setSelfLinks(array $selfLinks): MakairaCategory
     {
@@ -389,6 +375,7 @@ class MakairaCategory extends MakairaEntity
     public function setGmShowQtyInfo(bool $gmShowQtyInfo): static
     {
         $this->gmShowQtyInfo = $gmShowQtyInfo;
+
         return $this;
     }
 }

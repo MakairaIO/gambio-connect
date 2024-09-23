@@ -2,18 +2,18 @@
 
 $t_language_text_section_content_array = [
     'description' => 'You can use Makaira with this module',
-    'title'       => 'Makaira Gambio Connect',
-    'settings'           => 'Settings',
-    'makaira_url'        => 'Makaira URL',
-    'makaira_instance'   => 'Makaira instance',
-    'makaira_secret'     => 'Makaira secret',
+    'title' => 'Makaira Gambio Connect',
+    'settings' => 'Settings',
+    'makaira_url' => 'Makaira URL',
+    'makaira_instance' => 'Makaira instance',
+    'makaira_secret' => 'Makaira secret',
     'makaira_active_search' => 'Makaira active search',
     'welcome' => 'Welcome',
     'faq' => 'FAQ',
     'document' => 'Document',
     'my_account' => 'My account',
-    "save" => "Save",
-    "manual_setup" => "Manual Setup",
+    'save' => 'Save',
+    'manual_setup' => 'Manual Setup',
     'manual_setup_description' => 'Only apply if you are already a Makaira customer and have the following values.',
     'saved' => 'Settings saved',
     'success' => 'Success',
@@ -33,6 +33,5 @@ $t_language_text_section_content_array = [
     'queue_length' => 'Queue Length',
     'last_sync' => 'Last Sync',
     'account_title' => 'Account',
-
 
 ];

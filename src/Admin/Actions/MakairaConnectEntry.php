@@ -16,15 +16,13 @@ use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleStatusService;
  */
 class MakairaConnectEntry extends AdminModuleAction
 {
-    public function __construct(protected ModuleStatusService $moduleStatusService)
-    {
-    }
+    public function __construct(protected ModuleStatusService $moduleStatusService) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(Request $request, Response $response): Response
     {
-        return $response->withRedirect($this->url->admin() . '/makaira/account', 302);
+        return $response->withRedirect($this->url->admin().'/makaira/account', 302);
     }
 }

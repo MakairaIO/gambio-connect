@@ -2,7 +2,6 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\Service;
 
-use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 
 interface GambioConnectEntityInterface

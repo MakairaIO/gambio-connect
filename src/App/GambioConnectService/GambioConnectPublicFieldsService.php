@@ -34,6 +34,7 @@ class GambioConnectPublicFieldsService extends GambioConnectService
                     return null;
                 }
             }
+
             return $field;
         });
     }

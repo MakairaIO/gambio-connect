@@ -40,103 +40,104 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER = 'makairaInstallationServiceCallCounter';
 
-    public function __construct(private ConfigurationService $configurationService)
-    {
-    }
+    public function __construct(private ConfigurationService $configurationService) {}
 
     public function getMakairaUrl(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_URL);
     }
 
     public function setMakairaUrl(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_URL, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_URL, $value);
+
         return $this;
     }
 
     public function getMakairaInstance(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTANCE);
     }
 
     public function setMakairaInstance(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTANCE, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTANCE, $value);
+
         return $this;
     }
 
     public function getMakairaSecret(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_SECRET);
     }
 
     public function setMakairaSecret(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_SECRET, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_SECRET, $value);
+
         return $this;
     }
 
     public function getStatus(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STATUS);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_STATUS);
     }
 
     public function setStatus(string $value): self
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_STATUS, $value);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_STATUS, $value);
+
         return $this;
     }
 
-
     public function getIsInstalled(): bool
     {
-        return (bool)$this->configurationService->find(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLED)?->value();
+        return (bool) $this->configurationService->find(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTALLED)?->value();
     }
 
     public function isPublicFieldsSetupDone(): bool
     {
-        return (bool)$this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
+        return (bool) $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE);
     }
 
     public function setPublicFieldsSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE, true);
     }
 
     public function getRecoCrossSelling(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_CROSS_SELLING);
     }
 
     public function setRecoCrossSelling(string $recoCrossSelling = ''): void
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_CROSS_SELLING, $recoCrossSelling);
     }
 
     public function getRecoReverseCrossSelling(): string
     {
-        return $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
+        return $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING);
     }
 
     public function setRecoReverseCrossSelling(string $recoReverseCrossSelling = ''): void
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING, $recoReverseCrossSelling);
     }
 
     public function getCronjobStatus(): bool
     {
-        return (bool)$this->getConfigValue(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE);
+        return (bool) $this->getConfigValue(self::CONFIG_MAKAIRA_CRONJOB_ACTIVE);
     }
 
     public function setMakairaImporterSetupDone(): void
     {
-        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
+        $this->setConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE, true);
     }
 
     public function isMakairaImporterSetupDone(): bool
     {
-        return (bool) $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
+        return (bool) $this->getConfigValue(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_IMPORTER_SETUP_DONE);
     }
 
     public function setMakairaCronJobActive(): void
@@ -162,15 +163,15 @@ class ModuleConfigService
     public static function getModuleConfigKeys(): array
     {
         return [
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_CROSS_SELLING,
-            self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_ACTIVE,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_ACTIVE_SEARCH,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_REQUEST_DATA,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALLED,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_CROSS_SELLING,
+            self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_RECO_REVERSE_CROSS_SELLING,
             self::CONFIG_MAKAIRA_CRONJOB_ACTIVE,
-            self::CONFIG_MAKAIRA_CRONJOB_INTERVAL
+            self::CONFIG_MAKAIRA_CRONJOB_INTERVAL,
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace GXModules\MakairaIO\MakairaConnect\App\Installer;
 
 use CI_DB_query_builder;
-use GXModules\MakairaIO\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
 
 class GambioConnectProductsPropertiesCombisDefaultTableInstaller implements GambioConnectTableInstallerInterface
 {
@@ -36,10 +35,10 @@ class GambioConnectProductsPropertiesCombisDefaultTableInstaller implements Gamb
 
     public static function uninstall(CI_DB_query_builder $db): void
     {
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_create_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_create_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_update_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_update_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_delete_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_properties_combis_default_delete_trigger');
     }
 }

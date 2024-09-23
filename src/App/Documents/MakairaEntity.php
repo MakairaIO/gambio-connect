@@ -5,23 +5,28 @@ namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 class MakairaEntity
 {
     public const DOC_TYPE_PRODUCT = 'product';
+
     public const DOC_TYPE_VARIANT = 'variant';
+
     public const DOC_TYPE_CATEGORY = 'category';
+
     public const DOC_TYPE_MANUFACTURER = 'manufacturer';
 
-
     private string $id;
+
     private string $type;
+
     private int $shop = 1;
 
     private bool $active = true;
+
     private bool $searchable = true;
+
     private bool $hidden = false;
 
     protected bool $delete = false;
 
     private string $pictureUrlMain = '';
-
 
     public function toArray(): array
     {
@@ -36,12 +41,10 @@ class MakairaEntity
         ];
     }
 
-
     public function getId(): string
     {
         return $this->id;
     }
-
 
     public function setId(string $id): MakairaEntity
     {
@@ -50,12 +53,10 @@ class MakairaEntity
         return $this;
     }
 
-
     public function getType(): string
     {
         return $this->type;
     }
-
 
     public function setType(string $type): MakairaEntity
     {
@@ -64,12 +65,10 @@ class MakairaEntity
         return $this;
     }
 
-
     public function getShop(): int
     {
         return $this->shop;
     }
-
 
     public function setShop(int $shop): MakairaEntity
     {
@@ -78,12 +77,10 @@ class MakairaEntity
         return $this;
     }
 
-
     public function isActive(): bool
     {
         return $this->active;
     }
-
 
     public function setActive(bool $active): MakairaEntity
     {
@@ -92,12 +89,10 @@ class MakairaEntity
         return $this;
     }
 
-
     public function isSearchable(): bool
     {
         return $this->searchable;
     }
-
 
     public function setSearchable(bool $searchable): MakairaEntity
     {
@@ -106,12 +101,10 @@ class MakairaEntity
         return $this;
     }
 
-
     public function isHidden(): bool
     {
         return $this->hidden;
     }
-
 
     public function setHidden(bool $hidden): MakairaEntity
     {
@@ -124,7 +117,6 @@ class MakairaEntity
     {
         return $this->pictureUrlMain;
     }
-
 
     public function setPictureUrlMain(string $pictureUrlMain): MakairaEntity
     {
@@ -141,6 +133,7 @@ class MakairaEntity
     public function setDelete(bool $delete): static
     {
         $this->delete = $delete;
+
         return $this;
     }
 }

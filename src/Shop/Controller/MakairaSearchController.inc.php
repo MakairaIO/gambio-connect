@@ -13,13 +13,14 @@ use LegacyDependencyContainer;
 use MainFactory;
 
 /**
- *
  * @link http://shop-url.de/shop.php?do=MakairaSearch/GetAutosuggest
  */
 class MakairaSearchController extends HttpViewController
 {
     private $makairaRequest;
+
     private $configurationStorage;
+
     private $languageService;
 
     public function __construct(
@@ -35,7 +36,7 @@ class MakairaSearchController extends HttpViewController
         $makairaUrl = $this->configurationStorage->get('makairaUrl');
         $makairaInstance = $this->configurationStorage->get('makairaInstance');
         $languageId = $_SESSION['languages_id'] ?? '2';
-        $languageId = (int)$languageId;
+        $languageId = (int) $languageId;
         $language = $this->languageService->getLanguageById(2);
         $this->makairaRequest = new MakairaRequest($makairaUrl, $makairaInstance, $language->code());
     }
@@ -51,8 +52,8 @@ class MakairaSearchController extends HttpViewController
         $aLinks = isset($result['links']) ? $result['links']['items'] : [];
         $aPages = isset($result['page']) ? $result['page']['items'] : [];
 
-        $this->contentView->set_template_dir(__DIR__ . DIRECTORY_SEPARATOR);
-        $html = $this->_render('../ui/template/autosuggest.html', array(
+        $this->contentView->set_template_dir(__DIR__.DIRECTORY_SEPARATOR);
+        $html = $this->_render('../ui/template/autosuggest.html', [
             'result' => [
                 'products' => $aProducts,
                 'categories' => $aCategories,
@@ -61,7 +62,7 @@ class MakairaSearchController extends HttpViewController
                 'pages' => $aPages,
             ],
             'MAKAIRA_ACTIVE_SEARCH' => $this->configurationStorage->get('makairaActiveSearch'),
-        ));
+        ]);
 
         return new HttpControllerResponse($html);
     }

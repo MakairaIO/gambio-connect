@@ -3,7 +3,6 @@
 namespace GXModules\MakairaIO\MakairaConnect\App\Installer;
 
 use CI_DB_query_builder;
-use GXModules\MakairaIO\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
 
 class GambioConnectProductsToCategoriesTableInstaller implements GambioConnectTableInstallerInterface
 {
@@ -60,16 +59,16 @@ class GambioConnectProductsToCategoriesTableInstaller implements GambioConnectTa
 
     public static function uninstall(CI_DB_query_builder $db): void
     {
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_create_trigger_product");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_create_trigger_product');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_create_trigger_category");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_create_trigger_category');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_update_trigger_product");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_update_trigger_product');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_update_trigger_category");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_update_trigger_category');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_delete_trigger_product");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_delete_trigger_product');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_delete_trigger_category");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_to_categories_delete_trigger_category');
     }
 }

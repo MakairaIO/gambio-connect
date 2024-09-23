@@ -12,7 +12,6 @@ use Gambio\Core\Language\Services\LanguageService;
 use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectAccount;
 use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectEntry;
 use GXModules\MakairaIO\MakairaConnect\Admin\Actions\MakairaConnectManualSetup;
-use GXModules\MakairaIO\MakairaConnect\Admin\MakairaConnectInstaller;
 use GXModules\MakairaIO\MakairaConnect\Admin\MenuFilter\IsInstalledFilter;
 use GXModules\MakairaIO\MakairaConnect\Admin\MenuFilter\IsSetUpFilter;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
@@ -48,7 +47,7 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function provides(): array
     {
@@ -67,7 +66,7 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function register(): void
     {
@@ -81,7 +80,6 @@ class MakairaConnectBootableServiceProvider extends AbstractBootableServiceProvi
             ->addArgument(ModuleStatusService::class)
             ->addArgument(ModuleConfigService::class)
             ->addArgument(ChangesService::class);
-
 
         $this->application->registerShared(Export::class)
             ->addArgument(GambioConnectCategoryService::class)

@@ -8,12 +8,10 @@ use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleStatusService;
 
 class IsInstalledFilter implements FilterInterface
 {
-    public function __construct(protected ModuleStatusService $moduleStatusService)
-    {
-    }
+    public function __construct(protected ModuleStatusService $moduleStatusService) {}
 
     public function check(FilterConditionArguments $condition): bool
     {
-        return  $this->moduleStatusService->isInstalled();
+        return $this->moduleStatusService->isInstalled();
     }
 }

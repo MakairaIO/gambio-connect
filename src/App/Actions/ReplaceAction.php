@@ -2,7 +2,6 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\Actions;
 
-use Gambio\Core\Application\Application;
 use Gambio\Core\Application\Http\AbstractAction;
 use Gambio\Core\Application\Http\Request;
 use Gambio\Core\Application\Http\Response;
@@ -12,12 +11,10 @@ class ReplaceAction extends AbstractAction
 {
     public function __construct(
         protected GambioConnectService $gambioConnectService
-    ) {
-    }
-
+    ) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(Request $request, Response $response): Response
     {

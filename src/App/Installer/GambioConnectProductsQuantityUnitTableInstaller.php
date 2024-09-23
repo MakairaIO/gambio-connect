@@ -3,7 +3,6 @@
 namespace GXModules\MakairaIO\MakairaConnect\App\Installer;
 
 use CI_DB_query_builder;
-use GXModules\MakairaIO\MakairaConnect\App\Installer\GambioConnectTableInstallerInterface;
 
 class GambioConnectProductsQuantityUnitTableInstaller implements GambioConnectTableInstallerInterface
 {
@@ -36,10 +35,10 @@ class GambioConnectProductsQuantityUnitTableInstaller implements GambioConnectTa
 
     public static function uninstall(CI_DB_query_builder $db): void
     {
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_create_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_create_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_update_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_update_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_delete_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_products_quantity_unit_delete_trigger');
     }
 }

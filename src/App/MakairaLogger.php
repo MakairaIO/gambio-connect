@@ -10,20 +10,14 @@ use function Gambio\Core\Logging\logger;
 
 /**
  * Class MakairaLogger
- *
- * @package GXModules\MakairaIO\MakairaConnect\App
  */
 class MakairaLogger implements LoggerInterface
 {
     public const LOGFILE = 'makaira';
+
     private const LOG_LEVELS = ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'];
 
-
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $logger;
-
 
     /**
      * MakairaLogger constructor.
@@ -33,85 +27,76 @@ class MakairaLogger implements LoggerInterface
         $this->logger = logger(self::LOGFILE);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function emergency($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function alert($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function critical($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function error($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function warning($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function notice($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function info($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function debug($message, array $context = []): void
     {
         $this->log(__FUNCTION__, $message, $context);
     }
 
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function log($level, $message, array $context = []): void
     {
-        $messageLevel = (int)array_search($level, self::LOG_LEVELS, true);
+        $messageLevel = (int) array_search($level, self::LOG_LEVELS, true);
 
         if ($messageLevel >= 0) {
             $this->logger->log($level, $message, $context);

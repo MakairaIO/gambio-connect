@@ -22,19 +22,24 @@
 class splitPageResults
 {
     public $sql_query;
+
     public $products = [];
+
     public $number_of_rows;
+
     public $current_page_number;
+
     public $number_of_pages;
+
     public $number_of_rows_per_page;
 
     /**
-     * @var string $relPrevUrl needed for seo_tags-Smarty-Plugin (rel="prev")
+     * @var string needed for seo_tags-Smarty-Plugin (rel="prev")
      */
     protected $relPrevUrl = '';
 
     /**
-     * @var string $relNextUrl needed for seo_tags-Smarty-Plugin (rel="next")
+     * @var string needed for seo_tags-Smarty-Plugin (rel="next")
      */
     protected $relNextUrl = '';
 
@@ -73,11 +78,11 @@ class splitPageResults
     {
         global $PHP_SELF, $request_type;
 
-        $parameters    = str_replace('&amp;', '&', $parameters);
+        $parameters = str_replace('&amp;', '&', $parameters);
         $coo_seo_boost = MainFactory::create_object('GMSEOBoost', [], true);
 
         if ($coo_seo_boost->boost_categories && strpos_wrapper(gm_get_env_info('SCRIPT_NAME'), 'index.php') !== false) {
-            # use boost url for splitting urls
+            // use boost url for splitting urls
             $t_href_link_base = $coo_seo_boost->get_current_boost_url();
 
             parse_str($parameters, $parametersArray);
@@ -94,7 +99,7 @@ class splitPageResults
         } elseif (strpos($PHP_SELF, 'shop.php') > -1) {
             $t_href_link_base = FILENAME_DEFAULT; // Use the default "index.php" file for the links instead of "shop.php".
             if (gm_get_conf('USE_SEO_BOOST_LANGUAGE_CODE') === 'true') {
-                $t_href_link_base = $_SESSION['language_code'] . '/' . $t_href_link_base;
+                $t_href_link_base = $_SESSION['language_code'].'/'.$t_href_link_base;
             }
 
             parse_str($parameters, $parametersArray);
@@ -122,11 +127,11 @@ class splitPageResults
 
             $parameters = http_build_query($parametersArray, '', '&', PHP_QUERY_RFC3986);
         } else {
-            # use default url for splitting urls
+            // use default url for splitting urls
             $t_href_link_base = basename($PHP_SELF);
             $t_href_link_base = ($t_href_link_base === 'index.php' && FILENAME_DEFAULT === '') ? '' : $t_href_link_base;
             if (gm_get_conf('USE_SEO_BOOST_LANGUAGE_CODE') === 'true') {
-                $t_href_link_base = $_SESSION['language_code'] . '/' . $t_href_link_base;
+                $t_href_link_base = $_SESSION['language_code'].'/'.$t_href_link_base;
             }
         }
 
@@ -156,16 +161,16 @@ class splitPageResults
 
         $pageParam = '';
         if ($this->current_page_number - 1 !== 1) {
-            $pageParam = 'page=' . ($this->current_page_number - 1);
+            $pageParam = 'page='.($this->current_page_number - 1);
         }
 
         $this->relPrevUrl = '';
 
         // previous button - not displayed on first page
         if ($this->current_page_number > 1) {
-            $this->relPrevUrl = xtc_href_link($t_href_link_base, $parameters . $pageParam, $request_type);
-            $display_links_string .= '<a href="' . $this->relPrevUrl . '" class="pageResults" title=" '
-                . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+            $this->relPrevUrl = xtc_href_link($t_href_link_base, $parameters.$pageParam, $request_type);
+            $display_links_string .= '<a href="'.$this->relPrevUrl.'" class="pageResults" title=" '
+                .PREVNEXT_TITLE_PREVIOUS_PAGE.' ">'.PREVNEXT_BUTTON_PREV.'</a>&nbsp;&nbsp;';
         }
 
         $t_page_numbers_array = $this->get_page_numbers_array(
@@ -177,42 +182,42 @@ class splitPageResults
         for ($i = 0; $i < count($t_page_numbers_array); $i++) {
             $pageParam = '';
             if ($t_page_numbers_array[$i]['PAGE'] != 1) {
-                $pageParam = 'page=' . $t_page_numbers_array[$i]['PAGE'];
+                $pageParam = 'page='.$t_page_numbers_array[$i]['PAGE'];
             }
 
-            if ((int)$t_page_numbers_array[$i]['PAGE'] == $this->current_page_number) {
-                $display_links_string .= '&nbsp;<strong>' . $t_page_numbers_array[$i]['TEXT'] . '</strong>&nbsp;';
+            if ((int) $t_page_numbers_array[$i]['PAGE'] == $this->current_page_number) {
+                $display_links_string .= '&nbsp;<strong>'.$t_page_numbers_array[$i]['TEXT'].'</strong>&nbsp;';
             } elseif ($t_page_numbers_array[$i]['TEXT'] == '...') {
                 if ($i == 1) {
-                    $display_links_string .= '<a href="' . xtc_href_link(
+                    $display_links_string .= '<a href="'.xtc_href_link(
                         $t_href_link_base,
-                        $parameters . $pageParam,
+                        $parameters.$pageParam,
                         $request_type
                     )
-                        . '" class="pageResults" title=" '
-                        . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links)
-                        . ' ">...</a>';
+                        .'" class="pageResults" title=" '
+                        .sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links)
+                        .' ">...</a>';
                 } else {
-                    $display_links_string .= '<a href="' . xtc_href_link(
+                    $display_links_string .= '<a href="'.xtc_href_link(
                         $t_href_link_base,
-                        $parameters . $pageParam,
+                        $parameters.$pageParam,
                         $request_type
                     )
-                        . '" class="pageResults" title=" '
-                        . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links)
-                        . ' ">...</a>&nbsp;';
+                        .'" class="pageResults" title=" '
+                        .sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links)
+                        .' ">...</a>&nbsp;';
                 }
             } else {
-                $display_links_string .= '&nbsp;<a href="' . xtc_href_link(
+                $display_links_string .= '&nbsp;<a href="'.xtc_href_link(
                     $t_href_link_base,
-                    $parameters . $pageParam,
+                    $parameters.$pageParam,
                     $request_type
                 )
-                    . '" class="pageResults" title=" ' . sprintf(
+                    .'" class="pageResults" title=" '.sprintf(
                         PREVNEXT_TITLE_PAGE_NO,
                         $t_page_numbers_array[$i]['PAGE']
                     )
-                    . ' ">' . $t_page_numbers_array[$i]['TEXT'] . '</a>&nbsp;';
+                    .' ">'.$t_page_numbers_array[$i]['TEXT'].'</a>&nbsp;';
             }
         }
 
@@ -222,21 +227,20 @@ class splitPageResults
         if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
             $this->relNextUrl = xtc_href_link(
                 $t_href_link_base,
-                $parameters . 'page=' . ($this->current_page_number + 1),
+                $parameters.'page='.($this->current_page_number + 1),
                 $request_type
             );
 
-            $display_links_string .= '&nbsp;<a href="' . $this->relNextUrl . '" class="pageResults" title=" '
-                . PREVNEXT_TITLE_NEXT_PAGE . ' ">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
+            $display_links_string .= '&nbsp;<a href="'.$this->relNextUrl.'" class="pageResults" title=" '
+                .PREVNEXT_TITLE_NEXT_PAGE.' ">'.PREVNEXT_BUTTON_NEXT.'</a>&nbsp;';
         }
 
         return $display_links_string;
     }
 
-
     public function get_page_numbers_array($p_current_page, $p_max_page_number, $p_max_page)
     {
-        $t_pages_array = array();
+        $t_pages_array = [];
 
         $t_check_sum = 1 + (($p_max_page_number - 1) * 2) + 2;
         $count_index = 0;
@@ -253,7 +257,7 @@ class splitPageResults
                 $t_pages_array[$count_index]['TEXT'] = 1;
             }
             if ($p_current_page - $t_pages_before_and_after > 2) {
-                $count_index                         = count($t_pages_array);
+                $count_index = count($t_pages_array);
                 $t_pages_array[$count_index]['PAGE'] = $p_current_page - $t_pages_before_and_after - 1;
                 $t_pages_array[$count_index]['TEXT'] = '...';
             }
@@ -262,28 +266,27 @@ class splitPageResults
                     $p_current_page - $t_pages_before_and_after + $i < $p_max_page
                     && $p_current_page - $t_pages_before_and_after + $i > 0
                 ) {
-                    $count_index                         = count($t_pages_array);
+                    $count_index = count($t_pages_array);
                     $t_pages_array[$count_index]['PAGE'] = $p_current_page - $t_pages_before_and_after + $i;
                     $t_pages_array[$count_index]['TEXT'] = $p_current_page - $t_pages_before_and_after + $i;
                 }
             }
             if ($t_pages_array[count($t_pages_array) - 1]['PAGE'] == $p_max_page - 2) {
-                $count_index                         = count($t_pages_array);
+                $count_index = count($t_pages_array);
                 $t_pages_array[$count_index]['PAGE'] = $p_max_page - 1;
                 $t_pages_array[$count_index]['TEXT'] = $p_max_page - 1;
             } elseif ($t_pages_array[count($t_pages_array) - 1]['PAGE'] < $p_max_page - 1) {
-                $count_index                         = count($t_pages_array);
+                $count_index = count($t_pages_array);
                 $t_pages_array[$count_index]['PAGE'] = $p_current_page + $t_pages_before_and_after + 1;
                 $t_pages_array[$count_index]['TEXT'] = '...';
             }
-            $count_index                         = count($t_pages_array);
+            $count_index = count($t_pages_array);
             $t_pages_array[$count_index]['PAGE'] = $p_max_page;
             $t_pages_array[$count_index]['TEXT'] = $p_max_page;
         }
 
         return $t_pages_array;
     }
-
 
     // display number of total products found
     public function display_count($text_output)
@@ -304,7 +307,6 @@ class splitPageResults
         return sprintf($text_output, $from_num, $to_num, $this->number_of_rows);
     }
 
-
     public function setPrevNextUrls()
     {
         $GLOBALS['relPrevUrl'] = $this->relPrevUrl;
@@ -315,7 +317,6 @@ class splitPageResults
     {
         return $this->number_of_pages;
     }
-
 
     public static function get_navigation_url($parameters = null)
     {
@@ -336,11 +337,11 @@ class splitPageResults
 
         $request_type = (getenv('HTTPS') === '1' || getenv('HTTPS') === 'on') ? 'SSL' : 'NONSSL';
 
-        $parameters    = str_replace('&amp;', '&', $parameters);
+        $parameters = str_replace('&amp;', '&', $parameters);
         $coo_seo_boost = MainFactory::create_object('GMSEOBoost', [], true);
 
         if ($coo_seo_boost->boost_categories && strpos_wrapper(gm_get_env_info('SCRIPT_NAME'), 'index.php') !== false) {
-            # use boost url for splitting urls
+            // use boost url for splitting urls
             $t_href_link_base = $coo_seo_boost->get_current_boost_url();
 
             parse_str($parameters, $parametersArray);
@@ -357,7 +358,7 @@ class splitPageResults
         } elseif (strpos(gm_get_env_info('PHP_SELF'), 'shop.php') !== false) {
             $t_href_link_base = FILENAME_DEFAULT; // Use the default "index.php" file for the links instead of "shop.php".
             if (gm_get_conf('USE_SEO_BOOST_LANGUAGE_CODE') === 'true') {
-                $t_href_link_base = $_SESSION['language_code'] . '/' . $t_href_link_base;
+                $t_href_link_base = $_SESSION['language_code'].'/'.$t_href_link_base;
             }
 
             parse_str($parameters, $parametersArray);
@@ -385,11 +386,11 @@ class splitPageResults
 
             $parameters = http_build_query($parametersArray, '', '&', PHP_QUERY_RFC3986);
         } else {
-            # use default url for splitting urls
+            // use default url for splitting urls
             $t_href_link_base = basename(gm_get_env_info('PHP_SELF'));
             $t_href_link_base = ($t_href_link_base === 'index.php' && FILENAME_DEFAULT === '') ? '' : $t_href_link_base;
             if (gm_get_conf('USE_SEO_BOOST_LANGUAGE_CODE') === 'true') {
-                $t_href_link_base = $_SESSION['language_code'] . '/' . $t_href_link_base;
+                $t_href_link_base = $_SESSION['language_code'].'/'.$t_href_link_base;
             }
         }
 

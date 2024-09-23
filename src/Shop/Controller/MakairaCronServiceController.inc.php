@@ -6,7 +6,6 @@ use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 use GXModules\MakairaIO\MakairaConnect\App\MakairaLogger;
 
 /**
- *
  * @link http://shop-url.de/shop.php?do=MakairaCronService/doExport?language=de|en|...
  */
 class MakairaCronServiceController extends HttpViewController
@@ -33,25 +32,25 @@ class MakairaCronServiceController extends HttpViewController
 
     public function actionDoExport(): \JsonHttpControllerResponse
     {
-        if(empty($_GET['language'])) {
+        if (empty($_GET['language'])) {
             return new JsonHttpControllerResponse([
-                'error' => 'This action requires language parameter'
+                'error' => 'This action requires language parameter',
             ]);
         }
 
         $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
         try {
-            $language = $this->languageService->getLanguageByCode($_GET['language']);
-        }catch(Exception $exception) {
+            $this->languageService->getLanguageByCode($_GET['language']);
+        } catch (Exception $exception) {
             return new JsonHttpControllerResponse([
-                'error' => 'Language ' . $_GET['language'] . ' not found'
+                'error' => 'Language '.$_GET['language'].' not found',
             ]);
         }
 
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
 
-        $this->logger = new MakairaLogger();
+        $this->logger = new MakairaLogger;
 
         $this->moduleConfigService = new ModuleConfigService($this->configurationService);
 
@@ -61,7 +60,7 @@ class MakairaCronServiceController extends HttpViewController
 
         $this->logger->debug('Makaira Export Job Called', [
             'GET_Variables' => $_GET['language'],
-            'SESSION_Variables' => $_SESSION
+            'SESSION_Variables' => $_SESSION,
         ]);
 
         $productVariantsReadService = new \Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository(
@@ -70,7 +69,7 @@ class MakairaCronServiceController extends HttpViewController
             new \Gambio\Admin\Modules\Product\Submodules\Variant\App\Data\ProductVariantsInserter($this->connection),
             new \Gambio\Admin\Modules\Product\Submodules\Variant\App\Data\ProductVariantsUpdater($this->connection),
             new \Gambio\Admin\Modules\Product\Submodules\Variant\App\Data\ProductVariantsMapper(
-                new \Gambio\Admin\Modules\ProductVariant\Services\ProductVariantFactory(),
+                new \Gambio\Admin\Modules\ProductVariant\Services\ProductVariantFactory,
             ),
             LegacyDependencyContainer::getInstance()->get(\Psr\EventDispatcher\EventDispatcherInterface::class)
         );
@@ -79,7 +78,7 @@ class MakairaCronServiceController extends HttpViewController
             $this->client,
             $this->languageService,
             $this->connection,
-            new MakairaLogger(),
+            new MakairaLogger,
             $productVariantsReadService
         );
 
@@ -90,7 +89,7 @@ class MakairaCronServiceController extends HttpViewController
         $makairaConnectService->getProductService()->export();
 
         return new \JsonHttpControllerResponse([
-            'success' => true
+            'success' => true,
         ]);
     }
 }

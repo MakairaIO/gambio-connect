@@ -1,8 +1,7 @@
 <?php
 
-use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
-use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 
 class MakairaCategoryListingThemeContentView extends CategoryListingThemeContentView
 {
@@ -30,29 +29,29 @@ class MakairaCategoryListingThemeContentView extends CategoryListingThemeContent
 
     protected function _buildSubcategoriesArray()
     {
-            $image = '';
+        $image = '';
 
-            foreach ($this->subcategories as $subcategory) {
-                $result = $this->makairaClient->getCategory($subcategory);
-                $resultCategory = $result->category->items[0] ?? [];
-                $categoryArray = array_merge(
-                    [
-                        'categories_id' => $resultCategory->id,
-                    ],
-                    (array)$resultCategory->fields
-                );
-                $this->subcategoriesArray[] = [
-                    'CATEGORIES_ID' => $resultCategory->id,
-                    'CATEGORIES_NAME' => $resultCategory->fields->categories_name,
-                    'CATEGORIES_ALT_TEXT' => $resultCategory->fields->gm_alt_text,
-                    'CATEGORIES_HEADING_TITLE' => $resultCategory->fields->categories_heading_title,
-                    'CATEGORIES_IMAGE' => $image = $this->_buildImageUrl($categoryArray),
-                    'CATEGORIES_LINK' => $this->_buildCategoryUrl($categoryArray),
-                    'CATEGORIES_DESCRIPTION' => $resultCategory->fields->categories_description,
-                    'CATEGORIES_DESCRIPTION_BOTTOM' => $resultCategory->fields->categories_description_bottom
-                ];
-            }
+        foreach ($this->subcategories as $subcategory) {
+            $result = $this->makairaClient->getCategory($subcategory);
+            $resultCategory = $result->category->items[0] ?? [];
+            $categoryArray = array_merge(
+                [
+                    'categories_id' => $resultCategory->id,
+                ],
+                (array) $resultCategory->fields
+            );
+            $this->subcategoriesArray[] = [
+                'CATEGORIES_ID' => $resultCategory->id,
+                'CATEGORIES_NAME' => $resultCategory->fields->categories_name,
+                'CATEGORIES_ALT_TEXT' => $resultCategory->fields->gm_alt_text,
+                'CATEGORIES_HEADING_TITLE' => $resultCategory->fields->categories_heading_title,
+                'CATEGORIES_IMAGE' => $image = $this->_buildImageUrl($categoryArray),
+                'CATEGORIES_LINK' => $this->_buildCategoryUrl($categoryArray),
+                'CATEGORIES_DESCRIPTION' => $resultCategory->fields->categories_description,
+                'CATEGORIES_DESCRIPTION_BOTTOM' => $resultCategory->fields->categories_description_bottom,
+            ];
+        }
 
-            return $image;
+        return $image;
     }
 }

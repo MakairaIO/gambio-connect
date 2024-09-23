@@ -2,7 +2,6 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App;
 
-use Gambio\Core\Configuration\Services\ConfigurationFinder;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -10,16 +9,20 @@ use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
-use MainFactory;
 use Psr\Http\Message\ResponseInterface;
 
 class MakairaClient
 {
-    private string $nonce = "";
+    private string $nonce = '';
+
     private Client $client;
+
     private string $makairaUrl;
+
     private string $makairaSecret;
+
     private string $makairaInstance;
+
     private ModuleConfigService $moduleConfigService;
 
     private string $language = 'de';
@@ -35,21 +38,20 @@ class MakairaClient
         $this->language = $_SESSION['language_code'] ?? 'de';
 
         $this->client = new Client([
-            'base_uri' => rtrim($this->makairaUrl, "/"), // we trim the url to make sure we have no double slashes
+            'base_uri' => rtrim($this->makairaUrl, '/'), // we trim the url to make sure we have no double slashes
             'headers' => [
                 'X-Makaira-Instance' => $this->makairaInstance,
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-            ]
+            ],
         ]);
     }
-
 
     private function getHash($body): string
     {
         return hash_hmac(
             'sha256',
-            $this->nonce . ':' . json_encode($body),
+            $this->nonce.':'.json_encode($body),
             $this->makairaSecret
         );
     }
@@ -59,7 +61,7 @@ class MakairaClient
         return [
             'X-Makaira-Nonce' => $this->nonce,
             'X-Makaira-Hash' => $this->getHash($body),
-            'content-type' => 'application/json'
+            'content-type' => 'application/json',
         ];
     }
 
@@ -71,7 +73,7 @@ class MakairaClient
                 'json' => $body,
             ]);
         } catch (ClientException $e) {
-            throw new \Exception('Request failed: Response: ' . $e->getMessage());
+            throw new \Exception('Request failed: Response: '.$e->getMessage());
         }
     }
 
@@ -83,7 +85,7 @@ class MakairaClient
     public function rebuild(array $types)
     {
         $body = [
-            'docTypes' => $types
+            'docTypes' => $types,
         ];
 
         return $this->doRequest('POST', 'persistence/revisions/rebuild', $body);
@@ -92,7 +94,7 @@ class MakairaClient
     public function switch(array $types)
     {
         $body = [
-            'docTypes' => $types
+            'docTypes' => $types,
         ];
 
         return $this->doRequest('POST', 'persistence/revisions/switch', $body);
@@ -104,9 +106,10 @@ class MakairaClient
             '_start' => 0,
             '_end' => 100,
             '_sort' => 'changed',
-            '_order' => 'DESC'
+            '_order' => 'DESC',
         ];
-        return $this->doRequest('GET', 'publicfield?' . implode('&', $query));
+
+        return $this->doRequest('GET', 'publicfield?'.implode('&', $query));
     }
 
     public function setPublicField(
@@ -146,7 +149,7 @@ class MakairaClient
                     'cronExpression' => '',
                     'enabled' => true,
                     'kind' => 'continuously',
-                    'timeout' => 21600
+                    'timeout' => 21600,
                 ],
                 [
                     'active' => false,
@@ -154,8 +157,8 @@ class MakairaClient
                     'bulk' => true,
                     'cronExpression' => '',
                     'kind' => 'one-time',
-                    'timeout' => 21600
-                ]
+                    'timeout' => 21600,
+                ],
             ],
             'runnerCountMax' => 500,
             'scheduledImporters' => [],
@@ -167,7 +170,7 @@ class MakairaClient
                     'cronExpression' => '',
                     'enabled' => true,
                     'kind' => 'continuously',
-                    'timeout' => 21600
+                    'timeout' => 21600,
                 ],
                 [
                     'active' => false,
@@ -175,15 +178,15 @@ class MakairaClient
                     'bulk' => true,
                     'cronExpression' => '',
                     'kind' => 'one-time',
-                    'timeout' => 21600
-                ]
+                    'timeout' => 21600,
+                ],
             ],
             'sourceAuthPassword' => '',
             'sourceAuthUser' => '',
             'sourceSecret' => $this->makairaSecret,
             'sourceType' => 'persistence-layer',
             'sourceUrl' => '',
-            'targetType' => 'makaira'
+            'targetType' => 'makaira',
         ]);
     }
 
@@ -197,15 +200,16 @@ class MakairaClient
             'enableAggregations' => false,
             'aggregations' => [],
             'sorting' => [
-                'id' => 'ASC'
+                'id' => 'ASC',
             ],
             'fields' => [],
             'count' => 0,
             'offset' => 0,
-            'constraints' => $requestBuilder->getConstraint()
+            'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        $url = $this->makairaUrl . '/search/public';
+        $url = $this->makairaUrl.'/search/public';
+
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
@@ -227,15 +231,16 @@ class MakairaClient
 
         $body['constraints']['query.category_id'] = $categoryId;
 
-        if(!empty($group)) {
+        if (! empty($group)) {
             $body['constraints']['query.group'] = $group;
         }
 
-        $url = $this->makairaUrl . '/search/';
+        $url = $this->makairaUrl.'/search/';
+
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents(), true);
     }
 
-    public function getCategory(string $id, int $maxSearchResults = 8, int|null $pageNumber = null)
+    public function getCategory(string $id, int $maxSearchResults = 8, ?int $pageNumber = null)
     {
         if (empty($id)) {
             return [];
@@ -250,7 +255,7 @@ class MakairaClient
             'sorting' => [],
             'fields' => array_merge(
                 [
-                    'subcategories'
+                    'subcategories',
                 ],
                 MakairaProduct::FIELDS,
                 MakairaCategory::FIELDS,
@@ -262,14 +267,15 @@ class MakairaClient
 
         $body['constraints']['query.category_id'] = $id;
 
-        $url = $this->makairaUrl . '/search/';
+        $url = $this->makairaUrl.'/search/';
+
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
     public function search(
         string $searchkey,
         int $maxSearchResults = 8,
-        int|null $pageNumber = null,
+        ?int $pageNumber = null,
         array $sorting = [],
         string $group = ''
     ) {
@@ -286,14 +292,15 @@ class MakairaClient
             'fields' => MakairaProduct::FIELDS,
             'count' => $maxSearchResults,
             'offset' => $pageNumber ?: 0,
-            'constraints' => $requestBuilder->getConstraint()
+            'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        if(!empty($group)) {
+        if (! empty($group)) {
             $body['constraints']['query']['group'] = $group;
         }
 
-        $url = $this->makairaUrl . '/search/';
+        $url = $this->makairaUrl.'/search/';
+
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents(), true);
     }
 }

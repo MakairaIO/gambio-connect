@@ -4,7 +4,6 @@ namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Exception;
-use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
@@ -16,7 +15,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
 
     private string $currentLanguageCode;
 
-
     public function prepareExport(): void
     {
         $languages = $this->getLanguages();
@@ -27,13 +25,12 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
             foreach ($manufacturers as $manufacturer) {
                 $this->connection->executeQuery(
                     'CALL makairaChange('
-                    . $manufacturer['manufacturers_id']
-                    . ', "manufacturer")'
+                    .$manufacturer['manufacturers_id']
+                    .', "manufacturer")'
                 );
             }
         }
     }
-
 
     /**
      * @throws Exception
@@ -46,20 +43,20 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
 
         $makairaExports = $this->getEntitiesForExport('manufacturer');
 
-        if (!empty($makairaExports)) {
+        if (! empty($makairaExports)) {
             $manufacturers = [];
             foreach ($makairaExports as $export) {
                 if ($export['delete']) {
                     $manufacturers[] = [
                         'manufacturers_id' => $export['gambio_id'],
-                        'delete' => true
+                        'delete' => true,
                     ];
                 } else {
                     $manufacturers[] = array_merge(
                         $this->getQuery($this->currentLanguage, [$export])[0],
                         [
                             'manufacturers_id' => $export['gambio_id'],
-                            'delete' => false
+                            'delete' => false,
                         ]
                     );
                 }
@@ -74,9 +71,9 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                         $documents[] = $document;
                     }
                 } catch (Exception $exception) {
-                    $this->logger->error("Manufacturer Export to Makaira Failed", [
+                    $this->logger->error('Manufacturer Export to Makaira Failed', [
                         'id' => $manufacturer['manufacturers_id'],
-                        'message' => $exception->getMessage()
+                        'message' => $exception->getMessage(),
                     ]);
                 }
             }
@@ -84,16 +81,15 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
             $response = $this->client->pushRevision($data);
             $this->logger->info(
                 'Makaira Manufacturer Documents: '
-                . count($documents)
-                . ' with Status Code '
-                . $response->getStatusCode()
+                .count($documents)
+                .' with Status Code '
+                .$response->getStatusCode()
             );
             foreach ($manufacturers as $manufacturer) {
                 $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
             }
         }
     }
-
 
     /**
      * @throws Exception
@@ -102,7 +98,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     {
         return MakairaDataMapper::mapManufacturer($manufacturer);
     }
-
 
     public function getQuery(string $language, array $makairaChanges = []): array
     {
@@ -118,8 +113,8 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
             ->where('manufacturers_info.languages_id = :languageId')
             ->setParameter('languageId', $language);
 
-        if (!empty($makairaChanges)) {
-            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
+        if (! empty($makairaChanges)) {
+            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
             $query->where('manufacturers.manufacturers_id IN (:ids)')
                 ->setParameter('ids', implode(',', array_values($ids)));
         }

@@ -17,20 +17,17 @@ use Respect\Validation\Validator as v;
  */
 class MakairaConnectManualSetup extends AdminModuleAction
 {
-    private $templatePath = __DIR__ . '/../ui/template/manual-setup.html';
+    private $templatePath = __DIR__.'/../ui/template/manual-setup.html';
+
     private $title = 'manual_setup';
 
-
-    public function __construct(protected ModuleConfigService $moduleConfigService)
-    {
-    }
+    public function __construct(protected ModuleConfigService $moduleConfigService) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(Request $request, Response $response): Response
     {
-
 
         if ($request->isPost()) {
             return $this->handlePost($request, $response);
@@ -42,14 +39,13 @@ class MakairaConnectManualSetup extends AdminModuleAction
     private function handleGet(Request $request, Response $response): Response
     {
 
-
         $template = $this->render(
             $this->translate($this->title, 'makaira_connect_general'),
             $this->templatePath,
             [
                 'gambio_connect_form_url' => $this->url->admin(),
                 'makairaUrl' => $this->moduleConfigService->getMakairaUrl(),
-                'makairaInstance'  => $this->moduleConfigService->getMakairaInstance(),
+                'makairaInstance' => $this->moduleConfigService->getMakairaInstance(),
                 'makairaSecret' => $this->moduleConfigService->getMakairaSecret(),
             ]
         );
@@ -72,14 +68,13 @@ class MakairaConnectManualSetup extends AdminModuleAction
         $makairaSecret = htmlspecialchars($requestData['makairaSecret']);
         v::stringType()->validate($makairaSecret) ? $this->moduleConfigService->setMakairaSecret($makairaSecret) : $invalid[] = 'makairaSecret';
 
-
         $template = $this->render(
             $this->translate($this->title, 'makaira_connect_general'),
             $this->templatePath,
             [
                 'gambio_connect_form_url' => $this->url->admin(),
                 'makairaUrl' => $makairaUrl,
-                'makairaInstance'  => $makairaInstance,
+                'makairaInstance' => $makairaInstance,
                 'makairaSecret' => $makairaSecret,
                 'validationErrors' => $invalid,
                 'notification' => $this->getNotification($invalid),

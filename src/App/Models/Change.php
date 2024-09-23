@@ -9,10 +9,9 @@ class Change
         private string $gambioid,
         private string $type,
         private string $created_at,
-        private string $comment = "",
+        private string $comment = '',
         private ?string $consumed_at = null
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
-use DateTime;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
-use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
-
 class MakairaProduct extends MakairaEntity
 {
     public const FIELD_TYPE = 'type';
@@ -81,7 +76,6 @@ class MakairaProduct extends MakairaEntity
 
     public const FIELD_COO_PRODUCT = 'coo_product';
 
-
     public const FIELD_SHIPPING_NUMBER_OF_DAYS = 'shipping_number_of_days';
 
     public const FIELDS = [
@@ -124,14 +118,17 @@ class MakairaProduct extends MakairaEntity
     ];
 
     private int $stock = 0;
+
     private float $price = 0.0;
 
     private bool $isVariant = false;
 
     private array $attributes = [];
+
     private array $categories = [];
 
     private string $title = '';
+
     private string $ean = '';
 
     private string $isbn = '';
@@ -143,14 +140,23 @@ class MakairaProduct extends MakairaEntity
     private string $mpn = '';
 
     private string $model = '';
+
     private string $shortDescription = '';
+
     private string $longDescription = '';
+
     private string $soldAmount = '';
+
     private string $url = '';
+
     private string $searchKeys = '';
+
     private string $mainCategory = '';
+
     private string $mainCategoryUrl = '';
+
     private string $manufacturerId = '';
+
     private string $manufacturerTitle = '';
 
     private string $dateAdded = '';
@@ -175,14 +181,16 @@ class MakairaProduct extends MakairaEntity
 
     /* Special makaira fields */
     private float $makBoostNormInsert = 0.0;
+
     private float $makBoostNormSold = 0.0;
+
     private float $makBoostNormRating = 0.0;
+
     private float $makBoostNormRevenue = 0.0;
+
     private float $makBoostNormProfitMargin = 0.0;
 
     private array $groups = [];
-
-
 
     public function getGroups(): array
     {
@@ -192,14 +200,14 @@ class MakairaProduct extends MakairaEntity
     public function setGroups(array $groups): static
     {
         $this->groups = $groups;
+
         return $this;
     }
-
 
     public function toArray(): array
     {
         return array_merge(
-        /* Makaira fields */
+            /* Makaira fields */
             parent::toArray(),
             [
 
@@ -258,10 +266,9 @@ class MakairaProduct extends MakairaEntity
         return $coo_product->buildDataArray(self::toGambio($this));
     }
 
-
     private function mapProduct(): array
     {
-        if (!$this->product) {
+        if (! $this->product) {
             return false;
         }
 
@@ -284,12 +291,12 @@ class MakairaProduct extends MakairaEntity
                 'shortdesc' => $this->product['products_short_description'],
                 'longdesc' => $this->product['products_description'],
                 'price' => $this->product['products_price'],
-                'soldamount' => "",
+                'soldamount' => '',
                 'searchable' => true,
                 'searchkeys' => $this->product['products_keywords'] ?? '',
                 'url' => $this->getUrl(),
                 'maincategory' => $this->product['main_category_id'],
-                'maincategoryurl' => "",
+                'maincategoryurl' => '',
                 'category' => [],
                 'attributes' => [],
                 'mak_boost_norm_insert' => 0.0,
@@ -302,7 +309,7 @@ class MakairaProduct extends MakairaEntity
                 'manufacturer_title' => '',
             ],
             'source_revision' => 1,
-            'language_id' => $this->getLanguage()
+            'language_id' => $this->getLanguage(),
         ];
         if ($this->delete) {
             $document['delete'] = true;
@@ -338,12 +345,10 @@ class MakairaProduct extends MakairaEntity
         ];
     }
 
-
     public function getTitle(): string
     {
         return $this->title;
     }
-
 
     public function setTitle(string $title): MakairaProduct
     {
@@ -357,260 +362,240 @@ class MakairaProduct extends MakairaEntity
         return $this->stock;
     }
 
-
     public function setStock(int $stock): MakairaProduct
     {
         $this->stock = $stock;
+
         return $this;
     }
-
 
     public function getPrice(): float
     {
         return $this->price;
     }
 
-
     public function setPrice(float $price): MakairaProduct
     {
         $this->price = $price;
+
         return $this;
     }
-
 
     public function isVariant(): bool
     {
         return $this->isVariant;
     }
 
-
     public function setIsVariant(bool $isVariant): MakairaProduct
     {
         $this->isVariant = $isVariant;
+
         return $this;
     }
-
 
     public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-
     public function setAttributes(array $attributes): MakairaProduct
     {
         $this->attributes = $attributes;
+
         return $this;
     }
-
 
     public function getSearchKeys(): string
     {
         return $this->searchKeys;
     }
 
-
     public function setSearchKeys(string $searchKeys): MakairaProduct
     {
         $this->searchKeys = $searchKeys;
+
         return $this;
     }
-
 
     public function getCategories(): array
     {
         return $this->categories;
     }
 
-
     public function setCategories(array $categories): MakairaProduct
     {
         $this->categories = $categories;
+
         return $this;
     }
-
 
     public function getEan(): string
     {
         return $this->ean;
     }
 
-
     public function setEan(string $ean): MakairaProduct
     {
         $this->ean = $ean;
+
         return $this;
     }
-
 
     public function getShortDescription(): string
     {
         return $this->shortDescription;
     }
 
-
     public function setShortDescription(string $shortDescription): MakairaProduct
     {
         $this->shortDescription = $shortDescription;
+
         return $this;
     }
-
 
     public function getLongDescription(): string
     {
         return $this->longDescription;
     }
 
-
     public function setLongDescription(string $longDescription): MakairaProduct
     {
         $this->longDescription = $longDescription;
+
         return $this;
     }
-
 
     public function getSoldAmount(): string
     {
         return $this->soldAmount;
     }
 
-
     public function setSoldAmount(string $soldAmount): MakairaProduct
     {
         $this->soldAmount = $soldAmount;
+
         return $this;
     }
-
 
     public function getUrl(): string
     {
         return $this->url;
     }
 
-
     public function setUrl(string $url): MakairaProduct
     {
         $this->url = $url;
+
         return $this;
     }
-
 
     public function getMainCategory(): string
     {
         return $this->mainCategory;
     }
 
-
     public function setMainCategory(string $mainCategory): MakairaProduct
     {
         $this->mainCategory = $mainCategory;
+
         return $this;
     }
-
 
     public function getMainCategoryUrl(): string
     {
         return $this->mainCategoryUrl;
     }
 
-
     public function setMainCategoryUrl(string $mainCategoryUrl): MakairaProduct
     {
         $this->mainCategoryUrl = $mainCategoryUrl;
+
         return $this;
     }
-
 
     public function getManufacturerId(): string
     {
         return $this->manufacturerId;
     }
 
-
     public function setManufacturerId(string $manufacturerId): MakairaProduct
     {
         $this->manufacturerId = $manufacturerId;
+
         return $this;
     }
-
 
     public function getManufacturerTitle(): string
     {
         return $this->manufacturerTitle;
     }
 
-
     public function setManufacturerTitle(string $manufacturerTitle): MakairaProduct
     {
         $this->manufacturerTitle = $manufacturerTitle;
+
         return $this;
     }
-
 
     public function getMakBoostNormInsert(): float
     {
         return $this->makBoostNormInsert;
     }
 
-
     public function setMakBoostNormInsert(float $makBoostNormInsert): MakairaProduct
     {
         $this->makBoostNormInsert = $makBoostNormInsert;
+
         return $this;
     }
-
 
     public function getMakBoostNormSold(): float
     {
         return $this->makBoostNormSold;
     }
 
-
     public function setMakBoostNormSold(float $makBoostNormSold): MakairaProduct
     {
         $this->makBoostNormSold = $makBoostNormSold;
+
         return $this;
     }
-
 
     public function getMakBoostNormRating(): float
     {
         return $this->makBoostNormRating;
     }
 
-
     public function setMakBoostNormRating(float $makBoostNormRating): MakairaProduct
     {
         $this->makBoostNormRating = $makBoostNormRating;
+
         return $this;
     }
-
 
     public function getMakBoostNormRevenue(): float
     {
         return $this->makBoostNormRevenue;
     }
 
-
     public function setMakBoostNormRevenue(float $makBoostNormRevenue): MakairaProduct
     {
         $this->makBoostNormRevenue = $makBoostNormRevenue;
+
         return $this;
     }
-
 
     public function getMakBoostNormProfitMargin(): float
     {
         return $this->makBoostNormProfitMargin;
     }
 
-
     public function setMakBoostNormProfitMargin(float $makBoostNormProfitMargin): MakairaProduct
     {
         $this->makBoostNormProfitMargin = $makBoostNormProfitMargin;
+
         return $this;
     }
-
 
     public function setFsk18(bool $fsk18): static
     {
@@ -619,14 +604,12 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
-
     public function setTaxClassId(int $taxClassId): static
     {
         $this->taxClassId = $taxClassId;
 
         return $this;
     }
-
 
     public function setGmAltText(string $gmAltText): static
     {
@@ -635,14 +618,12 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
-
     public function setProductsVpe(int $productsVpe): static
     {
         $this->productsVpe = $productsVpe;
 
         return $this;
     }
-
 
     public function setProductsVpeStatus(int $productsVpeStatus): static
     {
@@ -651,7 +632,6 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
-
     public function setProductsVpeValue(float $productsVpeValue): static
     {
         $this->productsVpeValue = $productsVpeValue;
@@ -659,36 +639,30 @@ class MakairaProduct extends MakairaEntity
         return $this;
     }
 
-
     public function isFsk18(): bool
     {
         return $this->fsk18;
     }
-
 
     public function getTaxClassId(): int
     {
         return $this->taxClassId;
     }
 
-
     public function getGmAltText(): string
     {
         return $this->gmAltText;
     }
-
 
     public function getProductsVpe(): int
     {
         return $this->productsVpe;
     }
 
-
     public function getProductsVpeStatus(): int
     {
         return $this->productsVpeStatus;
     }
-
 
     public function getProductsVpeValue(): int
     {
@@ -715,6 +689,7 @@ class MakairaProduct extends MakairaEntity
     public function setIsbn(string $isbn): static
     {
         $this->isbn = $isbn;
+
         return $this;
     }
 
@@ -726,6 +701,7 @@ class MakairaProduct extends MakairaEntity
     public function setUpc(string $upc): static
     {
         $this->upc = $upc;
+
         return $this;
     }
 
@@ -737,6 +713,7 @@ class MakairaProduct extends MakairaEntity
     public function setJan(string $jan): static
     {
         $this->jan = $jan;
+
         return $this;
     }
 
@@ -748,6 +725,7 @@ class MakairaProduct extends MakairaEntity
     public function setDateAdded(string $dateAdded): static
     {
         $this->dateAdded = $dateAdded;
+
         return $this;
     }
 
@@ -759,6 +737,7 @@ class MakairaProduct extends MakairaEntity
     public function setDateAvailable(string $dateAvailable): static
     {
         $this->dateAvailable = $dateAvailable;
+
         return $this;
     }
 
@@ -770,6 +749,7 @@ class MakairaProduct extends MakairaEntity
     public function setShippingNumberOfDays(int $shippingNumberOfDays): static
     {
         $this->shippingNumberOfDays = $shippingNumberOfDays;
+
         return $this;
     }
 
@@ -781,6 +761,7 @@ class MakairaProduct extends MakairaEntity
     public function setMpn(string $mpn): static
     {
         $this->mpn = $mpn;
+
         return $this;
     }
 
@@ -792,6 +773,7 @@ class MakairaProduct extends MakairaEntity
     public function setModel(string $model): static
     {
         $this->model = $model;
+
         return $this;
     }
 
@@ -799,7 +781,7 @@ class MakairaProduct extends MakairaEntity
     {
         $codes = [];
         foreach (['ean', 'mpn', 'isbn', 'upc', 'jan', 'model'] as $code) {
-            if (!empty($this->$code)) {
+            if (! empty($this->$code)) {
                 $codes[] = $this->$code;
             }
         }

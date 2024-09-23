@@ -7,14 +7,14 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
     public function proceed()
     {
         if (defined('_GM_VALID_CALL') === false) {
-            die('x0');
+            exit('x0');
         }
 
         $configurationService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Configuration\Services\ConfigurationService::class);
 
         $moduleConfigService = new \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService($configurationService);
 
-        if(!$moduleConfigService->isMakairaImporterSetupDone() || !$moduleConfigService->isPublicFieldsSetupDone()) {
+        if (! $moduleConfigService->isMakairaImporterSetupDone() || ! $moduleConfigService->isPublicFieldsSetupDone()) {
             return parent::proceed();
         }
 
@@ -35,21 +35,21 @@ class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
                 'categories' => $result['category']['items'] ?? [],
                 'manufacturers' => $result['manufacturer']['items'] ?? [],
                 'links' => $result['links']['items'] ?? [],
-                'pages' => $result['pages']['items'] ?? []
+                'pages' => $result['pages']['items'] ?? [],
             ];
 
             $view = MainFactory::create('SearchAutoCompleterThemeContentView');
 
             $view->set_content_data('result', $moduleContent);
 
-            $view->set_template_dir(__DIR__ . '/../../ui/template');
+            $view->set_template_dir(__DIR__.'/../../ui/template');
 
             $view->set_content_template('autosuggest.html');
 
             $this->v_output_buffer = $view->get_html();
 
             return $this->v_output_buffer;
-        }catch(Exception $exception) {
+        } catch (Exception $exception) {
             return parent::proceed();
         }
     }

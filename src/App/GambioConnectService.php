@@ -7,12 +7,8 @@ namespace GXModules\MakairaIO\MakairaConnect\App;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Collections\Languages;
-use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
-use GXModules\MakairaIO\MakairaConnect\App\ChangesService;
-use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
-use GXModules\MakairaIO\MakairaConnect\App\MakairaLogger;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
@@ -23,8 +19,6 @@ use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectService as Gambi
 
 /**
  * Class GambioConnectService
- *
- * @package GXModules\MakairaIO\MakairaConnect\App
  */
 class GambioConnectService implements GambioConnectServiceInterface
 {
@@ -34,8 +28,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected Connection $connection,
         protected MakairaLogger $logger,
         protected ?ProductVariantsRepository $productVariantsRepository = null,
-    ) {
-    }
+    ) {}
 
     private function getService(string $service): static
     {
@@ -78,9 +71,10 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $this->languageService->getAvailableLanguages();
     }
 
-    public function exportIsDoneForType(string $type){
+    public function exportIsDoneForType(string $type)
+    {
         $this->connection->delete(ChangesService::TABLE_NAME, [
-            'type' => $type
+            'type' => $type,
         ]);
     }
 
@@ -88,7 +82,7 @@ class GambioConnectService implements GambioConnectServiceInterface
     {
         $this->connection->delete(ChangesService::TABLE_NAME, [
             'gambio_id' => $gambio_id,
-            'type' => $type
+            'type' => $type,
         ]);
     }
 
@@ -120,6 +114,7 @@ class GambioConnectService implements GambioConnectServiceInterface
 
             $changes[$index]['delete'] = empty($query);
         }
+
         return $changes;
     }
 
@@ -165,20 +160,20 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function addMakairaDocumentWrapper(MakairaEntity $document, string $language = null): array
+    public function addMakairaDocumentWrapper(MakairaEntity $document, ?string $language = null): array
     {
         return [
             'data' => $document->toArray(),
             'language_id' => $language,
-            'delete' => $document->isDelete()
+            'delete' => $document->isDelete(),
         ];
     }
 
-    public function addMultipleMakairaDocuments(array $documents, string $language = null): array
+    public function addMultipleMakairaDocuments(array $documents, ?string $language = null): array
     {
         $data = [
             'items' => [],
-            'import_timestamp' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'import_timestamp' => (new \DateTime)->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
 
@@ -186,7 +181,7 @@ class GambioConnectService implements GambioConnectServiceInterface
             $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
         }
 
-        $this->logger->debug("Makaira Documents for Debug", $data);
+        $this->logger->debug('Makaira Documents for Debug', $data);
 
         return $data;
     }

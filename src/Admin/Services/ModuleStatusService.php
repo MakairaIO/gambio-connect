@@ -6,8 +6,7 @@ class ModuleStatusService
 {
     public function __construct(
         protected ModuleConfigService $moduleConfigService
-    ) {
-    }
+    ) {}
 
     public function getModuleConfigService(): ModuleConfigService
     {
@@ -22,7 +21,7 @@ class ModuleStatusService
     public function isInSetup(): bool
     {
         return $this->isInstalled()
-            && !$this->makairaConfigIsSet();
+            && ! $this->makairaConfigIsSet();
     }
 
     public function isSetUp(): bool
@@ -37,9 +36,9 @@ class ModuleStatusService
 
     private function makairaConfigIsSet(): bool
     {
-        $urlSet = !empty($this->moduleConfigService->getMakairaUrl());
-        $instanceSet = !empty($this->moduleConfigService->getMakairaInstance());
-        $secretSet = !empty($this->moduleConfigService->getMakairaSecret());
+        $urlSet = ! empty($this->moduleConfigService->getMakairaUrl());
+        $instanceSet = ! empty($this->moduleConfigService->getMakairaInstance());
+        $secretSet = ! empty($this->moduleConfigService->getMakairaSecret());
 
         return $urlSet && $instanceSet && $secretSet;
     }

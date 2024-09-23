@@ -24,7 +24,7 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
             $this->get_content_template(),
             $_SESSION['language'],
             $_SESSION['currency'],
-            $_SESSION['customers_status']['customers_status_id']
+            $_SESSION['customers_status']['customers_status_id'],
         ];
     }
 
@@ -33,7 +33,7 @@ class MakairaProductListingThemeContentView extends ProductListingThemeContentVi
         parent::prepare_data();
 
         if ($this->moduleConfigService->isMakairaImporterSetupDone(
-            ) || $this->moduleConfigService->isPublicFieldsSetupDone()) {
+        ) || $this->moduleConfigService->isPublicFieldsSetupDone()) {
             $this->set_content_data('CATEGORIES_ID', $this->category_id);
             $this->set_content_data('CATEGORIES_DESCRIPTION', $this->category_description);
             $this->set_content_data('CATEGORIES_DESCRIPTION_BOTTOM', $this->category_description_bottom);

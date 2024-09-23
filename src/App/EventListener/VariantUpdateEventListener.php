@@ -12,15 +12,13 @@ class VariantUpdateEventListener
      */
     private $service;
 
-
-
     public function __construct(GambioConnectService $service)
     {
         $this->service = $service;
     }
 
     /**
-     * @param AdditionalOptionsStockUpdated $event
+     * @param  AdditionalOptionsStockUpdated  $event
      */
     public function __invoke(UpdatedProductVariantsStock $event): void
     {

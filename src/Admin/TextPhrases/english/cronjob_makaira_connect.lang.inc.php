@@ -1,7 +1,7 @@
 <?php
 
 $t_language_text_section_content_array = [
-    'cronjob_title'      => 'Makaira Export Job',
+    'cronjob_title' => 'Makaira Export Job',
     'configuration' => 'Gambio Connect CRON Konfiguration',
     'cronjob_label_active' => 'Aktiv',
     'cronjob_label_interval' => 'Interval',

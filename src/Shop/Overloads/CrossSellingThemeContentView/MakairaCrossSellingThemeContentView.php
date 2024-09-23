@@ -71,20 +71,21 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                     'products_vpe' => $fields['products_vpe'],
                     'products_vpe_value' => $fields['products_vpe_value'],
                     'products_vpe_status' => $fields['products_vpe_status'],
-                    'sort_order' => $fields['sort_order']
+                    'sort_order' => $fields['sort_order'],
                 ];
         }
 
         $data = [];
 
         foreach ($preparedData as $preparedDataItem) {
-            $data[0]['PRODUCTS'][] =  array_merge(
+            $data[0]['PRODUCTS'][] = array_merge(
                 $this->coo_product->buildDataArray($preparedDataItem),
                 [
-                    'PRODUCTS_IMAGE' => $preparedDataItem['products_image']
+                    'PRODUCTS_IMAGE' => $preparedDataItem['products_image'],
                 ]
             );
         }
+
         return $data;
     }
 
@@ -99,8 +100,9 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                 $this->coo_product->data['products_id'],
                 $this->moduleConfigService->getRecoCrossSelling()
             );
+
             return $this->mapMakairaResponse($requestData['items']);
-        }catch(Exception $exception) {
+        } catch (Exception $exception) {
             return parent::loadCrossSelling();
         }
     }
@@ -116,8 +118,9 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
                 $this->coo_product->data['products_id'],
                 $this->moduleConfigService->getRecoReverseCrossSelling()
             );
+
             return $this->mapMakairaResponse($requestData['items'])[0]['PRODUCTS'];
-        }catch(Exception $exception) {
+        } catch (Exception $exception) {
             return parent::loadReverseCrossSelling();
         }
     }

@@ -11,16 +11,15 @@ class SwitchAction extends AbstractAction
 {
     public function __construct(
         protected GambioConnectService $service
-    ) {
-    }
-
+    ) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(Request $request, Response $response): Response
     {
         $this->service->switch();
+
         return $response->withJson(['success' => true]);
     }
 }

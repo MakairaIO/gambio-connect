@@ -32,7 +32,7 @@ class MakairaConnectInstaller
     public static function onInstallation(CI_DB_query_builder $db)
     {
         $db->query(
-            "CREATE TABLE IF NOT EXISTS `" . ChangesService::TABLE_NAME .  "` (
+            'CREATE TABLE IF NOT EXISTS `'.ChangesService::TABLE_NAME."` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `gambio_id` varchar(255) NOT NULL,
                 `type` varchar(255) NOT NULL,
@@ -43,7 +43,7 @@ class MakairaConnectInstaller
               )"
         );
 
-        $db->query("
+        $db->query('
         CREATE PROCEDURE IF NOT EXISTS makairaChange (IN id INT, IN entity_type VARCHAR(255))
 	BEGIN
 		DECLARE entries INTEGER DEFAULT 0;
@@ -54,7 +54,7 @@ class MakairaConnectInstaller
 			INSERT INTO `makaira_connect_changes` (gambio_id, `type`) VALUES (id, entity_type);
 		END IF;
     END;
-            ");
+            ');
 
         GambioConnectProductsTableInstaller::install($db);
 
@@ -99,12 +99,11 @@ class MakairaConnectInstaller
         GambioConnectCategoriesFilterTableInstaller::install($db);
     }
 
-
     public static function onUninstallation(CI_DB_query_builder $db)
     {
-        $db->query("DROP TABLE IF EXISTS " . ChangesService::TABLE_NAME);
+        $db->query('DROP TABLE IF EXISTS '.ChangesService::TABLE_NAME);
 
-        $db->query("DROP PROCEDURE IF EXISTS makairaChange;");
+        $db->query('DROP PROCEDURE IF EXISTS makairaChange;');
 
         GambioConnectProductsTableInstaller::uninstall($db);
 

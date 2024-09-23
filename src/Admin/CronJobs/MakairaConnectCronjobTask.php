@@ -6,10 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
-use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
-use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectManufacturerService;
-use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 
 class MakairaConnectCronjobTask extends AbstractCronjobTask
@@ -22,14 +19,11 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
     protected Connection $connection;
 
-
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
 
         $this->connection = $dependencies['Connection'];
-
-
 
         $this->moduleConfigService = $dependencies['ModuleConfigService'];
 
@@ -46,15 +40,15 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
             $this->gambioConnectPublicFieldsService = $gambioConnectService->getGambioConnectPublicFieldsService();
 
-            return function () use($gambioConnectService) {
-                if (!$this->checkImporterSetup()) {
-                    $this->logInfo("Importer was not created yet - creating it now");
+            return function () use ($gambioConnectService) {
+                if (! $this->checkImporterSetup()) {
+                    $this->logInfo('Importer was not created yet - creating it now');
                     $this->gambioConnectImporterConfigService->setUpImporter();
 
                     $this->completeImporterSetUp();
                 }
 
-                $host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
+                $host = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/';
 
                 $languages = $this->connection->createQueryBuilder()
                     ->select('code')
@@ -64,18 +58,18 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $this->logInfo('MakairaConnect Cronjob Started');
 
-                foreach($languages as $language) {
-                    $this->logInfo('Begin Export for Language ' . $language['code']);
+                foreach ($languages as $language) {
+                    $this->logInfo('Begin Export for Language '.$language['code']);
                     $client = new \GuzzleHttp\Client([
-                        'base_uri' => $host . $language['code'],
+                        'base_uri' => $host.$language['code'],
                     ]);
                     try {
-                        $client->get('shop.php?do=MakairaCronService/doExport&language='. $language['code']);
-                    }catch(Exception $exception) {
-                        $this->logInfo('Error in Export for Language ' . $language['code']);
+                        $client->get('shop.php?do=MakairaCronService/doExport&language='.$language['code']);
+                    } catch (Exception $exception) {
+                        $this->logInfo('Error in Export for Language '.$language['code']);
                         $this->logError($exception->getMessage());
                     }
-                    $this->logInfo('End Export for Language ' . $language['code']);
+                    $this->logInfo('End Export for Language '.$language['code']);
                 }
 
                 $gambioConnectService->exportIsDoneForType('product');
@@ -84,7 +78,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $gambioConnectService->exportIsDoneForType('category');
 
-                if (!$this->checkPublicFieldsSetup()) {
+                if (! $this->checkPublicFieldsSetup()) {
                     try {
                         $this->logInfo('Makaira Public Fields Setup Has Started');
 
@@ -93,7 +87,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                         $this->gambioConnectPublicFieldsService->setUpCategoryPublicFields();
 
                         $this->logInfo('Makaira Public Fields has been setup');
-                    }catch(Exception) {
+                    } catch (Exception) {
                         return;
                     }
 
@@ -101,38 +95,20 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 }
             };
         }
-        return function () {
-        };
+
+        return function () {};
     }
 
-
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     protected function logInfo(string $message): void
     {
         $this->logger->log(['message' => $message, 'level' => 'info']);
     }
 
-
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     protected function logError(string $message): void
     {
         $this->logger->logError(['message' => $message, 'level' => 'error']);
     }
 
-
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     protected function logNotice(string $message): void
     {
         $this->logger->log(['message' => $message, 'level' => 'notice']);
@@ -144,8 +120,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
 
-        if (!$makairaUrl || !$makairaInstance || !$makairaSecret) {
+        if (! $makairaUrl || ! $makairaInstance || ! $makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
+
             return false;
         }
 
@@ -166,7 +143,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
     {
         $importers = $this->gambioConnectImporterConfigService->checkImporter();
 
-        if(count($importers) > 0 && !$this->moduleConfigService->isMakairaImporterSetupDone()) {
+        if (count($importers) > 0 && ! $this->moduleConfigService->isMakairaImporterSetupDone()) {
             $this->moduleConfigService->setMakairaImporterSetupDone();
         }
 

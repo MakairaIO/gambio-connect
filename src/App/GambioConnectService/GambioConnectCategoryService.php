@@ -16,7 +16,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
     private string $currentLanguageCode;
 
-
     public function prepareExport(): void
     {
         $languages = $this->getLanguages();
@@ -25,7 +24,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             $categories = $this->getQuery($language->id());
 
             foreach ($categories as $category) {
-                $this->connection->executeQuery('CALL makairaChange(' . $category['categories_id'] . ', "category")');
+                $this->connection->executeQuery('CALL makairaChange('.$category['categories_id'].', "category")');
             }
         }
     }
@@ -38,7 +37,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
-        if (!empty($makairaExports)) {
+        if (! empty($makairaExports)) {
             $categories = [];
             foreach ($makairaExports as $export) {
                 if ($export['delete']) {
@@ -52,7 +51,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                         $exportCategory ?? [],
                         [
                             'categories_id' => $export['gambio_id'],
-                            'delete' => false
+                            'delete' => false,
                         ]
                     );
                 }
@@ -71,9 +70,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                         $documents[] = $document;
                     }
                 } catch (Exception $exception) {
-                    $this->logger->error("Category Export to Makaira Failed", [
+                    $this->logger->error('Category Export to Makaira Failed', [
                         'id' => $category['categories_id'],
-                        'message' => $exception->getMessage()
+                        'message' => $exception->getMessage(),
                     ]);
                 }
             }
@@ -81,16 +80,15 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             $response = $this->client->pushRevision($data);
             $this->logger->info(
                 'Makaira Category Documents: '
-                . count($documents)
-                . ' with Status Code '
-                . $response->getStatusCode()
+                .count($documents)
+                .' with Status Code '
+                .$response->getStatusCode()
             );
             foreach ($categories as $category) {
                 $this->exportIsDone($category['categories_id'], 'category');
             }
         }
     }
-
 
     /**
      * @throws Exception
@@ -102,11 +100,10 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         return MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
     }
 
-
     /**
-     * @param Language $language
-     *
+     * @param  Language  $language
      * @return \mixed[][]
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function getQuery(string $language, array $makairaChanges = []): array
@@ -129,9 +126,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->where('categories_description.language_id = :languageId')
             ->setParameter('languageId', $language);
 
-        if (!empty($makairaChanges)) {
+        if (! empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->andWhere('categories.categories_id IN (' . implode(',', array_values($ids)) . ')');
+            $query->andWhere('categories.categories_id IN ('.implode(',', array_values($ids)).')');
         }
 
         return array_filter(
@@ -172,7 +169,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
     {
         if (empty($category['parent_id'])) {
             return [
-                'depth'     => $depth,
+                'depth' => $depth,
                 'hierarchy' => empty($hierarchy) ? $category['categories_id'] : $hierarchy,
             ];
         }
@@ -187,13 +184,13 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             ->execute()
             ->fetchAssociative();
         if (empty($hierarchy)) {
-            if(empty($parentCategory)) {
+            if (empty($parentCategory)) {
                 $hierarchy = $category['categories_id'];
             } else {
-                $hierarchy = $parentCategory['categories_id'] . '//' . $category['categories_id'];
+                $hierarchy = $parentCategory['categories_id'].'//'.$category['categories_id'];
             }
         } else {
-            $hierarchy = $parentCategory['categories_id'] . '//' . $hierarchy;
+            $hierarchy = $parentCategory['categories_id'].'//'.$hierarchy;
         }
 
         return $this->calculateCategoryDepth($parentCategory, $depth, $hierarchy);

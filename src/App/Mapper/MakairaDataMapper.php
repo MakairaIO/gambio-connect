@@ -3,12 +3,7 @@
 namespace GXModules\MakairaIO\MakairaConnect\App\Mapper;
 
 use DateTime;
-use Gambio\Admin\Modules\Language\Model\Language;
-use Gambio\Admin\Modules\Product\App\ProductVariantsReadService;
-use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
-use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaXtcPrice;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaManufacturer;
@@ -22,7 +17,7 @@ class MakairaDataMapper
      */
     public static function mapManufacturer(array $data): MakairaManufacturer
     {
-        $transfer = new MakairaManufacturer();
+        $transfer = new MakairaManufacturer;
 
         if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
@@ -56,7 +51,7 @@ class MakairaDataMapper
      */
     public static function mapCategory(array $data, array $hierarchy, string $language): MakairaCategory
     {
-        $transfer = new MakairaCategory();
+        $transfer = new MakairaCategory;
 
         if ($data['delete']) {
             return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
@@ -78,7 +73,7 @@ class MakairaDataMapper
             ->setDepth($hierarchy['depth'])
             ->setHierarchy($hierarchy['hierarchy'])
             ->setSubCategories($subCategories)
-            ->setUrl('?' . xtc_category_link($data['categories_id'], $data['categories_name'], $language))
+            ->setUrl('?'.xtc_category_link($data['categories_id'], $data['categories_name'], $language))
             ->setCategoryDescription($data['categories_description'] ?? '')
             ->setCategoryDescriptionBottom($data['categories_description_bottom'] ?? '')
             ->setCategoryHeadingTitle($data['categories_heading_title'] ?? '')
@@ -92,8 +87,7 @@ class MakairaDataMapper
             ->setCategoriesId($data['categories_id'])
             ->setViewModeTiled($data['view_mode_tiled'])
             ->setCategoriesImage($data['categories_image'] ?? '')
-            ->setGmShowQtyInfo($data['gm_show_qty_info'])
-        ;
+            ->setGmShowQtyInfo($data['gm_show_qty_info']);
 
         return $transfer;
     }
@@ -102,7 +96,7 @@ class MakairaDataMapper
     {
         $product = (new \product($product['products_id'], $languageId))->data;
         $productDocument = self::mapProduct($product, $languageId, $currencyCode, $customerStatusId);
-        $variantDocument = new MakairaVariant();
+        $variantDocument = new MakairaVariant;
         $variantDocument->setProduct($product);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
         $variantDocument->setId($variant->id())
@@ -127,7 +121,7 @@ class MakairaDataMapper
 
     public static function mapProduct(array $data, string $languageId, array $currencyCode, array $customerStatusId): MakairaProduct
     {
-        $transfer = new MakairaProduct();
+        $transfer = new MakairaProduct;
         if ($data['delete']) {
             return $transfer->setId($data['products_id'])
                 ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
@@ -150,13 +144,13 @@ class MakairaDataMapper
 
         $image = '';
 
-        if (!empty($data['products_image'])) {
-            $image = HTTPS_SERVER . DIR_WS_CATALOG . 'images/product_images/original_images/' . $data['products_image'];
+        if (! empty($data['products_image'])) {
+            $image = HTTPS_SERVER.DIR_WS_CATALOG.'images/product_images/original_images/'.$data['products_image'];
         }
 
         $groups = [];
-        foreach($currencyCode as $code) {
-            foreach($customerStatusId as $statusId) {
+        foreach ($currencyCode as $code) {
+            foreach ($customerStatusId as $statusId) {
                 $groups[$languageId.'_'.$code['code'].'_'.$statusId['customers_status_id']] = [
                     'products_price' => [
                         'formated' => $cooProduct['PRODUCTS_PRICE'],
@@ -166,7 +160,7 @@ class MakairaDataMapper
                     'products_shipping_range' => $data['coo_product']['PRODUCTS_SHIPPING_RANGE'],
                     'products_shipping_image' => $data['coo_product']['PRODUCTS_SHIPPING_IMAGE'],
                     'products_shipping_link_active' => $data['coo_product']['PRODUCTS_SHIPPING_LINK_ACTIVE'],
-                    'coo_product' => $cooProduct
+                    'coo_product' => $cooProduct,
                 ];
             }
         }
@@ -190,7 +184,7 @@ class MakairaDataMapper
             ->setDateAvailable($data['products_date_available'] ?? '')
             ->setUrl($data['coo_product']['PRODUCTS_LINK'])
             ->setTaxClassId($data['products_tax_class_id'])
-            ->setFsk18((bool)$data['products_fsk18'] ?? false)
+            ->setFsk18((bool) $data['products_fsk18'] ?? false)
             ->setTaxClassId($data['products_tax_class_id'])
             ->setGmAltText($data['gm_alt_text'] ?? '')
             ->setProductsVpe($data['products_vpe'])

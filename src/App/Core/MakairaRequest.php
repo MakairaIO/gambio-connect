@@ -4,20 +4,19 @@ namespace GXModules\MakairaIO\MakairaConnect\App\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
-use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
-use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
-use Makaira\Constraints;
-use Makaira\Query;
 
 class MakairaRequest
 {
     private Client $client;
+
     private string $makairaUrl;
+
     private string $makairaInstance;
 
     private string $makairaSecret = '';
 
-    private string $nonce = "";
+    private string $nonce = '';
+
     private string $language;
 
     public function __construct(string $makairaUrl, string $makairaInstance, string $language, string $makairaSecret = '')
@@ -28,12 +27,12 @@ class MakairaRequest
         $this->nonce = bin2hex(random_bytes(8));
 
         $this->client = new Client([
-          'base_uri' => rtrim($this->makairaUrl), // we trim the url to make sure we have no double slashes
-          'headers' => [
-            'X-Makaira-Instance' => $this->makairaInstance,
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-          ]
+            'base_uri' => rtrim($this->makairaUrl), // we trim the url to make sure we have no double slashes
+            'headers' => [
+                'X-Makaira-Instance' => $this->makairaInstance,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
         ]);
     }
 
@@ -41,16 +40,17 @@ class MakairaRequest
     {
         $requestBuilder = new RequestBuilder($this->language);
         $body = [
-          'searchPhrase' => '',
-          'isSearch' => false,
-          'enableAggregations' => false,
-          'url' => $url,
-          'count' => 50,
-          'offset' => 0,
-          'constraints' => $requestBuilder->getConstraint()
+            'searchPhrase' => '',
+            'isSearch' => false,
+            'enableAggregations' => false,
+            'url' => $url,
+            'count' => 50,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint(),
         ];
-        $uri = $this->makairaUrl . $this->getEndpoint('page');
+        $uri = $this->makairaUrl.$this->getEndpoint('page');
         $response = $this->request('POST', $uri, $body);
+
         return $response;
     }
 
@@ -58,17 +58,18 @@ class MakairaRequest
     {
         $requestBuilder = new RequestBuilder($this->language);
         $body = [
-          'searchPhrase' => $searchPhrase,
-          'isSearch' => true,
-          'enableAggregations' => false,
-          'aggregations' => [],
-          'sorting' => [],
-          'count' => 8,
-          'offset' => 0,
-          'constraints' => $requestBuilder->getConstraint()
+            'searchPhrase' => $searchPhrase,
+            'isSearch' => true,
+            'enableAggregations' => false,
+            'aggregations' => [],
+            'sorting' => [],
+            'count' => 8,
+            'offset' => 0,
+            'constraints' => $requestBuilder->getConstraint(),
         ];
-        $uri = $this->makairaUrl . $this->getEndpoint('search/public');
+        $uri = $this->makairaUrl.$this->getEndpoint('search/public');
         $response = $this->request('POST', $uri, $body);
+
         return $response;
     }
 
@@ -92,11 +93,12 @@ class MakairaRequest
                 'price',
                 'products_vpe',
                 'products_vpe_status',
-                'products_vpe_value'
-            ]
+                'products_vpe_value',
+            ],
         ];
-        $uri = $this->makairaUrl . $this->getEndpoint('recommendation');
+        $uri = $this->makairaUrl.$this->getEndpoint('recommendation');
         $response = $this->request('POST', $uri, $body);
+
         return $response;
     }
 
@@ -116,7 +118,8 @@ class MakairaRequest
             'offset' => 0,
         ];
 
-        $url = $this->makairaUrl . $this->getEndpoint('category') . $id;
+        $url = $this->makairaUrl.$this->getEndpoint('category').$id;
+
         return $this->request('GET', $url, '');
     }
 
@@ -154,9 +157,10 @@ class MakairaRequest
             }
             $response = $this->client->request($method, $url, $options);
             $body = $response->getBody()->getContents();
+
             return json_decode($body, true);
         } catch (ServerException $e) {
-            throw new \Exception('Request failed: Response: ' . $url . json_encode($body) . $e->getMessage());
+            throw new \Exception('Request failed: Response: '.$url.json_encode($body).$e->getMessage());
         }
     }
 }

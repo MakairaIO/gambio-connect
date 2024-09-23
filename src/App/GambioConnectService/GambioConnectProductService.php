@@ -3,7 +3,6 @@
 namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
-use Gambio\Admin\Modules\Language\Model\Language;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ValueObjects\ProductId;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
@@ -46,7 +45,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             $products = $this->getQuery($language->id());
 
             foreach ($products as $product) {
-                $this->connection->executeQuery('CALL makairaChange(' . $product['products_id'] . ', "product")');
+                $this->connection->executeQuery('CALL makairaChange('.$product['products_id'].', "product")');
             }
         }
     }
@@ -63,7 +62,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
         $makairaChanges = $this->getEntitiesForExport('product');
 
-        if (!empty($makairaChanges)) {
+        if (! empty($makairaChanges)) {
             $products = [];
             foreach ($makairaChanges as $change) {
                 if ($change['delete']) {
@@ -96,9 +95,9 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
                         $this->logger->info(
                             'Processing '
-                            . count($variants->toArray())
-                            . ' Variants for '
-                            . $product['products_id']
+                            .count($variants->toArray())
+                            .' Variants for '
+                            .$product['products_id']
                         );
 
                         foreach ($variants as $variant) {
@@ -112,15 +111,15 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         }
 
                         foreach ($documents as $document) {
-                            $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
-                                'data' => $document->getId()
+                            $this->logger->info('Prepared Document for Makaira '.get_class($document), [
+                                'data' => $document->getId(),
                             ]);
                         }
                     }
                 } catch (\Exception $exception) {
-                    $this->logger->error("Product Export to Makaira Failed", [
+                    $this->logger->error('Product Export to Makaira Failed', [
                         'id' => $product['products_id'],
-                        'message' => $exception->getMessage()
+                        'message' => $exception->getMessage(),
                     ]);
                 }
             }
@@ -153,8 +152,8 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             ->select('*')
             ->from('products');
 
-        if (!empty($makairaChanges)) {
-            $ids = array_map(fn($change) => $change['gambio_id'], $makairaChanges);
+        if (! empty($makairaChanges)) {
+            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
             $productsQuery
                 ->add('where', $productsQuery->expr()->in('products.products_id', $ids), true);
         }
@@ -180,7 +179,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
                 if ($relationTable === 'products_description' || $relationTable === 'products_properties_index') {
                     $query
-                        ->andWhere($relationTable . '.language_id = :languageId')
+                        ->andWhere($relationTable.'.language_id = :languageId')
                         ->setParameter('languageId', $language);
                 }
 
@@ -189,7 +188,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                         $relationTable,
                         'categories_description',
                         'categories_description',
-                        $relationTable . '.categories_id = categories_description.categories_id'
+                        $relationTable.'.categories_id = categories_description.categories_id'
                     )
                         ->andWhere('categories_description.language_id = :languageId')
                         ->setParameter('languageId', $language->id());

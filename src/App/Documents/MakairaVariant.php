@@ -6,12 +6,11 @@ namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
 use DateTime;
 use Gambio\Admin\Modules\Product\Submodules\Variant\Model\Collections\ProductVariants;
-use Gambio\Admin\Modules\Product\Submodules\Variant\Model\ProductVariant;
-use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 
 class MakairaVariant extends MakairaEntity
 {
     private array $makairaDocument = [];
+
     private array $product;
 
     private int $parent;
@@ -47,14 +46,15 @@ class MakairaVariant extends MakairaEntity
     private string $maincategoryurl;
 
     private ProductVariants $variants;
+
     private array $options = [];
+
     private string $now;
 
     public function __construct()
     {
-        $this->now = (new DateTime())->format('Y-m-d H:i:s');
+        $this->now = (new DateTime)->format('Y-m-d H:i:s');
     }
-
 
     public function setProduct(array $product): static
     {
@@ -66,10 +66,9 @@ class MakairaVariant extends MakairaEntity
     public function toArray(): array
     {
         return array_merge(
-        /* Makaira fields */
+            /* Makaira fields */
             parent::toArray(),
             [
-
 
                 /* Product fields */
 
@@ -87,17 +86,15 @@ class MakairaVariant extends MakairaEntity
                 'longdesc' => $this->getLongdesc(),
                 'price' => $this->getPrice(),
                 'meta_keywords' => $this->getMetaKeywords(),
-                'meta_description' => $this->getMetaDescription()
+                'meta_description' => $this->getMetaDescription(),
             ]
         );
     }
-
 
     public function getParent(): int
     {
         return $this->parent;
     }
-
 
     public function setParent(int $parent): static
     {
@@ -111,7 +108,6 @@ class MakairaVariant extends MakairaEntity
         return $this->ean;
     }
 
-
     public function setEan(string $ean): static
     {
         $this->ean = $ean;
@@ -119,12 +115,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function isVariant(): bool
     {
         return $this->isVariant;
     }
-
 
     public function setIsVariant(bool $isVariant): static
     {
@@ -132,7 +126,6 @@ class MakairaVariant extends MakairaEntity
 
         return $this;
     }
-
 
     public function isActive(): bool
     {
@@ -144,7 +137,6 @@ class MakairaVariant extends MakairaEntity
         return $this->sort;
     }
 
-
     public function setSort(int $sort): static
     {
         $this->sort = $sort;
@@ -152,12 +144,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getStock(): int
     {
         return $this->stock;
     }
-
 
     public function setStock(int $stock): static
     {
@@ -165,7 +155,6 @@ class MakairaVariant extends MakairaEntity
 
         return $this;
     }
-
 
     public function isOnstock(): bool
     {
@@ -175,21 +164,19 @@ class MakairaVariant extends MakairaEntity
     public function setOnstock(bool $onStock): static
     {
         $this->onStock = $onStock;
+
         return $this;
     }
-
 
     public function getPictureUrlMain(): string
     {
         return $this->picture_url_main;
     }
 
-
     public function getTitle(): string
     {
         return $this->title;
     }
-
 
     public function setTitle(string $title): static
     {
@@ -198,12 +185,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getShortdesc(): string
     {
         return $this->shortdesc;
     }
-
 
     public function setShortdesc(string $shortdesc): static
     {
@@ -212,12 +197,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getLongdesc(): string
     {
         return $this->longdesc;
     }
-
 
     public function setLongdesc(string $longdesc): static
     {
@@ -226,12 +209,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getPrice(): float
     {
         return $this->price;
     }
-
 
     public function setPrice(float $price): static
     {
@@ -240,12 +221,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getSearchkeys(): string
     {
         return $this->searchkeys;
     }
-
 
     public function setSearchkeys(string $searchkeys): static
     {
@@ -254,12 +233,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getMetaKeywords(): string
     {
         return $this->meta_keywords;
     }
-
 
     public function setMetaKeywords(string $meta_keywords): static
     {
@@ -268,12 +245,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getMetaDescription(): string
     {
         return $this->meta_description;
     }
-
 
     public function setMetaDescription(string $meta_description): static
     {
@@ -282,12 +257,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getMaincategory(): string
     {
         return $this->maincategory;
     }
-
 
     public function setMaincategory(string $maincategory): static
     {
@@ -296,12 +269,10 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function getMaincategoryurl(): string
     {
         return $this->maincategoryurl;
     }
-
 
     public function setMaincategoryurl(string $maincategoryurl): static
     {
@@ -310,13 +281,12 @@ class MakairaVariant extends MakairaEntity
         return $this;
     }
 
-
     public function addMakairaDocumentWrapper(): array
     {
         return [
             'items' => $this->makairaDocument,
             'import_timestamp' => $this->now,
-            'source_identifier' => 'gambio'
+            'source_identifier' => 'gambio',
         ];
     }
 }

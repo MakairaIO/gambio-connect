@@ -29,10 +29,10 @@ class GambioConnectProductsTableInstaller
 
     public static function uninstall(CI_DB_query_builder $db): void
     {
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_create_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_create_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_update_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_update_trigger');
 
-        $db->query("DROP TRIGGER IF EXISTS makaira_connect_product_delete_trigger");
+        $db->query('DROP TRIGGER IF EXISTS makaira_connect_product_delete_trigger');
     }
 }

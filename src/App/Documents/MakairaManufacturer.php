@@ -2,21 +2,25 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\Documents;
 
-use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use DateTime;
 
 class MakairaManufacturer extends MakairaEntity
 {
     private string $metaTitle;
+
     private string $metaDescription;
+
     private string $metaKeywords;
+
     private string $remoteUrl;
+
     private bool $isUrlClicked;
 
     private ?DateTime $createdAt = null;
-    private ?DateTime $updatedAt = null;
-    private ?DateTime $lastClickedAt = null;
 
+    private ?DateTime $updatedAt = null;
+
+    private ?DateTime $lastClickedAt = null;
 
     public function toArray(): array
     {
@@ -36,12 +40,10 @@ class MakairaManufacturer extends MakairaEntity
         ];
     }
 
-
     public function getMetaTitle(): string
     {
         return $this->metaTitle;
     }
-
 
     public function setMetaTitle(string $metaTitle): \GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer
     {
@@ -50,12 +52,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getMetaDescription(): string
     {
         return $this->metaDescription;
     }
-
 
     public function setMetaDescription(string $metaDescription): MakairaManufacturer
     {
@@ -64,12 +64,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getMetaKeywords(): string
     {
         return $this->metaKeywords;
     }
-
 
     public function setMetaKeywords(string $metaKeywords): MakairaManufacturer
     {
@@ -78,12 +76,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getRemoteUrl(): string
     {
         return $this->remoteUrl;
     }
-
 
     public function setRemoteUrl(string $remoteUrl): MakairaManufacturer
     {
@@ -92,12 +88,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function isUrlClicked(): bool
     {
         return $this->isUrlClicked;
     }
-
 
     public function setIsUrlClicked(bool $isUrlClicked): MakairaManufacturer
     {
@@ -106,12 +100,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
-
 
     public function setCreatedAt(?DateTime $createdAt): MakairaManufacturer
     {
@@ -120,12 +112,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
-
 
     public function setUpdatedAt(?DateTime $updatedAt): MakairaManufacturer
     {
@@ -134,12 +124,10 @@ class MakairaManufacturer extends MakairaEntity
         return $this;
     }
 
-
     public function getLastClickedAt(): ?DateTime
     {
         return $this->lastClickedAt;
     }
-
 
     public function setLastClickedAt(?DateTime $lastClickedAt): MakairaManufacturer
     {

@@ -12,8 +12,6 @@ use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 /**
  * Class Export
- *
- * @package GXModules\MakairaIO\MakairaConnect\App\Actions
  */
 class Export extends AbstractAction
 {
@@ -21,12 +19,11 @@ class Export extends AbstractAction
         protected GambioConnectService\GambioConnectCategoryService $gambioConnectCategoryService,
         protected GambioConnectService\GambioConnectProductService $gambioConnectProductService,
         protected GambioConnectService\GambioConnectManufacturerService $gambioConnectManufacturerService,
-    ) {
-    }
-
+    ) {}
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function handle(Request $request, Response $response): Response
