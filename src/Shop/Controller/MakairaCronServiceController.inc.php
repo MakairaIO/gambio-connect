@@ -33,6 +33,22 @@ class MakairaCronServiceController extends HttpViewController
 
     public function actionDoExport(): \JsonHttpControllerResponse
     {
+        if(empty($_GET['language'])) {
+            return new JsonHttpControllerResponse([
+                'error' => 'This action requires language parameter'
+            ]);
+        }
+
+        $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
+
+        try {
+            $language = $this->languageService->getLanguageByCode($_GET['language']);
+        }catch(Exception $exception) {
+            return new JsonHttpControllerResponse([
+                'error' => 'Language ' . $_GET['language'] . ' not found'
+            ]);
+        }
+
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
 
         $this->logger = new MakairaLogger();
@@ -40,8 +56,6 @@ class MakairaCronServiceController extends HttpViewController
         $this->moduleConfigService = new ModuleConfigService($this->configurationService);
 
         $this->client = new MakairaClient($this->configurationService);
-
-        $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
         $this->connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
 
