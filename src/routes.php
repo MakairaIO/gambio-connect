@@ -10,7 +10,7 @@ use GXModules\MakairaIO\MakairaConnect\App\Actions\Export;
 use GXModules\MakairaIO\MakairaConnect\App\Actions\ReplaceAction;
 use GXModules\MakairaIO\MakairaConnect\App\Actions\SwitchAction;
 
-return static function (RouteCollector $routeCollector) {
+return static function (RouteCollector $routeCollector): void {
     $routeCollector->get('/admin/makaira/gambio-connect', MakairaConnectEntry::class);
     $routeCollector->get('/admin/makaira/manual-setup', MakairaConnectManualSetup::class);
     $routeCollector->post('/admin/makaira/manual-setup', MakairaConnectManualSetup::class);

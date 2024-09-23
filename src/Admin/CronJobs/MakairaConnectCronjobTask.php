@@ -40,7 +40,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
             $this->gambioConnectPublicFieldsService = $gambioConnectService->getGambioConnectPublicFieldsService();
 
-            return function () use ($gambioConnectService) {
+            return function () use ($gambioConnectService): void {
                 if (! $this->checkImporterSetup()) {
                     $this->logInfo('Importer was not created yet - creating it now');
                     $this->gambioConnectImporterConfigService->setUpImporter();
@@ -96,7 +96,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
             };
         }
 
-        return function () {};
+        return function (): void {};
     }
 
     protected function logInfo(string $message): void
