@@ -69,15 +69,9 @@ class MakairaCronServiceController extends HttpViewController
             $productVariantsReadService
         );
 
-        $makairaConnectService->getManufacturerService()->prepareExport();
-
         $makairaConnectService->getManufacturerService()->export();
 
-        $makairaConnectService->getCategoryService()->prepareExport();
-
         $makairaConnectService->getCategoryService()->export();
-
-        $makairaConnectService->getProductService()->prepareExport();
 
         $makairaConnectService->getProductService()->export();
 
