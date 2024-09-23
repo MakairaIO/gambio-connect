@@ -420,6 +420,8 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
             } catch (Exception) {
                 parent::proceed($p_action);
             }
+        } else {
+            return parent::proceed($p_action);
         }
     }
 
