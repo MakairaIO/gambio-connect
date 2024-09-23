@@ -51,7 +51,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
             );
 
             $this->products = array_map(function ($makairaProduct) {
-                return (array) $makairaProduct->fields;
+                return $makairaProduct['fields'];
             }, $result['product']['items']);
         } elseif (empty($categoryId)) {
             $this->products = [];

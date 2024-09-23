@@ -289,7 +289,13 @@ class MakairaClient
             'enableAggregations' => true,
             'aggregations' => [],
             'sorting' => $sorting,
-            'fields' => MakairaProduct::FIELDS,
+            'fields' => array_merge(
+                [
+                    'subcategories',
+                ],
+                MakairaProduct::FIELDS,
+                MakairaCategory::FIELDS,
+            ),
             'count' => $maxSearchResults,
             'offset' => $pageNumber ?: 0,
             'constraints' => $requestBuilder->getConstraint(),
