@@ -16,6 +16,8 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
 
     private string $groupBy = '';
 
+    private array $filter = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -40,6 +42,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
 
     private function getCategory($categoryId)
     {
+        $this->prepareFilterForMakaira();
         $this->groupBy = $_SESSION['languages_id'].'_'.$this->currency_code.'_'.$this->customers_status_id;
         if ($this->isSearch()) {
             $result = $this->makairaClient->search(
@@ -47,7 +50,8 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                 $this->determine_max_display_search_results(),
                 $this->page_number ?? 0,
                 $this->prepareSortingForMakaira(),
-                $this->groupBy
+                $this->groupBy,
+                $this->filter
             );
 
             $this->products = array_map(function ($makairaProduct) {
@@ -63,7 +67,8 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                 $this->determine_max_display_search_results(),
                 $this->page_number ?? 0,
                 $this->prepareSortingForMakaira(),
-                $this->groupBy
+                $this->groupBy,
+                $this->filter,
             );
 
             $banners = $result['banners'];
@@ -453,5 +458,15 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
         }
 
         return [$type => $sort[1]];
+    }
+
+    private function prepareFilterForMakaira(): void{
+        if(! empty($this->filter_price_min)) {
+            $this->filter['price_from'] = $this->filter_price_min;
+        }
+
+        if(! empty($this->filter_price_max)) {
+            $this->filter['price_to'] = $this->filter_price_max;
+        }
     }
 }

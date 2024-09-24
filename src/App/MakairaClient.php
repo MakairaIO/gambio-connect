@@ -213,7 +213,7 @@ class MakairaClient
         return json_decode($this->doRequest('POST', $url, $body)->getBody()->getContents());
     }
 
-    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [], string $group = '')
+    public function getProducts(string $categoryId, int $maxResults = 12, int $offset = 0, array $sorting = [], string $group = '', array $filter = [])
     {
         $requestBuilder = new RequestBuilder($this->language);
 
@@ -221,7 +221,7 @@ class MakairaClient
             'searchPhrase' => $categoryId,
             'isSearch' => false,
             'enableAggregations' => true,
-            'aggregations' => [],
+            'aggregations' => $filter,
             'sorting' => $sorting,
             'fields' => [],
             'count' => $maxResults,
@@ -277,7 +277,8 @@ class MakairaClient
         int $maxSearchResults = 8,
         ?int $pageNumber = null,
         array $sorting = [],
-        string $group = ''
+        string $group = '',
+        array $filter = []
     ) {
         if (empty($searchkey)) {
             return [];
@@ -287,7 +288,7 @@ class MakairaClient
             'searchPhrase' => $searchkey,
             'isSearch' => true,
             'enableAggregations' => true,
-            'aggregations' => [],
+            'aggregations' => $filter,
             'sorting' => $sorting,
             'fields' => array_merge(
                 [
