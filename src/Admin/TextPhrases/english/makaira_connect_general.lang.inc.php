@@ -2,7 +2,7 @@
 
 $t_language_text_section_content_array = [
     'description' => 'You can use Makaira with this module',
-    'title' => 'Makaira Gambio Connect',
+    'title' => 'Makaira Connect',
     'settings' => 'Settings',
     'makaira_url' => 'Makaira URL',
     'makaira_instance' => 'Makaira instance',
@@ -22,6 +22,12 @@ $t_language_text_section_content_array = [
     'account' => 'Account',
     'in_setup_description' => 'Makaira is being set up. This process may take a few minutes. Thank you for your patience.',
     'goto_makaira' => 'To Makaira',
+    'promotion_title' => 'Promotions',
+    'promotion_description' => 'Promotions has to be configured in makaira and displayed in suggestions and search results:',
+    'goto_promotion_banner' => 'Configure advertising banner',
+    'goto_promotion_advertising_space' => 'Configure advertising space',
+    'promotion_advertising_space_docs' => 'https://docs.makaira.io/docs/advertising-space',
+    'promotion_advertising_banner_docs' => 'https://docs.makaira.io/docs/advertising-banner',
     'reco_title' => 'Makaira Recommendations',
     'reco_cross_selling_description' => 'Here you can configure which Makaira Recommendations you want to use. Find the ID in your Makaira dashboard.',
     'goto_makaira_recos' => 'Go to Makaira Recommendations',

@@ -92,7 +92,7 @@ class ModuleConfigService
 
     public function getIsInstalled(): bool
     {
-        return (bool) $this->configurationService->find(self::CONFIG_PREFIX.self::CONFIG_MAKAIRA_INSTALLED)?->value();
+        return (bool) $this->configurationService->find(self::CONFIG_MAKAIRA_INSTALLED)?->value();
     }
 
     public function isPublicFieldsSetupDone(): bool
