@@ -3,7 +3,7 @@
 use GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest;
 
 // phpcs:ignore
-class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
+class MakairaCrossSellingThemeContentView extends MakairaCrossSellingThemeContentView_parent
 {
     private $moduleStatusService;
 
@@ -92,7 +92,7 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
     private function loadCrossSelling(): array
     {
         if (empty($this->moduleConfigService->getRecoCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoCrossSelling())) {
-            return parent::loadCrossSelling();
+            return parent::get_data() ?? [];
         }
         try {
             $this->set_content_template('product_info_cross_selling.html');
@@ -103,14 +103,14 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 
             return $this->mapMakairaResponse($requestData['items']);
         } catch (Exception $exception) {
-            return parent::loadCrossSelling();
+            return parent::get_data() ?? [];
         }
     }
 
     private function loadReverseCrossSelling(): array
     {
         if (empty($this->moduleConfigService->getRecoReverseCrossSelling()) || empty($this->moduleStatusService->getModuleConfigService()->getRecoReverseCrossSelling())) {
-            return parent::loadReverseCrossSelling();
+            return parent::get_data() ?? [];
         }
         try {
             $this->set_content_template('product_info_reverse_cross_selling.html');
@@ -121,7 +121,7 @@ class MakairaCrossSellingThemeContentView extends CrossSellingThemeContentView
 
             return $this->mapMakairaResponse($requestData['items'])[0]['PRODUCTS'];
         } catch (Exception $exception) {
-            return parent::loadReverseCrossSelling();
+            return parent::get_data() ?? [];
         }
     }
 }
