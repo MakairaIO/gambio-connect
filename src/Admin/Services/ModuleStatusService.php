@@ -20,9 +20,10 @@ class ModuleStatusService
 
     public function isInSetup(): bool
     {
-        if($this->isInstalled()) {
-            return !$this->makairaConfigIsSet();
+        if ($this->isInstalled()) {
+            return ! $this->makairaConfigIsSet();
         }
+
         return false;
     }
 
@@ -41,6 +42,7 @@ class ModuleStatusService
         $urlSet = ! empty($this->moduleConfigService->getMakairaUrl());
         $instanceSet = ! empty($this->moduleConfigService->getMakairaInstance());
         $secretSet = ! empty($this->moduleConfigService->getMakairaSecret());
+
         return $urlSet && $instanceSet && $secretSet;
     }
 }

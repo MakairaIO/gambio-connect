@@ -48,7 +48,7 @@ class MakairaSplitPageResults extends splitPageResults
     {
         $this->sql_query = '';
 
-        if(is_string($products)) {
+        if (is_string($products)) {
             return new parent($products, $page, $max_rows);
         }
 
@@ -194,29 +194,29 @@ class MakairaSplitPageResults extends splitPageResults
             } elseif ($t_page_numbers_array[$i]['TEXT'] == '...') {
                 if ($i == 1) {
                     $display_links_string .= '<a href="'.xtc_href_link(
-                            $t_href_link_base,
-                            $parameters.$pageParam,
-                            $request_type
-                        )
+                        $t_href_link_base,
+                        $parameters.$pageParam,
+                        $request_type
+                    )
                         .'" class="pageResults" title=" '
                         .sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links)
                         .' ">...</a>';
                 } else {
                     $display_links_string .= '<a href="'.xtc_href_link(
-                            $t_href_link_base,
-                            $parameters.$pageParam,
-                            $request_type
-                        )
+                        $t_href_link_base,
+                        $parameters.$pageParam,
+                        $request_type
+                    )
                         .'" class="pageResults" title=" '
                         .sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links)
                         .' ">...</a>&nbsp;';
                 }
             } else {
                 $display_links_string .= '&nbsp;<a href="'.xtc_href_link(
-                        $t_href_link_base,
-                        $parameters.$pageParam,
-                        $request_type
-                    )
+                    $t_href_link_base,
+                    $parameters.$pageParam,
+                    $request_type
+                )
                     .'" class="pageResults" title=" '.sprintf(
                         PREVNEXT_TITLE_PAGE_NO,
                         $t_page_numbers_array[$i]['PAGE']

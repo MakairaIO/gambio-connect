@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../SplitPageResults/makaira_split_page_results.php';
+require __DIR__.'/../SplitPageResults/makaira_split_page_results.php';
 
 class MakairaProductListingContentControl extends MakairaProductListingContentControl_parent
 {
@@ -460,12 +460,13 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
         return [$type => $sort[1]];
     }
 
-    private function prepareFilterForMakaira(): void{
-        if(! empty($this->filter_price_min)) {
+    private function prepareFilterForMakaira(): void
+    {
+        if (! empty($this->filter_price_min)) {
             $this->filter['price_from'] = $this->filter_price_min;
         }
 
-        if(! empty($this->filter_price_max)) {
+        if (! empty($this->filter_price_max)) {
             $this->filter['price_to'] = $this->filter_price_max;
         }
     }
