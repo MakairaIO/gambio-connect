@@ -84,9 +84,6 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 .' with Status Code '
                 .$response->getStatusCode()
             );
-            foreach ($categories as $category) {
-                $this->exportIsDone($category['categories_id'], 'category');
-            }
         }
     }
 

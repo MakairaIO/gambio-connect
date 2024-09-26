@@ -85,9 +85,6 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 .' with Status Code '
                 .$response->getStatusCode()
             );
-            foreach ($manufacturers as $manufacturer) {
-                $this->exportIsDone($manufacturer['manufacturers_id'], 'manufacturer');
-            }
         }
     }
 
