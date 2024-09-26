@@ -1,6 +1,6 @@
 <?php
 
-class MakairaProductListingThemeContentView extends ProductListingThemeContentView
+class MakairaProductListingThemeContentView extends MakairaProductListingThemeContentView_parent
 {
     private \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
 

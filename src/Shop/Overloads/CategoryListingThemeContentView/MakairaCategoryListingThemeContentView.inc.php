@@ -3,7 +3,7 @@
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;
 
-class MakairaCategoryListingThemeContentView extends CategoryListingThemeContentView
+class MakairaCategoryListingThemeContentView extends MakairaCategoryListingThemeContentView_parent
 {
     private ModuleConfigService $configurationStorage;
 

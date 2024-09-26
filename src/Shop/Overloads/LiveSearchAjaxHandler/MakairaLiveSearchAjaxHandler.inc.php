@@ -1,6 +1,6 @@
 <?php
 
-class MakairaLiveSearchAjaxHandler extends LiveSearchAjaxHandler
+class MakairaLiveSearchAjaxHandler extends MakairaLiveSearchAjaxHandler_parent
 {
     private \GXModules\MakairaIO\MakairaConnect\App\Core\MakairaRequest $makairaRequest;
 
