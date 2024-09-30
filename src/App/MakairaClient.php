@@ -229,7 +229,7 @@ class MakairaClient
             'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        $body['constraints']['query.category_id'] = $categoryId;
+        $body['constraints']['query.categories_id'] = $categoryId;
 
         if (! empty($group)) {
             $body['constraints']['query.group'] = $group;
@@ -265,7 +265,7 @@ class MakairaClient
             'constraints' => $requestBuilder->getConstraint(),
         ];
 
-        $body['constraints']['query.category_id'] = $id;
+        $body['constraints']['query.categories_id'] = $id;
 
         $url = $this->makairaUrl.'/search/';
 
