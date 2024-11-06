@@ -28,6 +28,9 @@
     <include_path>
       <path value="$PROJECT_DIR$/src" />
       <path value="$PROJECT_DIR$/../gxdev/src" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/vendor/rector/rector" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
