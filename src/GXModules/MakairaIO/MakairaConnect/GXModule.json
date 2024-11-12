@@ -10,6 +10,7 @@
     "controller": "GXModules\\MakairaIO\\MakairaConnect\\Admin\\MakairaConnectInstaller",
     "method": "onUninstallation"
   },
+  "config_url": "makaira/gambio-connect",
   "configuration": [
     {
       "title": "makaira_connect.settings",
