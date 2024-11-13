@@ -35,13 +35,13 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    public function export(): void
+    public function export(int $start = 0, int $limit = 1000): void
     {
         $this->currentLanguage = $_SESSION['languages_id'];
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
-        $makairaExports = $this->getEntitiesForExport('manufacturer');
+        $makairaExports = $this->getEntitiesForExport('manufacturer', $start, $limit);
 
         if (! empty($makairaExports)) {
             $manufacturers = [];

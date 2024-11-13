@@ -50,7 +50,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         }
     }
 
-    public function export(): void
+    public function export(int $start = 0, int $limit = 1000): void
     {
         $this->currencyCodes = $this->getCurrencyCodes();
 
@@ -60,7 +60,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
-        $makairaChanges = $this->getEntitiesForExport('product');
+        $makairaChanges = $this->getEntitiesForExport('product', $start, $limit);
 
         if (! empty($makairaChanges)) {
             $products = [];

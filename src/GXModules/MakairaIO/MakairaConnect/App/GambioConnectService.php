@@ -86,7 +86,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         ]);
     }
 
-    protected function getEntitiesForExport(string $type): array
+    protected function getEntitiesForExport(string $type, int $start = 0, int $limit = 1000): array
     {
         $changes = $this->getMakairaChangesForType($type);
         foreach ($changes as $index => $change) {
@@ -109,6 +109,8 @@ class GambioConnectService implements GambioConnectServiceInterface
                 ->from($table)
                 ->where("$table.$key = :gambioId")
                 ->setParameter('gambioId', $change['gambio_id'])
+                ->setFirstResult($start)
+                ->setMaxResults($limit)
                 ->execute()
                 ->fetchAll(FetchMode::ASSOCIATIVE);
 

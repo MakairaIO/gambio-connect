@@ -58,22 +58,34 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     ->execute()
                     ->fetchAll(FetchMode::ASSOCIATIVE);
 
+                $limit = 1000;
+
+                $currentPosition = 0;
+
                 $this->logInfo('MakairaConnect Cronjob Started');
 
-                foreach ($languages as $language) {
-                    $this->logInfo('Begin Export for Language '.$language['code']);
-                    $client = new \GuzzleHttp\Client([
-                        'base_uri' => $host.$language['code'],
-                    ]);
-                    try {
-                        $client->get('shop.php?do=MakairaCronService/doExport&language='.$language['code']);
-                    } catch (Exception $exception) {
-                        $errors = true;
-                        $this->logInfo('Error in Export for Language '.$language['code']);
-                        $this->logError($exception->getMessage());
+                do {
+                    foreach ($languages as $index => $language) {
+                        $this->logInfo('Begin Export for Language ' . $language['code']);
+                        $client = new \GuzzleHttp\Client([
+                            'base_uri' => $host . $language['code'],
+                        ]);
+                        try {
+                            $client->get(
+                                'shop.php?do=MakairaCronService/doExport&language=' . $language['code'] . '&start=' . $currentPosition . '&limit=' . $limit
+                            );
+                        } catch (Exception $exception) {
+                            $errors = true;
+                            $this->logInfo('Error in Export for Language ' . $language['code']);
+                            $this->logError($exception->getMessage());
+                        }
+                        $this->logInfo('End Export for Language ' . $language['code']);
+
+                        if ($index === count($languages) - 1) {
+                            $currentPosition += $limit;
+                        }
                     }
-                    $this->logInfo('End Export for Language '.$language['code']);
-                }
+                }while($currentPosition >= $limit);
 
                 if(!$errors) {
                     $gambioConnectService->exportIsDoneForType('product');

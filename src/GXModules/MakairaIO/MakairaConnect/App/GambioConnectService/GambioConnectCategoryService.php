@@ -29,9 +29,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
     }
 
-    public function export(): void
+    public function export(int $start = 0, int $limit = 1000): void
     {
-        $makairaExports = $this->getEntitiesForExport('category');
+        $makairaExports = $this->getEntitiesForExport('category', $start, $limit);
 
         $this->currentLanguage = $_SESSION['languages_id'];
 

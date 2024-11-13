@@ -38,6 +38,18 @@ class MakairaCronServiceController extends HttpViewController
             ]);
         }
 
+        if ($_GET['start'] === null) {
+            return new JsonHttpControllerResponse([
+                'error' => 'This action required start parameter'
+            ]);
+        }
+
+        if (empty($_GET['limit'])) {
+            return new JsonHttpControllerResponse([
+                'error' => 'This action required limit parameter'
+            ]);
+        }
+
         $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
         try {
@@ -47,6 +59,10 @@ class MakairaCronServiceController extends HttpViewController
                 'error' => 'Language '.$_GET['language'].' not found',
             ]);
         }
+
+        $start = $_GET['start'];
+
+        $limit = $_GET['limit'];
 
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
 
@@ -59,7 +75,7 @@ class MakairaCronServiceController extends HttpViewController
         $this->connection = LegacyDependencyContainer::getInstance()->get(\Doctrine\DBAL\Connection::class);
 
         $this->logger->debug('Makaira Export Job Called', [
-            'GET_Variables' => $_GET['language'],
+            'GET_Variables' => $_GET,
             'SESSION_Variables' => $_SESSION,
         ]);
 
@@ -82,11 +98,11 @@ class MakairaCronServiceController extends HttpViewController
             $productVariantsReadService
         );
 
-        $makairaConnectService->getManufacturerService()->export();
+        $makairaConnectService->getManufacturerService()->export($start, $limit);
 
-        $makairaConnectService->getCategoryService()->export();
+        $makairaConnectService->getCategoryService()->export($start, $limit);
 
-        $makairaConnectService->getProductService()->export();
+        $makairaConnectService->getProductService()->export($start, $limit);
 
         return new \JsonHttpControllerResponse([
             'success' => true,

@@ -6,15 +6,15 @@ use DateTime;
 
 class MakairaManufacturer extends MakairaEntity
 {
-    private string $title;
+    private string $title = '';
 
-    private string $metaTitle;
+    private string $metaTitle = '';
 
-    private string $metaDescription;
+    private string $metaDescription = '';
 
-    private string $metaKeywords;
+    private string $metaKeywords = '';
 
-    private string $remoteUrl;
+    private string $remoteUrl = '';
 
     private bool $isUrlClicked;
 
