@@ -48,6 +48,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     $this->completeImporterSetUp();
                 }
 
+                $errors = false;
+
                 $host = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/';
 
                 $languages = $this->connection->createQueryBuilder()
@@ -66,17 +68,20 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     try {
                         $client->get('shop.php?do=MakairaCronService/doExport&language='.$language['code']);
                     } catch (Exception $exception) {
+                        $errors = true;
                         $this->logInfo('Error in Export for Language '.$language['code']);
                         $this->logError($exception->getMessage());
                     }
                     $this->logInfo('End Export for Language '.$language['code']);
                 }
 
-                $gambioConnectService->exportIsDoneForType('product');
+                if(!$errors) {
+                    $gambioConnectService->exportIsDoneForType('product');
 
-                $gambioConnectService->exportIsDoneForType('manufacturer');
+                    $gambioConnectService->exportIsDoneForType('manufacturer');
 
-                $gambioConnectService->exportIsDoneForType('category');
+                    $gambioConnectService->exportIsDoneForType('category');
+                }
 
                 if (! $this->checkPublicFieldsSetup()) {
                     try {
