@@ -56,7 +56,7 @@ class MakairaManufacturer extends MakairaEntity
         return $this->metaTitle;
     }
 
-    public function setMetaTitle(string $metaTitle): \GXModules\Makaira\GambioConnect\App\Documents\MakairaManufacturer
+    public function setMetaTitle(string $metaTitle): MakairaManufacturer
     {
         $this->metaTitle = $metaTitle;
 
