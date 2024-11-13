@@ -58,7 +58,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     ->execute()
                     ->fetchAll(FetchMode::ASSOCIATIVE);
 
-                $limit = 1000;
+                $limit = 100;
 
                 $currentPosition = 0;
 
