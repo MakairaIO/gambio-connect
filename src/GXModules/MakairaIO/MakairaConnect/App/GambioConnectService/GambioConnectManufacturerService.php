@@ -77,7 +77,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                     ]);
                 }
             }
-            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguage);
+            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
             $response = $this->client->pushRevision($data);
             $this->logger->info(
                 'Makaira Manufacturer Documents: '
