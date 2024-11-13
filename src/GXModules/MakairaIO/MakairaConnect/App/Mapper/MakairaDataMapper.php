@@ -32,7 +32,7 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
             ->setId($data['manufacturers_id'])
-            ->setManufacturerTitle($data['manufacturers_name'])
+            ->setTitle($data['manufacturers_name'])
             ->setPictureUrlMain($data['manufacturers_image'])
             ->setCreatedAt($createdAt)
             ->setUpdatedAt($updatedAt)

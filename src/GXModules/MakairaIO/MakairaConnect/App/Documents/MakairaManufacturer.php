@@ -6,6 +6,8 @@ use DateTime;
 
 class MakairaManufacturer extends MakairaEntity
 {
+    private string $title;
+
     private string $metaTitle;
 
     private string $metaDescription;
@@ -29,6 +31,7 @@ class MakairaManufacturer extends MakairaEntity
             ...parent::toArray(),
 
             /* Manufacturer fields */
+            'title' => $this->title,
             'metaTitle' => $this->metaTitle,
             'metaDescription' => $this->metaDescription,
             'metaKeywords' => $this->metaKeywords,
@@ -39,6 +42,14 @@ class MakairaManufacturer extends MakairaEntity
             'lastClickedAt' => $this->lastClickedAt,
         ];
     }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+
 
     public function getMetaTitle(): string
     {
