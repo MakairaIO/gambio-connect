@@ -2,6 +2,7 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
+use CategoryListItem;
 use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
@@ -21,10 +22,13 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
-            $categories = $this->getQuery($language->id());
-
-            foreach ($categories as $category) {
-                $this->connection->executeQuery('CALL makairaChange('.$category['categories_id'].', "category")');
+            /** @var \CategoryReadService $categoryReadService */
+            $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+            /** @var \CategoryListItemCollection $categories */
+            $categories = $categoryReadService->getCategoryList(new \LanguageCode($language->code()));
+            /** @var CategoryListItem $category */
+            foreach($categories as $category) {
+                $this->callStoredProcedure($category->getCategoryId(), 'category');
             }
         }
     }
@@ -37,59 +41,65 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
+        /** @var \CategoryReadService $categoryReadService */
+        $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+
         if (! empty($makairaExports)) {
             $categories = [];
             foreach ($makairaExports as $export) {
                 if ($export['delete']) {
-                    $categories[] = [
-                        'categories_id' => $export['gambio_id'],
-                        'delete' => true,
-                    ];
+                    $categories[] = MakairaDataMapper::mapCategory($export['gambio_id'], true, $this->currentLanguageCode);
                 } else {
-                    $exportCategory = $this->getQuery($this->currentLanguage, [$export])[0];
-                    $categories[] = array_merge(
-                        $exportCategory ?? [],
-                        [
-                            'categories_id' => $export['gambio_id'],
-                            'delete' => false,
-                        ]
-                    );
-                }
-            }
+                    try {
+                        $categoryId = new \IdType($export['gambio_id']);
+                        $category = MakairaDataMapper::mapCategory(
+                            $export['gambio_id'],
+                            false,
+                            $this->currentLanguageCode
+                        );
 
-            $documents = [];
+                        /** @var \IdCollection $subCategoryIds */
+                        $subCategoryIds = $categoryReadService->getCategoryIdsTree($categoryId);
+                        $hierarchy = $category->getCategoriesId() . '//';
+                        $depth = 1;
+                        foreach ($subCategoryIds as $subCategoryId) {
+                            /** @var IdType $subCategoryId */
+                            $subCategories = MakairaDataMapper::mapCategory(
+                                (int)$subCategoryId,
+                                false,
+                                $this->currentLanguageCode
+                            )->toArray();
+                            $hierarchy .= (int)$subCategoryId . '//';
+                            $depth++;
+                        }
+                        $category->setSubCategories($subCategories);
+                        $category->setHierarchy($hierarchy);
+                        $category->setDepth($depth);
 
-            foreach ($categories as $category) {
-                try {
-                    $category['subcategories'] = $this->getSubCategories(
-                        $this->currentLanguage,
-                        $category['categories_id']
-                    );
-                    $document = $this->pushRevision($category);
-                    if ($document->getId()) {
-                        $documents[] = $document;
+                        $categories[] = $category->toArray();
+                    }catch(Exception $e){
+                        $this->logger->error('Category Export to Makaira Failed', [
+                            'id' => $category->getCategoriesId(),
+                            'message' => $e->getMessage(),
+                        ]);
                     }
-                } catch (Exception $exception) {
-                    $this->logger->error('Category Export to Makaira Failed', [
-                        'id' => $category['categories_id'],
-                        'message' => $exception->getMessage(),
-                    ]);
                 }
             }
-            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
+            $data = $this->addMultipleMakairaDocuments($categories, $this->currentLanguageCode);
             $response = $this->client->pushRevision($data);
-            $this->logger->info(
-                'Makaira Category Documents: '
-                .count($documents)
-                .' with Status Code '
-                .$response->getStatusCode()
-            );
 
             if($lastLanguage) {
                 foreach($makairaExports as $change) {
                     $this->exportIsDone($change['gambio_id'], 'product');
                 }
             }
+
+            $this->logger->info(
+                'Makaira Category Documents: '
+                .count($categories)
+                .' with Status Code '
+                .$response->getStatusCode()
+            );
         }
     }
 

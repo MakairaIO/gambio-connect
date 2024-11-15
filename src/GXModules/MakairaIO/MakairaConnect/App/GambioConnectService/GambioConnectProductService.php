@@ -84,7 +84,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
 
             foreach ($products as $product) {
                 try {
-                    $document = $this->pushRevision($product);
+                    $document = MakairaDataMapper::mapProduct($product);
                     if ($document->getId()) {
                         $documents[] = $document;
 
@@ -104,6 +104,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                             $documents[] = MakairaDataMapper::mapVariant(
                                 $product,
                                 $this->currentLanguage,
+                                $this->currentLanguageCode,
                                 $this->currencyCodes,
                                 $this->customerStatusIds,
                                 $variant
@@ -141,6 +142,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         return MakairaDataMapper::mapProduct(
             $product,
             $_SESSION['languages_id'],
+            $this->currentLanguageCode,
             $this->currencyCodes,
             $this->customerStatusIds
         );

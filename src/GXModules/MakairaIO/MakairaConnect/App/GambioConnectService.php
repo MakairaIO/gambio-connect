@@ -71,6 +71,11 @@ class GambioConnectService implements GambioConnectServiceInterface
         return $this->languageService->getAvailableLanguages();
     }
 
+    public function callStoredProcedure(int $id, string $type): void
+    {
+        $this->connection->executeQuery('CALL makairaChange('.$id.','.$type.')');
+    }
+
     public function exportIsDoneForType(string $type)
     {
         $this->connection->delete(ChangesService::TABLE_NAME, [

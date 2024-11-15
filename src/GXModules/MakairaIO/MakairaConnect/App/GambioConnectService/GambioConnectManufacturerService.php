@@ -23,11 +23,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
             $manufacturers = $this->getQuery($language->id());
 
             foreach ($manufacturers as $manufacturer) {
-                $this->connection->executeQuery(
-                    'CALL makairaChange('
-                    .$manufacturer['manufacturers_id']
-                    .', "manufacturer")'
-                );
+                $this->callStoredProcedure($manufacturer['manufacturers_id'], 'manufacturer');
             }
         }
     }
@@ -52,45 +48,33 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                         'delete' => true,
                     ];
                 } else {
-                    $manufacturers[] = array_merge(
-                        $this->getQuery($this->currentLanguage, [$export])[0],
-                        [
-                            'manufacturers_id' => $export['gambio_id'],
-                            'delete' => false,
-                        ]
-                    );
-                }
-            }
-
-            $documents = [];
-
-            foreach ($manufacturers as $manufacturer) {
-                try {
-                    $document = $this->pushRevision($manufacturer);
-                    if ($document->getId()) {
-                        $documents[] = $document;
+                    try {
+                        $manufacturers[] = MakairaDataMapper::mapManufacturer(
+                            $export['gambio_id'],
+                            $this->currentLanguageCode
+                        )->toArray();
+                    }catch (Exception $e){
+                        $this->logger->error('Manufacturer Export to Makaira Failed', [
+                            'id' => $export['gambio_id'],
+                            'message' => $e->getMessage(),
+                        ]);
                     }
-                } catch (Exception $exception) {
-                    $this->logger->error('Manufacturer Export to Makaira Failed', [
-                        'id' => $manufacturer['manufacturers_id'],
-                        'message' => $exception->getMessage(),
-                    ]);
                 }
             }
-            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
+
+            $data = $this->addMultipleMakairaDocuments($manufacturers, $this->currentLanguageCode);
             $response = $this->client->pushRevision($data);
+            if($lastLanguage) {
+                foreach($manufacturers as $manufacturer){
+                    $this->exportIsDone($manufacturer['id'], 'manufacturer');
+                }
+            }
             $this->logger->info(
                 'Makaira Manufacturer Documents: '
-                .count($documents)
+                .count($manufacturers)
                 .' with Status Code '
                 .$response->getStatusCode()
             );
-
-            if($lastLanguage) {
-                foreach($makairaExports as $change) {
-                    $this->exportIsDone($change['gambio_id'], 'manufacturer');
-                }
-            }
         }
     }
 
