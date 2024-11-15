@@ -16,7 +16,7 @@ class MakairaManufacturer extends MakairaEntity
 
     private string $remoteUrl = '';
 
-    private bool $isUrlClicked;
+    private bool $isUrlClicked = false;
 
     private ?DateTime $createdAt = null;
 

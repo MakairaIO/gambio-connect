@@ -29,7 +29,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         }
     }
 
-    public function export(int $start = 0, int $limit = 1000): void
+    public function export(int $start = 0, int $limit = 1000, bool $lastLanguage = false): void
     {
         $makairaExports = $this->getEntitiesForExport('category', $start, $limit);
 
@@ -84,6 +84,12 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 .' with Status Code '
                 .$response->getStatusCode()
             );
+
+            if($lastLanguage) {
+                foreach($makairaExports as $change) {
+                    $this->exportIsDone($change['gambio_id'], 'product');
+                }
+            }
         }
     }
 

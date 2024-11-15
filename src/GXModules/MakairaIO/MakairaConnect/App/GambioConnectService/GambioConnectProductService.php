@@ -50,7 +50,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         }
     }
 
-    public function export(int $start = 0, int $limit = 1000): void
+    public function export(int $start = 0, int $limit = 1000, bool $lastLanguage = false): void
     {
         $this->currencyCodes = $this->getCurrencyCodes();
 
@@ -127,6 +127,12 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
 
             $this->client->pushRevision($data);
+
+            if($lastLanguage) {
+                foreach($makairaChanges as $change) {
+                    $this->exportIsDone($change['gambio_id'], 'product');
+                }
+            }
         }
     }
 

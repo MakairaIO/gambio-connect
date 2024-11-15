@@ -50,6 +50,8 @@ class MakairaCronServiceController extends HttpViewController
             ]);
         }
 
+        $lastLanguage = (int)$_GET['complete'];
+
         $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
         try {
@@ -98,11 +100,11 @@ class MakairaCronServiceController extends HttpViewController
             $productVariantsReadService
         );
 
-        $makairaConnectService->getManufacturerService()->export($start, $limit);
+        $makairaConnectService->getManufacturerService()->export($start, $limit, $lastLanguage);
 
-        $makairaConnectService->getCategoryService()->export($start, $limit);
+        $makairaConnectService->getCategoryService()->export($start, $limit, $lastLanguage);
 
-        $makairaConnectService->getProductService()->export($start, $limit);
+        $makairaConnectService->getProductService()->export($start, $limit, $lastLanguage);
 
         return new \JsonHttpControllerResponse([
             'success' => true,

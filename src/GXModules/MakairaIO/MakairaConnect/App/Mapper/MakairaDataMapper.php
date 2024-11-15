@@ -137,7 +137,7 @@ class MakairaDataMapper
         $stock = 1;
 
         $category = [
-            'catid' => $data['main_category_id'],
+            'catid' => $data['main_category_id'] ?? 0,
             'shopid' => 1,
             'path' => $data['coo_product']['PRODUCTS_CATEGORY_URL'],
         ];
@@ -186,9 +186,9 @@ class MakairaDataMapper
             ->setTaxClassId((int)$data['products_tax_class_id'])
             ->setFsk18((bool) $data['products_fsk18'] ?? false)
             ->setGmAltText($data['gm_alt_text'] ?? '')
-            ->setProductsVpe((int)$data['products_vpe'])
-            ->setProductsVpeStatus((int)$data['products_vpe_status'])
-            ->setProductsVpeValue((int)$data['products_vpe_value'])
+            ->setProductsVpe((int)$data['products_vpe'] ?? 0)
+            ->setProductsVpeStatus((int)$data['products_vpe_status'] ?? 0)
+            ->setProductsVpeValue((int)$data['products_vpe_value'] ?? 0)
             ->setSearchKeys($data['products_keywords'] ?? '')
             ->setCategories([$category])
             ->setMainCategory($category['title'] ?? '')

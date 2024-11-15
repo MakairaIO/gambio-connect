@@ -88,7 +88,7 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     protected function getEntitiesForExport(string $type, int $start = 0, int $limit = 1000): array
     {
-        $changes = $this->getMakairaChangesForType($type);
+        $changes = $this->getMakairaChangesForType($type, $start, $limit);
         foreach ($changes as $index => $change) {
             switch ($type) {
                 case 'product':
@@ -109,8 +109,6 @@ class GambioConnectService implements GambioConnectServiceInterface
                 ->from($table)
                 ->where("$table.$key = :gambioId")
                 ->setParameter('gambioId', $change['gambio_id'])
-                ->setFirstResult($start)
-                ->setMaxResults($limit)
                 ->execute()
                 ->fetchAll(FetchMode::ASSOCIATIVE);
 
@@ -139,13 +137,15 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    private function getMakairaChangesForType(string $type): array
+    private function getMakairaChangesForType(string $type, int $start = 0, int $limit = 100): array
     {
         return $this->connection->createQueryBuilder()
             ->select('gambio_id')
             ->from(ChangesService::TABLE_NAME)
             ->where('type = :type')
             ->setParameter('type', $type)
+            ->setFirstResult($start)
+            ->setMaxResults($limit)
             ->execute()
             ->fetchAll(FetchMode::ASSOCIATIVE);
     }

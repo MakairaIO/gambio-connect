@@ -35,7 +35,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    public function export(int $start = 0, int $limit = 1000): void
+    public function export(int $start = 0, int $limit = 1000, bool $lastLanguage = false): void
     {
         $this->currentLanguage = $_SESSION['languages_id'];
 
@@ -85,6 +85,12 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 .' with Status Code '
                 .$response->getStatusCode()
             );
+
+            if($lastLanguage) {
+                foreach($makairaExports as $change) {
+                    $this->exportIsDone($change['gambio_id'], 'manufacturer');
+                }
+            }
         }
     }
 

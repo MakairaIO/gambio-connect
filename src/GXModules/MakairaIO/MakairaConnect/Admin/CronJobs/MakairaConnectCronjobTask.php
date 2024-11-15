@@ -58,41 +58,60 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     ->execute()
                     ->fetchAll(FetchMode::ASSOCIATIVE);
 
-                $limit = 100;
+                $changes = $this->connection->createQueryBuilder()
+                    ->select('id')
+                    ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
+                    ->execute()
+                    ->fetchAll(FetchMode::ASSOCIATIVE);
+
+                $limit = 500;
 
                 $currentPosition = 0;
 
                 $this->logInfo('MakairaConnect Cronjob Started');
 
-                do {
-                    foreach ($languages as $index => $language) {
-                        $this->logInfo('Begin Export for Language ' . $language['code']);
+                $this->logInfo('Check count of Changes for Makaira');
+
+                if(count($changes) > 1000) {
+                    foreach($languages as $index => $language) {
+                        $lastLanguage = $index === (count($languages) - 1);
+                        $this->logInfo('Begin Export of '.$limit.' Datasets for Language ' . $language['code']);
                         $client = new \GuzzleHttp\Client([
                             'base_uri' => $host . $language['code'],
                         ]);
                         try {
                             $client->get(
-                                'shop.php?do=MakairaCronService/doExport&language=' . $language['code'] . '&start=' . $currentPosition . '&limit=' . $limit
+                                'shop.php?do=MakairaCronService/doExport&language=' . $language['code'] . '&start=' . $currentPosition . '&limit=' . $limit . '&complete=' . $lastLanguage
                             );
                         } catch (Exception $exception) {
-                            $errors = true;
                             $this->logInfo('Error in Export for Language ' . $language['code']);
                             $this->logError($exception->getMessage());
                         }
-                        $this->logInfo('End Export for Language ' . $language['code']);
-
-                        if ($index === count($languages) - 1) {
-                            $currentPosition += $limit;
-                        }
+                        $this->logInfo('End Export of '.$limit.' Datasets for Language ' . $language['code']);
                     }
-                }while($currentPosition >= $limit);
+                } else {
+                    do {
+                        foreach ($languages as $index => $language) {
+                            $lastLanguage = $index === (count($languages) - 1);
+                            $this->logInfo('Begin Export for Language ' . $language['code']);
+                            $client = new \GuzzleHttp\Client([
+                                'base_uri' => $host . $language['code'],
+                            ]);
+                            try {
+                                $client->get(
+                                    'shop.php?do=MakairaCronService/doExport&language=' . $language['code'] . '&start=' . $currentPosition . '&limit=' . $limit . '&complete=' . $lastLanguage
+                                );
+                            } catch (Exception $exception) {
+                                $this->logInfo('Error in Export for Language ' . $language['code']);
+                                $this->logError($exception->getMessage());
+                            }
+                            $this->logInfo('End Export for Language ' . $language['code']);
 
-                if(!$errors) {
-                    $gambioConnectService->exportIsDoneForType('product');
-
-                    $gambioConnectService->exportIsDoneForType('manufacturer');
-
-                    $gambioConnectService->exportIsDoneForType('category');
+                            if ($lastLanguage) {
+                                $currentPosition += $limit;
+                            }
+                        }
+                    } while ($currentPosition >= $changes);
                 }
 
                 if (! $this->checkPublicFieldsSetup()) {
@@ -136,11 +155,16 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
         $makairaUrl = $this->moduleConfigService->getMakairaUrl();
         $makairaSecret = $this->moduleConfigService->getMakairaSecret();
         $makairaInstance = $this->moduleConfigService->getMakairaInstance();
+        $cronStatus = $this->moduleConfigService->getCronjobStatus();
 
         if (! $makairaUrl || ! $makairaInstance || ! $makairaSecret) {
             $this->logInfo('No Makaira Credentials found - CRON can not work');
 
             return false;
+        }
+
+        if(!$cronStatus) {
+            $this->logInfo('CRON Job Inactive');
         }
 
         return true;
