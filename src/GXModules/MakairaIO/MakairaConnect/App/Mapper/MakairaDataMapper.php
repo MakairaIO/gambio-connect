@@ -23,7 +23,13 @@ class MakairaDataMapper
         /** @var \ManufacturerReadService $manufacturerReadService */
         $manufacturerReadService = \StaticGXCoreLoader::getService('ManufacturerRead');
         /** @var \Manufacturer $manufacturer */
-        $manufacturer = $manufacturerReadService->getById(new \IdType($id));
+        try {
+            $manufacturer = $manufacturerReadService->getById(new \IdType($id));
+        } catch(\EntityNotFoundException $exception) {
+            $transfer->delete();
+            return $transfer;
+        }
+
         $transfer->setCreatedAt($manufacturer->getDateAdded())
             ->setUpdatedAt($manufacturer->getLastModified())
             ->setId($manufacturer->getId())
@@ -37,22 +43,21 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public static function mapCategory(int $id, bool $delete, string $language): MakairaCategory
+    public static function mapCategory(int $id, string $language): MakairaCategory
     {
         $transfer = new MakairaCategory;
 
         $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
 
-        if($delete) {
-            return $transfer->setType(MakairaCategory::DOC_TYPE_CATEGORY)
-                ->setId($id)
-                ->setCategoriesId($id)
-                ->setDelete($delete);
-        }
-
         /** @var \CategoryReadService $categoryReadService */
         $categoryId = new \IdType($id);
-        $category = $categoryReadService->getCategoryById($categoryId);
+        try {
+            $category = $categoryReadService->getCategoryById($categoryId);
+        }catch (\UnexpectedValueException $exception) {
+            $transfer->delete();
+
+            return $transfer;
+        }
 
         $languageCode = new \LanguageCode(new \StringType($language));
 
@@ -78,9 +83,9 @@ class MakairaDataMapper
         return $transfer;
     }
 
-    public static function mapVariant(array $product, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
+    public static function mapVariant(int $productId, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
     {
-        $product = (new \product($product['products_id'], $languageId))->data;
+        $product = (new \product($productId, $languageId))->data;
         $productDocument = self::mapProduct($product, $languageId, $languageCode, $currencyCode, $customerStatusId);
         $variantDocument = new MakairaVariant;
         $variantDocument->setProduct($product);
@@ -105,19 +110,20 @@ class MakairaDataMapper
         return $variantDocument;
     }
 
-    public static function mapProduct(array $data, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId): MakairaProduct
+    public static function mapProduct(int $id, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId): MakairaProduct
     {
         $transfer = new MakairaProduct;
-        if ($data['delete']) {
-            return $transfer->setId($data['products_id'])
-                ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-                ->setDelete(true);
-        }
         /** @var \ProductReadService $productReadService */
         $productReadService = \StaticGXCoreLoader::getService('ProductRead');
         /** @var \StoredProduct $product */
-        $storedProduct = $productReadService->getProductById($data['products_id']);
-        $product = new \product($data['products_id'], $languageId);
+        try {
+            $storedProduct = $productReadService->getProductById(new \IdType($id));
+        }catch( \UnexpectedValueException $exception) {
+            return $transfer->setId($id)
+                ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
+                ->delete();
+        }
+        $product = new \product($id, $languageId);
         $cooProduct = $product->buildDataArray($product->data);
 
         $data = $product->data;

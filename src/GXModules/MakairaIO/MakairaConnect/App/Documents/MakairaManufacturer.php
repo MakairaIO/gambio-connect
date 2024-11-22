@@ -26,6 +26,12 @@ class MakairaManufacturer extends MakairaEntity
 
     public function toArray(): array
     {
+        if($this->delete) {
+            return [
+                'delete' => $this->delete
+            ];
+        }
+
         return [
             /* MAKAIRA fields */
             ...parent::toArray(),
@@ -41,6 +47,17 @@ class MakairaManufacturer extends MakairaEntity
             'updatedAt' => $this->updatedAt,
             'lastClickedAt' => $this->lastClickedAt,
         ];
+    }
+
+    public function isDelete(): bool
+    {
+        return $this->delete;
+    }
+
+    public function setDelete(bool $delete): static
+    {
+        $this->delete = $delete;
+        return $this;
     }
 
     public function setTitle(string $title): static

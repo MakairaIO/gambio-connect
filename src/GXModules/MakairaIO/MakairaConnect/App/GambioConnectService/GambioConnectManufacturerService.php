@@ -31,44 +31,31 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
     /**
      * @throws Exception
      */
-    public function export(int $start = 0, int $limit = 1000, bool $lastLanguage = false): void
+    public function export(array $changes = []): void
     {
         $this->currentLanguage = $_SESSION['languages_id'];
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
-        $makairaExports = $this->getEntitiesForExport('manufacturer', $start, $limit);
-
-        if (! empty($makairaExports)) {
+        if (! empty($changes)) {
             $manufacturers = [];
-            foreach ($makairaExports as $export) {
-                if ($export['delete']) {
-                    $manufacturers[] = [
-                        'manufacturers_id' => $export['gambio_id'],
-                        'delete' => true,
-                    ];
-                } else {
-                    try {
-                        $manufacturers[] = MakairaDataMapper::mapManufacturer(
-                            $export['gambio_id'],
-                            $this->currentLanguageCode
-                        )->toArray();
-                    }catch (Exception $e){
-                        $this->logger->error('Manufacturer Export to Makaira Failed', [
-                            'id' => $export['gambio_id'],
-                            'message' => $e->getMessage(),
-                        ]);
-                    }
+            foreach ($changes as $export) {
+                try {
+                    $manufacturers[] = MakairaDataMapper::mapManufacturer(
+                        $export['gambio_id'],
+                        $this->currentLanguageCode
+                    )->toArray();
+                }catch (Exception $e){
+                    $this->logger->error('Manufacturer Export to Makaira Failed', [
+                        'id' => $export['gambio_id'],
+                        'message' => $e->getMessage(),
+                    ]);
                 }
             }
 
             $data = $this->addMultipleMakairaDocuments($manufacturers, $this->currentLanguageCode);
             $response = $this->client->pushRevision($data);
-            if($lastLanguage) {
-                foreach($manufacturers as $manufacturer){
-                    $this->exportIsDone($manufacturer['id'], 'manufacturer');
-                }
-            }
+
             $this->logger->info(
                 'Makaira Manufacturer Documents: '
                 .count($manufacturers)

@@ -96,6 +96,14 @@ class MakairaCategory extends MakairaEntity
 
     public function toArray(): array
     {
+        if ($this->isDelete()) {
+            return [
+                'id' => $this->getId(),
+                'categories_id' => $this->getCategoriesId(),
+                'delete' => $this->isDelete()
+            ];
+        }
+
         return array_merge(
             /* Makaira fields */
             parent::toArray(),

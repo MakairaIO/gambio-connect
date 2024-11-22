@@ -136,4 +136,11 @@ class MakairaEntity
 
         return $this;
     }
+
+    public function delete(): MakairaEntity
+    {
+        $this->delete = true;
+
+        return $this;
+    }
 }
