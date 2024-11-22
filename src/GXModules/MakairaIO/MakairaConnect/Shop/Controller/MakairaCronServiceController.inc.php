@@ -66,6 +66,7 @@ class MakairaCronServiceController extends HttpViewController
 
         $this->logger->debug('Makaira Export Job Called', [
             'GET_Variables' => $_GET,
+            'POST_Variables' => $data,
             'SESSION_Variables' => $_SESSION,
         ]);
 
