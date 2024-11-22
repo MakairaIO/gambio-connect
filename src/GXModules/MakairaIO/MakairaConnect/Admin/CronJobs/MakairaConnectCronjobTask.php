@@ -116,7 +116,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $this->connection->createQueryBuilder()
                     ->delete(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
-                    ->add('where', $this->connection->createQueryBuilder()->expr()->in('id', $changes))
+                    ->add('where', $this->connection->createQueryBuilder()->expr()->in('id', $deleteIds))
                 ->execute();
 
                 if (! $this->checkPublicFieldsSetup()) {
