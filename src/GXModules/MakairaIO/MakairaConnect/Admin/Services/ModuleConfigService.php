@@ -18,6 +18,8 @@ class ModuleConfigService
 
     public const CONFIG_MAKAIRA_STATUS = 'status';
 
+    public const CONFIG_MAKAIRA_BATCH_SIZE = 'batchSize';
+
     public const CONFIG_MAKAIRA_PUBLICFIELDS_SETUP_DONE = 'publicFieldsSetupDone';
 
     public const CONFIG_MAKAIRA_IMPORTER_SETUP_DONE = 'makairaImporterSetupDone';
@@ -41,6 +43,19 @@ class ModuleConfigService
     public const CONFIG_MAKAIRA_INSTALLATION_SERVICE_CALL_COUNTER = 'makairaInstallationServiceCallCounter';
 
     public function __construct(private ConfigurationService $configurationService) {}
+
+    public function setBatchSize(int $batchSize): self
+    {
+        $this->setConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_BATCH_SIZE, $batchSize);
+
+        return $this;
+    }
+
+    public function getBatchSize(): int
+    {
+        return empty($value = $this->getConfigValue(self::CONFIG_PREFIX . self::CONFIG_MAKAIRA_BATCH_SIZE))
+            ? 500 : (int)$value;
+    }
 
     public function getMakairaUrl(): string
     {

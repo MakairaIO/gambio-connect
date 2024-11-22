@@ -64,12 +64,12 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     ->execute()
                     ->fetchAll(FetchMode::ASSOCIATIVE);
 
-                $limit = 500;
+                $limit = $this->moduleConfigService->getBatchSize();
 
                 $query = $this->connection->createQueryBuilder()
                     ->select('gambio_id')
                     ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
-                    ->setMaxResults(500);
+                    ->setMaxResults($limit);
 
                 $changes = [];
 
@@ -103,9 +103,15 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                         } catch (Exception $exception) {
                             $this->logInfo('Error in Export for Language ' . $language['code']);
                             $this->logError($exception->getMessage());
+                            $errors = true;
+                            $this->moduleConfigService->setBatchSize($limit / 2);
                         }
                         $this->logInfo('End Export of '.$limit.' Datasets for Language ' . $language['code']);
                     }
+                }
+
+                if($errors === false) {
+                    $this->moduleConfigService->setBatchSize($limit + 1);
                 }
 
                 $this->connection->createQueryBuilder()
