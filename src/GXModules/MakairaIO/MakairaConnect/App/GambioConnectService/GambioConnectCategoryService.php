@@ -60,17 +60,16 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                         /** @var IdType $subCategoryId */
                         $subCategories = MakairaDataMapper::mapCategory(
                             (int)$subCategoryId,
-                            false,
                             $this->currentLanguageCode
                         )->toArray();
-                        $hierarchy .= (int)$subCategoryId . '//';
+                        $hierarchy .= $subCategoryId. '//';
                         $depth++;
                     }
                     $category->setSubCategories($subCategories);
                     $category->setHierarchy($hierarchy);
                     $category->setDepth($depth);
 
-                    $categories[] = $category->toArray();
+                    $categories[] = $category;
                 }catch(Exception $e){
                     $this->logger->error('Category Export to Makaira Failed', [
                         'id' => $category->getCategoriesId(),

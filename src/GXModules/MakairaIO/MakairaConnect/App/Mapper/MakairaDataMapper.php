@@ -54,7 +54,9 @@ class MakairaDataMapper
         try {
             $category = $categoryReadService->getCategoryById($categoryId);
         }catch (\UnexpectedValueException $exception) {
-            $transfer->delete();
+            $transfer->setId($categoryId)
+                ->setCategoriesId($categoryId)
+                ->delete();
 
             return $transfer;
         }
@@ -64,6 +66,7 @@ class MakairaDataMapper
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
             ->setId($category->getCategoryId())
+            ->setCategoriesId($categoryId)
             ->setCategoryTitle($categoryTitle = $category->getName($languageCode))
             ->setUrl('?' . xtc_category_link($categoryId, $categoryTitle, $language))
             ->setCategoryDescription($category->getDescription($languageCode) ?? '')
@@ -87,7 +90,7 @@ class MakairaDataMapper
     {
         $product = new \product($productId, $languageId);
         $variantCooProduct = $product->buildDataArray($product->data);
-        $productDocument = self::mapProduct((int)$product, $languageId, $languageCode, $currencyCode, $customerStatusId);
+        $productDocument = self::mapProduct($productId, $languageId, $languageCode, $currencyCode, $customerStatusId);
         $variantDocument = new MakairaVariant;
         $variantDocument->setProduct($variantCooProduct);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);

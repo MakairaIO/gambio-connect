@@ -66,7 +66,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $this->currentLanguageCode = $_SESSION['language_code'];
 
         if (! empty($changes)) {
-            $products = [];
+            $documents = [];
             foreach($changes as $change) {
                 try {
                     $document = MakairaDataMapper::mapProduct((int)$change['gambio_id'], $this->currentLanguage, $this->currentLanguageCode, $this->currencyCodes, $this->customerStatusIds);

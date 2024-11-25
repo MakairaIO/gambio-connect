@@ -45,7 +45,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                     $manufacturers[] = MakairaDataMapper::mapManufacturer(
                         $export['gambio_id'],
                         $this->currentLanguageCode
-                    )->toArray();
+                    );
                 }catch (Exception $e){
                     $this->logger->error('Manufacturer Export to Makaira Failed', [
                         'id' => $export['gambio_id'],

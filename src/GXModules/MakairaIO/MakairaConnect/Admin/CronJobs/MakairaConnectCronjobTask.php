@@ -98,7 +98,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                                     ]
                                 ]
                             );
-                            $deleteIds = array_merge($deleteIds, $changes[$changeType]);
+                            $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
+                                return $change['gambio_id'];
+                            }, $changes[$changeType]));
                         } catch (Exception $exception) {
                             $this->logInfo('Error in Export of ' . $changeType . ' for Language ' . $language['code']);
                             $this->logError($exception->getMessage());
@@ -120,10 +122,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo("Delete " . count($deleteIds) . " changes.");
 
                 $this->connection->createQueryBuilder()
-                    ->delete()
                     ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
-                    ->add('where', $this->connection->createQueryBuilder()->expr()->in('id', $deleteIds))
-                ->execute();
+                    ->add('where', $this->connection->createQueryBuilder()->expr()->in('gambio_id', $deleteIds))
+                    ->delete();
 
                 $this->logInfo("Deleted " . count($deleteIds) . " changes.");
 
