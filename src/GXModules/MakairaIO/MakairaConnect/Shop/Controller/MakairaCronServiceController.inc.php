@@ -38,19 +38,11 @@ class MakairaCronServiceController extends HttpViewController
             ]);
         }
 
-        if ($_GET['start'] === null) {
-            return new JsonHttpControllerResponse([
-                'error' => 'This action required start parameter'
-            ]);
-        }
+        $data = json_decode(file_get_contents('php://input'), true, flags: JSON_THROW_ON_ERROR);
 
-        if (empty($_GET['limit'])) {
-            return new JsonHttpControllerResponse([
-                'error' => 'This action required limit parameter'
-            ]);
-        }
+        $changeType = $data['type'];
 
-        $lastLanguage = (int)$_GET['complete'];
+        $changes = $data['changes'];
 
         $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
@@ -61,10 +53,6 @@ class MakairaCronServiceController extends HttpViewController
                 'error' => 'Language '.$_GET['language'].' not found',
             ]);
         }
-
-        $start = $_GET['start'];
-
-        $limit = $_GET['limit'];
 
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
 
@@ -78,6 +66,7 @@ class MakairaCronServiceController extends HttpViewController
 
         $this->logger->debug('Makaira Export Job Called', [
             'GET_Variables' => $_GET,
+            'POST_Variables' => $data,
             'SESSION_Variables' => $_SESSION,
         ]);
 
@@ -100,11 +89,9 @@ class MakairaCronServiceController extends HttpViewController
             $productVariantsReadService
         );
 
-        $makairaConnectService->getManufacturerService()->export($start, $limit, $lastLanguage);
+        $serviceName = 'get' . ucfirst($changeType) . 'Service';
 
-        $makairaConnectService->getCategoryService()->export($start, $limit, $lastLanguage);
-
-        $makairaConnectService->getProductService()->export($start, $limit, $lastLanguage);
+        $makairaConnectService->$serviceName()->export($changes);
 
         return new \JsonHttpControllerResponse([
             'success' => true,

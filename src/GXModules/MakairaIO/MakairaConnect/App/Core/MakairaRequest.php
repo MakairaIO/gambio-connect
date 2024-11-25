@@ -23,6 +23,7 @@ class MakairaRequest
     {
         $this->makairaInstance = $makairaInstance;
         $this->makairaUrl = $makairaUrl;
+        $this->makairaSecret = $makairaSecret;
         $this->language = $language;
         $this->nonce = bin2hex(random_bytes(8));
 

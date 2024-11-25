@@ -9,8 +9,4 @@ interface GambioConnectEntityInterface
     public function export(): void;
 
     public function prepareExport(): void;
-
-    public function pushRevision(array $entity): MakairaEntity;
-
-    public function getQuery(string $language, array $makairaChanges = []): array;
 }

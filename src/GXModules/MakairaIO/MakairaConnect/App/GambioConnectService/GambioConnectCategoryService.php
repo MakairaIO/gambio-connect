@@ -2,6 +2,7 @@
 
 namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
+use CategoryListItem;
 use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
@@ -21,151 +22,72 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
-            $categories = $this->getQuery($language->id());
-
-            foreach ($categories as $category) {
-                $this->connection->executeQuery('CALL makairaChange('.$category['categories_id'].', "category")');
+            /** @var \CategoryReadService $categoryReadService */
+            $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+            /** @var \CategoryListItemCollection $categories */
+            $categories = $categoryReadService->getCategoryList(new \LanguageCode($language->code()));
+            /** @var CategoryListItem $category */
+            foreach($categories as $category) {
+                $this->callStoredProcedure($category->getCategoryId(), 'category');
             }
         }
     }
 
-    public function export(int $start = 0, int $limit = 1000, bool $lastLanguage = false): void
+    public function export(array $changes = []): void
     {
-        $makairaExports = $this->getEntitiesForExport('category', $start, $limit);
-
         $this->currentLanguage = $_SESSION['languages_id'];
 
         $this->currentLanguageCode = $_SESSION['language_code'];
 
-        if (! empty($makairaExports)) {
+        /** @var \CategoryReadService $categoryReadService */
+        $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+
+        if (! empty($changes)) {
             $categories = [];
-            foreach ($makairaExports as $export) {
-                if ($export['delete']) {
-                    $categories[] = [
-                        'categories_id' => $export['gambio_id'],
-                        'delete' => true,
-                    ];
-                } else {
-                    $exportCategory = $this->getQuery($this->currentLanguage, [$export])[0];
-                    $categories[] = array_merge(
-                        $exportCategory ?? [],
-                        [
-                            'categories_id' => $export['gambio_id'],
-                            'delete' => false,
-                        ]
-                    );
-                }
-            }
-
-            $documents = [];
-
-            foreach ($categories as $category) {
+            foreach ($changes as $export) {
                 try {
-                    $category['subcategories'] = $this->getSubCategories(
-                        $this->currentLanguage,
-                        $category['categories_id']
+                    $categoryId = new \IdType($export['gambio_id']);
+                    $category = MakairaDataMapper::mapCategory(
+                        $export['gambio_id'],
+                        $this->currentLanguageCode
                     );
-                    $document = $this->pushRevision($category);
-                    if ($document->getId()) {
-                        $documents[] = $document;
+
+                    /** @var \IdCollection $subCategoryIds */
+                    $subCategoryIds = $categoryReadService->getCategoryIdsTree($categoryId);
+                    $hierarchy = $category->getCategoriesId() . '//';
+                    $depth = 1;
+                    foreach ($subCategoryIds as $subCategoryId) {
+                        /** @var IdType $subCategoryId */
+                        $subCategories = MakairaDataMapper::mapCategory(
+                            (int)$subCategoryId,
+                            false,
+                            $this->currentLanguageCode
+                        )->toArray();
+                        $hierarchy .= (int)$subCategoryId . '//';
+                        $depth++;
                     }
-                } catch (Exception $exception) {
+                    $category->setSubCategories($subCategories);
+                    $category->setHierarchy($hierarchy);
+                    $category->setDepth($depth);
+
+                    $categories[] = $category->toArray();
+                }catch(Exception $e){
                     $this->logger->error('Category Export to Makaira Failed', [
-                        'id' => $category['categories_id'],
-                        'message' => $exception->getMessage(),
+                        'id' => $category->getCategoriesId(),
+                        'message' => $e->getMessage(),
                     ]);
                 }
             }
-            $data = $this->addMultipleMakairaDocuments($documents, $this->currentLanguageCode);
+            $data = $this->addMultipleMakairaDocuments($categories, $this->currentLanguageCode);
             $response = $this->client->pushRevision($data);
+
             $this->logger->info(
                 'Makaira Category Documents: '
-                .count($documents)
+                .count($categories)
                 .' with Status Code '
                 .$response->getStatusCode()
             );
-
-            if($lastLanguage) {
-                foreach($makairaExports as $change) {
-                    $this->exportIsDone($change['gambio_id'], 'product');
-                }
-            }
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function pushRevision(array $category): MakairaCategory
-    {
-        $hierarchy = $this->calculateCategoryDepth($category);
-
-        return MakairaDataMapper::mapCategory($category, $hierarchy, $this->currentLanguage);
-    }
-
-    /**
-     * @param  Language  $language
-     * @return \mixed[][]
-     *
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function getQuery(string $language, array $makairaChanges = []): array
-    {
-        $query = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('categories')
-            ->leftJoin(
-                'categories',
-                'categories_description',
-                'categories_description',
-                'categories.categories_id = categories_description.categories_id'
-            )
-            ->leftJoin(
-                'categories_description',
-                'languages',
-                'languages',
-                'categories_description.language_id = languages.languages_id'
-            )
-            ->where('categories_description.language_id = :languageId')
-            ->setParameter('languageId', $language);
-
-        if (! empty($makairaChanges)) {
-            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->andWhere('categories.categories_id IN ('.implode(',', array_values($ids)).')');
-        }
-
-        return array_filter(
-            $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
-            fn (array $category) => $category['language_id'] == $language
-        );
-    }
-
-    public function getSubCategories(string $language, int $parentCategoryId): array
-    {
-        $query = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('categories')
-            ->leftJoin(
-                'categories',
-                'categories_description',
-                'categories_description',
-                'categories.categories_id = categories_description.categories_id'
-            )
-            ->leftJoin(
-                'categories_description',
-                'languages',
-                'languages',
-                'categories_description.language_id = languages.languages_id'
-            )
-            ->where('categories_description.language_id = :languageId')
-            ->setParameter('languageId', $language)
-            ->where('categories.parent_id = :parentId')
-            ->setParameter('parentId', $parentCategoryId);
-
-        return array_filter(
-            $query->execute()->fetchAll(FetchMode::ASSOCIATIVE),
-            fn (array $category) => $category['language_id'] == $language
-        );
     }
 
     private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array

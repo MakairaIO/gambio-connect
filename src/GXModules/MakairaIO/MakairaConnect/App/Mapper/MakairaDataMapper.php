@@ -15,33 +15,27 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public static function mapManufacturer(array $data): MakairaManufacturer
+    public static function mapManufacturer(int $id, string $languageCode): MakairaManufacturer
     {
         $transfer = new MakairaManufacturer;
+        $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER);
 
-        if ($data['delete']) {
-            return $transfer->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
-                ->setId($data['manufacturers_id'])
-                ->setDelete(true);
+        /** @var \ManufacturerReadService $manufacturerReadService */
+        $manufacturerReadService = \StaticGXCoreLoader::getService('ManufacturerRead');
+        /** @var \Manufacturer $manufacturer */
+        try {
+            $manufacturer = $manufacturerReadService->getById(new \IdType($id));
+        } catch(\EntityNotFoundException $exception) {
+            $transfer->delete();
+            return $transfer;
         }
 
-        $createdAt = $data['date_added'] ? new DateTime($data['date_added']) : null;
-        $updatedAt = $data['last_modified'] ? new DateTime($data['last_modified']) : null;
-        $lastClickedAt = $data['date_last_click'] ? new DateTime($data['date_last_click']) : null;
-
-        $transfer
-            ->setType(MakairaEntity::DOC_TYPE_MANUFACTURER)
-            ->setId($data['manufacturers_id'])
-            ->setTitle($data['manufacturers_name'])
-            ->setPictureUrlMain($data['manufacturers_image'])
-            ->setCreatedAt($createdAt)
-            ->setUpdatedAt($updatedAt)
-            ->setMetaTitle($data['manufacturers_meta_title'])
-            ->setMetaDescription($data['manufacturers_meta_description'])
-            ->setMetaKeywords($data['manufacturers_meta_keywords'])
-            ->setRemoteUrl($data['manufacturers_url'])
-            ->setIsUrlClicked($data['url_clicked'])
-            ->setLastClickedAt($lastClickedAt);
+        $transfer->setCreatedAt($manufacturer->getDateAdded())
+            ->setUpdatedAt($manufacturer->getLastModified())
+            ->setId($manufacturer->getId())
+            ->setTitle($manufacturer->getName())
+            ->setPictureUrlMain($manufacturer->getImage())
+            ->setRemoteUrl($manufacturer->getUrl(new \LanguageCode(new \StringType($languageCode))));
 
         return $transfer;
     }
@@ -49,53 +43,50 @@ class MakairaDataMapper
     /**
      * @throws \Exception
      */
-    public static function mapCategory(array $data, array $hierarchy, string $language): MakairaCategory
+    public static function mapCategory(int $id, string $language): MakairaCategory
     {
         $transfer = new MakairaCategory;
 
-        if ($data['delete']) {
-            return $transfer->setType(MakairaEntity::DOC_TYPE_CATEGORY)
-                ->setId($data['categories_id'])
-                ->setCategoriesId($data['categories_id'])
-                ->setDelete(true);
+        $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+
+        /** @var \CategoryReadService $categoryReadService */
+        $categoryId = new \IdType($id);
+        try {
+            $category = $categoryReadService->getCategoryById($categoryId);
+        }catch (\UnexpectedValueException $exception) {
+            $transfer->delete();
+
+            return $transfer;
         }
 
-        $subCategories = [];
-
-        foreach ($data['subcategories'] as $subcategory) {
-            $subCategories[] = $subcategory['categories_id'];
-        }
+        $languageCode = new \LanguageCode(new \StringType($language));
 
         $transfer
             ->setType(MakairaEntity::DOC_TYPE_CATEGORY)
-            ->setId($data['categories_id'])
-            ->setCategoryTitle($data['categories_name'])
-            ->setDepth($hierarchy['depth'])
-            ->setHierarchy($hierarchy['hierarchy'])
-            ->setSubCategories($subCategories)
-            ->setUrl('?'.xtc_category_link($data['categories_id'], $data['categories_name'], $language))
-            ->setCategoryDescription($data['categories_description'] ?? '')
-            ->setCategoryDescriptionBottom($data['categories_description_bottom'] ?? '')
-            ->setCategoryHeadingTitle($data['categories_heading_title'] ?? '')
-            ->setGmAltText($data['gm_alt_text'] ?? '')
-            ->setShowSubCategories($data['show_sub_categories'] ?? false)
-            ->setShowSubCategoriesImages($data['show_sub_categories_images'] ?? false)
-            ->setShowSubCategoriesNames($data['show_sub_categories_names'] ?? false)
-            ->setShowCategoriesImageInDescription($data['show_sub_categories_image_in_description'] ?? false)
-            ->setShowSubProducts($data['show_sub_products'] ?? false)
-            ->setCategoriesTemplate($data['categories_template'] ?? '')
-            ->setCategoriesId($data['categories_id'])
-            ->setViewModeTiled($data['view_mode_tiled'])
-            ->setCategoriesImage($data['categories_image'] ?? '')
-            ->setGmShowQtyInfo($data['gm_show_qty_info']);
+            ->setId($category->getCategoryId())
+            ->setCategoryTitle($categoryTitle = $category->getName($languageCode))
+            ->setUrl('?' . xtc_category_link($categoryId, $categoryTitle, $language))
+            ->setCategoryDescription($category->getDescription($languageCode) ?? '')
+            ->setCategoryDescriptionBottom($category->getDescriptionBottom($languageCode) ?? '')
+            ->setCategoryHeadingTitle($category->getHeadingTitle($languageCode) ?? '')
+            ->setGmAltText($category->getImageAltText($languageCode) ?? '')
+            ->setShowSubCategories($category->getSettings()->showSubcategories())
+            ->setShowSubCategoriesImages($category->getSettings()->showSubcategoryImages())
+            ->setShowSubCategoriesNames($category->getSettings()->showSubcategoryNames())
+            ->setShowCategoriesImageInDescription($category->getSettings()->showCategoryImageInDescription())
+            ->setShowSubProducts($category->getSettings()->showSubcategoryProducts())
+            ->setCategoriesTemplate($category->getSettings()->getCategoryListingTemplate())
+            ->setViewModeTiled($category->getSettings()->isDefaultViewModeTiled())
+            ->setCategoriesImage($category->getImage())
+            ->setGmShowQtyInfo($category->getSettings()->showQuantityInput());
 
         return $transfer;
     }
 
-    public static function mapVariant(array $product, string $languageId, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
+    public static function mapVariant(int $productId, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
     {
-        $product = (new \product($product['products_id'], $languageId))->data;
-        $productDocument = self::mapProduct($product, $languageId, $currencyCode, $customerStatusId);
+        $product = (new \product($productId, $languageId))->data;
+        $productDocument = self::mapProduct($product, $languageId, $languageCode, $currencyCode, $customerStatusId);
         $variantDocument = new MakairaVariant;
         $variantDocument->setProduct($product);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
@@ -119,22 +110,25 @@ class MakairaDataMapper
         return $variantDocument;
     }
 
-    public static function mapProduct(array $data, string $languageId, array $currencyCode, array $customerStatusId): MakairaProduct
+    public static function mapProduct(int $id, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId): MakairaProduct
     {
         $transfer = new MakairaProduct;
-        if ($data['delete']) {
-            return $transfer->setId($data['products_id'])
+        /** @var \ProductReadService $productReadService */
+        $productReadService = \StaticGXCoreLoader::getService('ProductRead');
+        /** @var \StoredProduct $product */
+        try {
+            $storedProduct = $productReadService->getProductById(new \IdType($id));
+        }catch( \UnexpectedValueException $exception) {
+            return $transfer->setId($id)
                 ->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-                ->setDelete(true);
+                ->delete();
         }
-        $product = new \product($data['products_id'], $languageId);
+        $product = new \product($id, $languageId);
         $cooProduct = $product->buildDataArray($product->data);
 
         $data = $product->data;
 
         $data['coo_product'] = $cooProduct;
-
-        $stock = 1;
 
         $category = [
             'catid' => $data['main_category_id'] ?? 0,
@@ -166,30 +160,26 @@ class MakairaDataMapper
         }
 
         $transfer->setType(MakairaEntity::DOC_TYPE_PRODUCT)
-            ->setId($data['products_id'])
-            ->setStock($stock)
-            ->setPrice((float)$data['products_price'])
+            ->setId($storedProduct->getProductId())
+            ->setStock($storedProduct->getQuantity())
+            ->setPrice($storedProduct->getPrice())
             ->setIsVariant(false)
             ->setPictureUrlMain($image)
-            ->setTitle($data['products_name'])
-            ->setLongDescription($data['products_description'])
-            ->setShortDescription($data['products_short_description'])
-            ->setEan($data['products_ean'] ?? '')
-            ->setMpn($data['products_item_codes']['code_mpn'] ?? '')
-            ->setIsbn($data['products_item_codes']['code_isbn'] ?? '')
-            ->setUpc($data['products_item_codes']['code_upc'] ?? '')
-            ->setJan($data['products_item_codes']['code_jan'] ?? '')
-            ->setModel($data['products_model'])
-            ->setDateAdded($data['products_date_added'] ?? '')
-            ->setDateAvailable($data['products_date_available'] ?? '')
-            ->setUrl($data['coo_product']['PRODUCTS_LINK'])
-            ->setTaxClassId((int)$data['products_tax_class_id'])
-            ->setFsk18((bool) $data['products_fsk18'] ?? false)
-            ->setGmAltText($data['gm_alt_text'] ?? '')
-            ->setProductsVpe((int)$data['products_vpe'] ?? 0)
-            ->setProductsVpeStatus((int)$data['products_vpe_status'] ?? 0)
-            ->setProductsVpeValue((int)$data['products_vpe_value'] ?? 0)
-            ->setSearchKeys($data['products_keywords'] ?? '')
+            ->setTitle($storedProduct->getName($languageCodeEntity = new \LanguageCode(new \StringType($languageCode))))
+            ->setLongDescription($storedProduct->getDescription($languageCodeEntity))
+            ->setShortDescription($storedProduct->getShortDescription($languageCodeEntity))
+            ->setEan($storedProduct->getEan())
+            ->setModel($storedProduct->getProductModel())
+            ->setDateAdded($storedProduct->getAddedDateTime()->format('Y-m-d H:i:s'))
+            ->setDateAvailable($storedProduct->getAvailableDateTime()->format('Y-m-d H:i:s'))
+            ->setUrl($storedProduct->getInfoUrl($languageCodeEntity))
+            ->setTaxClassId($storedProduct->getTaxClassId())
+            ->setFsk18($storedProduct->isFsk18())
+            ->setGmAltText($storedProduct->getPrimaryImage()->getAltText($languageCodeEntity))
+            ->setProductsVpe($storedProduct->getVpeId())
+            ->setProductsVpeStatus($storedProduct->isVpeActive())
+            ->setProductsVpeValue($storedProduct->getVpeValue())
+            ->setSearchKeys($storedProduct->getKeywords($languageCodeEntity))
             ->setCategories([$category])
             ->setMainCategory($category['title'] ?? '')
             ->setMainCategoryUrl($category['path'])
