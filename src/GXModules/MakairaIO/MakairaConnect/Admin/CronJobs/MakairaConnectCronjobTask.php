@@ -120,7 +120,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo("Delete " . count($deleteIds) . " changes.");
 
                 $this->connection->createQueryBuilder()
-                    ->delete(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
+                    ->delete()
+                    ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
                     ->add('where', $this->connection->createQueryBuilder()->expr()->in('id', $deleteIds))
                 ->execute();
 

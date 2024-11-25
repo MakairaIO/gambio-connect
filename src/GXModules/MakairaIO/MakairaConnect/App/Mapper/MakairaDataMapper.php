@@ -85,24 +85,25 @@ class MakairaDataMapper
 
     public static function mapVariant(int $productId, string $languageId, string $languageCode, array $currencyCode, array $customerStatusId, ProductVariant $variant): MakairaVariant
     {
-        $product = (new \product($productId, $languageId))->data;
-        $productDocument = self::mapProduct($product, $languageId, $languageCode, $currencyCode, $customerStatusId);
+        $product = new \product($productId, $languageId);
+        $variantCooProduct = $product->buildDataArray($product->data);
+        $productDocument = self::mapProduct((int)$product, $languageId, $languageCode, $currencyCode, $customerStatusId);
         $variantDocument = new MakairaVariant;
-        $variantDocument->setProduct($product);
+        $variantDocument->setProduct($variantCooProduct);
         $variantDocument->setType(MakairaEntity::DOC_TYPE_VARIANT);
         $variantDocument->setId($variant->id())
             ->setShop(1)
             ->setParent($variant->productId())
-            ->setLongdesc($product['products_description'])
-            ->setShortdesc($product['products_short_description'])
-            ->setPrice((float)$product['products_price'])
-            ->setTitle($product['products_name'])
+            ->setLongdesc($productDocument->getLongDescription())
+            ->setShortdesc($productDocument->getShortDescription())
+            ->setPrice((float)$variantCooProduct['PRODUCTS_PRICE'])
+            ->setTitle($productDocument->getTitle())
             ->setEan($variant->ean() ?? '')
             ->setIsVariant(true)
             ->setStock($variant->stock())
             ->setOnstock($variant->stock() > 1)
-            ->setMetaDescription($product['products_meta_description'])
-            ->setMetaKeywords($product['products_meta_keywords'])
+            ->setMetaDescription($variantCooProduct['PRODUCTS_META_DESCRIPTION'] ?? '')
+            ->setMetaKeywords($variantCooProduct['PRODUCTS_META_KEYWORDS'] ?? '')
             ->setMaincategory($productDocument->getMainCategory())
             ->setMaincategoryurl($productDocument->getMainCategoryUrl())
             ->setPictureUrlMain($productDocument->getPictureUrlMain());
