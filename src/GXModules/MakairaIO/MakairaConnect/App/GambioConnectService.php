@@ -73,7 +73,7 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     public function callStoredProcedure(int $id, string $type): void
     {
-        $this->connection->executeQuery('CALL makairaChange('.$id.','.$type.')');
+        $this->connection->executeQuery('CALL makairaChange('.$id.',"'.$type.'")');
     }
 
     public function exportIsDoneForType(string $type)

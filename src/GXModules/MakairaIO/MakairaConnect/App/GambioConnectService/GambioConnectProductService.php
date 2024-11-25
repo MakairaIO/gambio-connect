@@ -41,11 +41,16 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
     {
         $languages = $this->getLanguages();
 
-        foreach ($languages as $language) {
-            $products = $this->getQuery($language->id());
+        /** @var \ProductReadService $productReadService */
+        $productReadService = \StaticGXCoreLoader::getService('ProductRead');
 
+
+        foreach ($languages as $language) {
+            $products = $productReadService->getProductList(new \LanguageCode(new \StringType($language->code())));
+
+            /** @var \ProductListItem $product */
             foreach ($products as $product) {
-                $this->connection->executeQuery('CALL makairaChange('.$product['products_id'].', "product")');
+                $this->connection->executeQuery('CALL makairaChange('.$product->getProductId().', "product")');
             }
         }
     }

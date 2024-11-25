@@ -25,7 +25,7 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
             /** @var \CategoryReadService $categoryReadService */
             $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
             /** @var \CategoryListItemCollection $categories */
-            $categories = $categoryReadService->getCategoryList(new \LanguageCode($language->code()));
+            $categories = $categoryReadService->getCategoryList(new \LanguageCode(new \StringType($language->code())));
             /** @var CategoryListItem $category */
             foreach($categories as $category) {
                 $this->callStoredProcedure($category->getCategoryId(), 'category');

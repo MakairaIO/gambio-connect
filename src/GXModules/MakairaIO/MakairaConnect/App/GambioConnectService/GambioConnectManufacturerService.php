@@ -4,6 +4,7 @@ namespace GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 
 use Doctrine\DBAL\FetchMode;
 use Exception;
+use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
@@ -17,14 +18,14 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
 
     public function prepareExport(): void
     {
-        $languages = $this->getLanguages();
+        /** @var \ManufacturerReadService $readService */
+        $readService = \StaticGXCoreLoader::getService('ManufacturerRead');
 
-        foreach ($languages as $language) {
-            $manufacturers = $this->getQuery($language->id());
+        $manufacturers = $readService->getAll();
 
-            foreach ($manufacturers as $manufacturer) {
-                $this->callStoredProcedure($manufacturer['manufacturers_id'], 'manufacturer');
-            }
+        /** @var \ManufacturerInterface $manufacturer */
+        foreach($manufacturers as $manufacturer) {
+            $this->callStoredProcedure($manufacturer->getId(), 'manufacturer');
         }
     }
 
@@ -73,7 +74,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
         return MakairaDataMapper::mapManufacturer($manufacturer);
     }
 
-    public function getQuery(string $language, array $makairaChanges = []): array
+    public function getQuery(Language $language, array $makairaChanges = []): array
     {
         $query = $this->connection->createQueryBuilder()
             ->select('*')
@@ -85,7 +86,7 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
                 'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id'
             )
             ->where('manufacturers_info.languages_id = :languageId')
-            ->setParameter('languageId', $language);
+            ->setParameter('languageId', $language->id());
 
         if (! empty($makairaChanges)) {
             $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
