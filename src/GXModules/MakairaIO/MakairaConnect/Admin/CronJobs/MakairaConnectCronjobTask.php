@@ -5,6 +5,7 @@
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
+use GXModules\MakairaIO\MakairaConnect\App\ChangesService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
@@ -70,7 +71,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $query = $this->connection->createQueryBuilder()
                     ->select('gambio_id')
-                    ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
+                    ->from(ChangesService::TABLE_NAME)
                     ->setMaxResults($limit);
 
                 $changes = [];
@@ -122,9 +123,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 $this->logInfo("Delete " . count($deleteIds) . " changes.");
 
                 $this->connection->createQueryBuilder()
-                    ->from(\GXModules\MakairaIO\MakairaConnect\App\ChangesService::TABLE_NAME)
-                    ->add('where', $this->connection->createQueryBuilder()->expr()->in('gambio_id', $deleteIds))
-                    ->delete();
+                    ->delete(ChangesService::TABLE_NAME)
+                    ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')
+                    ->execute();
 
                 $this->logInfo("Deleted " . count($deleteIds) . " changes.");
 
