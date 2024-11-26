@@ -122,12 +122,14 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $this->logInfo("Delete " . count($deleteIds) . " changes.");
 
-                $this->connection->createQueryBuilder()
-                    ->delete(ChangesService::TABLE_NAME)
-                    ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')
-                    ->execute();
+                if(!empty($deleteIds)) {
+                    $this->connection->createQueryBuilder()
+                        ->delete(ChangesService::TABLE_NAME)
+                        ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')
+                        ->execute();
 
-                $this->logInfo("Deleted " . count($deleteIds) . " changes.");
+                    $this->logInfo("Deleted " . count($deleteIds) . " changes.");
+                }
 
                 if (! $this->checkPublicFieldsSetup()) {
                     try {
