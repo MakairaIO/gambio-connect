@@ -9,6 +9,7 @@ use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaManufacturer;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaProduct;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaVariant;
+use JetBrains\PhpStorm\Language;
 
 class MakairaDataMapper
 {
@@ -119,6 +120,9 @@ class MakairaDataMapper
         $transfer = new MakairaProduct;
         /** @var \ProductReadService $productReadService */
         $productReadService = \StaticGXCoreLoader::getService('ProductRead');
+
+        /** @var \CategoryReadService $categoryReadService */
+        $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
         /** @var \StoredProduct $product */
         try {
             $storedProduct = $productReadService->getProductById(new \IdType($id));
@@ -132,18 +136,23 @@ class MakairaDataMapper
 
         $data = $product->data;
 
-        $data['coo_product'] = $cooProduct;
+        $data['coo_product'] = serialize($cooProduct);
+
+        /** @var \StoredCategory $storedCategory */
+        $storedCategory = $categoryReadService->getCategoryById(new \IdType($storedProduct->getMainCategoryId()));
 
         $category = [
-            'catid' => $data['main_category_id'] ?? 0,
+            'catid' => $storedProduct->getMainCategoryId(),
             'shopid' => 1,
-            'path' => $data['coo_product']['PRODUCTS_CATEGORY_URL'],
+            'path' => $storedCategory->getUrlRewrite(new \LanguageCode(new \StringType($languageCode)))->getRewriteUrl(),
         ];
 
         $image = '';
 
-        if (! empty($data['products_image'])) {
-            $image = HTTPS_SERVER.DIR_WS_CATALOG.'images/product_images/original_images/'.$data['products_image'];
+        $primaryImage = $storedProduct->getPrimaryImage();
+
+        if (! empty($primaryImage->isVisible())) {
+            $image = HTTPS_SERVER.DIR_WS_CATALOG.'images/product_images/original_images/' . $primaryImage->getFilename();
         }
 
         $groups = [];
@@ -154,11 +163,11 @@ class MakairaDataMapper
                         'formated' => $cooProduct['PRODUCTS_PRICE'],
                         'plain' => $data['products_price'],
                     ],
-                    'products_shipping_name' => $data['coo_product']['PRODUCTS_SHIPPING_NAME'],
-                    'products_shipping_range' => $data['coo_product']['PRODUCTS_SHIPPING_RANGE'],
-                    'products_shipping_image' => $data['coo_product']['PRODUCTS_SHIPPING_IMAGE'],
-                    'products_shipping_link_active' => $data['coo_product']['PRODUCTS_SHIPPING_LINK_ACTIVE'],
-                    'coo_product' => $cooProduct,
+                    'products_shipping_name' => $cooProduct['PRODUCTS_SHIPPING_NAME'],
+                    'products_shipping_range' => $cooProduct['PRODUCTS_SHIPPING_RANGE'],
+                    'products_shipping_image' => $cooProduct['PRODUCTS_SHIPPING_IMAGE'],
+                    'products_shipping_link_active' => $cooProduct['PRODUCTS_SHIPPING_LINK_ACTIVE'],
+                    'coo_product' => $data['coo_product'],
                 ];
             }
         }
@@ -173,10 +182,14 @@ class MakairaDataMapper
             ->setLongDescription($storedProduct->getDescription($languageCodeEntity))
             ->setShortDescription($storedProduct->getShortDescription($languageCodeEntity))
             ->setEan($storedProduct->getEan())
+            ->setIsbn($storedProduct->getAddonValue(new \StringType('codeIsbn')))
+            ->setUpc($storedProduct->getAddonValue(new \StringType('codeUpc')))
+            ->setMpn($storedProduct->getAddonValue(new \StringType('codeMpn')))
+            ->setJan($storedProduct->getAddonValue(new \StringType('codeJan')))
             ->setModel($storedProduct->getProductModel())
             ->setDateAdded($storedProduct->getAddedDateTime()->format('Y-m-d H:i:s'))
             ->setDateAvailable($storedProduct->getAvailableDateTime()->format('Y-m-d H:i:s'))
-            ->setUrl($storedProduct->getInfoUrl($languageCodeEntity))
+            ->setUrl($cooProduct['PRODUCTS_LINK'])
             ->setTaxClassId($storedProduct->getTaxClassId())
             ->setFsk18($storedProduct->isFsk18())
             ->setGmAltText($storedProduct->getPrimaryImage()->getAltText($languageCodeEntity))
@@ -185,7 +198,7 @@ class MakairaDataMapper
             ->setProductsVpeValue($storedProduct->getVpeValue())
             ->setSearchKeys($storedProduct->getKeywords($languageCodeEntity))
             ->setCategories([$category])
-            ->setMainCategory($category['title'] ?? '')
+            ->setMainCategory($storedCategory->getName(new \LanguageCode(new \StringType($languageCode))))
             ->setMainCategoryUrl($category['path'])
             ->setGroups($groups);
 

@@ -111,7 +111,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 }
             }
 
-            foreach(array_chunk($documents, 1000) as $documentChunk) {
+            foreach(array_chunk($documents, 100) as $documentChunk) {
                 $data = $this->addMultipleMakairaDocuments($documentChunk, $this->currentLanguageCode);
 
                 $this->client->pushRevision($data);

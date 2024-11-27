@@ -107,6 +107,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                             $this->logError($exception->getMessage());
                             $errors = true;
                             $newBatchSize = $limit / 2;
+                            if($newBatchSize <= 1) {
+                                $newBatchSize = 1000;
+                            }
                             $this->logInfo("Set Batch Limit to $newBatchSize");
                             $this->moduleConfigService->setBatchSize($newBatchSize);
                         }

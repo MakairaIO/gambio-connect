@@ -217,7 +217,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                                 $GLOBALS['xtPrice']->showFrom_Attributes = false;
                             }
 
-                            $coo_product = $t_product_array['coo_product'];
+                            $coo_product = unserialize($t_product_array['coo_product']);
                             $t_products_array[] = $coo_product;
 
                             $t_attributes_html = '';

@@ -5,6 +5,7 @@ namespace GXModules\MakairaIO\MakairaConnect\App;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\RequestOptions;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
@@ -303,7 +304,7 @@ class MakairaClient
         ];
 
         if (! empty($group)) {
-            $body['constraints']['query']['group'] = $group;
+            $body['constraints']['query.group'] = $group;
         }
 
         $url = $this->makairaUrl.'/search/';
