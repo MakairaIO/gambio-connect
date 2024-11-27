@@ -80,7 +80,11 @@ class MakairaClient
 
     public function pushRevision(array $document)
     {
-        return $this->doRequest('PUT', 'persistence/revisions', $document);
+        try {
+            return $this->doRequest('PUT', 'persistence/revisions', $document);
+        }catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 
     public function rebuild(array $types)

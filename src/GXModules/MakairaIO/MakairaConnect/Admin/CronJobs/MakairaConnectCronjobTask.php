@@ -69,52 +69,56 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $limit = $this->moduleConfigService->getBatchSize();
 
-                $query = $this->connection->createQueryBuilder()
-                    ->select('gambio_id')
+                $changes = $this->connection->createQueryBuilder()
+                    ->select('gambio_id', 'type')
                     ->from(ChangesService::TABLE_NAME)
-                    ->setMaxResults($limit);
+                    ->setMaxResults($limit)
+                ->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
-                $changes = [];
+                $this->logInfo("Loaded " . $countChanges = count($changes) . " changes");
 
-                foreach(self::CHANGE_TYPES as $changeType) {
-                    $changes[$changeType] = $query->where('type = :type')->setParameter('type', $changeType)->execute()->fetchAll(FetchMode::ASSOCIATIVE);
-                    $this->logInfo("Loaded " . $changeType . " from changes table: " . count($changes[$changeType]) . " changes.");
-                }
+                $this->logger->log([
+                    'changes' => $changes
+
+                ]);
 
                 $deleteIds = [];
 
-                foreach(self::CHANGE_TYPES as $changeType) {
-                    foreach($languages as $language) {
-                        $this->logInfo('Begin Export of '.$changeType . ': ' . $limit.' Datasets for Language ' . $language['code']);
-                        $client = new \GuzzleHttp\Client([
-                            'base_uri' => $host . $language['code'],
-                        ]);
-                        try {
-                            $client->post(
-                                'shop.php?do=MakairaCronService/doExport&language=' . $language['code'],
-                                [
-                                    'json' => [
-                                        'type' => $changeType,
-                                        'changes' => $changes[$changeType],
-                                    ]
+                foreach($languages as $language) {
+                    $this->logInfo('Begin Export of : ' . $countChanges.' Datasets for Language ' . $language['code'] . " with Changes");
+                    $client = new \GuzzleHttp\Client([
+                        'base_uri' => $host . $language['code'],
+                    ]);
+                    try {
+                        $response = $client->post(
+                            'shop.php?do=MakairaCronService/doExport&language=' . $language['code'],
+                            [
+                                'json' => [
+                                    'changes' => $changes,
                                 ]
-                            );
-                            $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
-                                return $change['gambio_id'];
-                            }, $changes[$changeType]));
-                        } catch (Exception $exception) {
-                            $this->logInfo('Error in Export of ' . $changeType . ' for Language ' . $language['code']);
-                            $this->logError($exception->getMessage());
-                            $errors = true;
-                            $newBatchSize = $limit / 2;
-                            if($newBatchSize <= 1) {
-                                $newBatchSize = 1000;
-                            }
-                            $this->logInfo("Set Batch Limit to $newBatchSize");
-                            $this->moduleConfigService->setBatchSize($newBatchSize);
+                            ]
+                        );
+
+                        $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
+                            return $change['gambio_id'];
+                        }, $changes));
+                    } catch (Exception $exception) {
+                        $this->logInfo('Error in Export for Language ' . $language['code']);
+                        $this->logError($exception->getMessage());
+                        if(str_contains('500 Internal Server Error', $exception->getMessage())) {
+                            $this->logError("Fatal Request Error - Exiting");
+
+                            return;
                         }
-                        $this->logInfo('End Export of '. $changeType . ': ' . $limit.' Datasets for Language ' . $language['code']);
+                        $errors = true;
+                        $newBatchSize = $limit / 2;
+                        if($newBatchSize <= 1) {
+                            $newBatchSize = 1000;
+                        }
+                        $this->logInfo("Set Batch Limit to $newBatchSize");
+                        $this->moduleConfigService->setBatchSize($newBatchSize);
                     }
+                    $this->logInfo('End Export of : ' . $countChanges.' Datasets for Language ' . $language['code']);
                 }
 
                 if($errors === false) {
@@ -123,9 +127,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     $this->moduleConfigService->setBatchSize($newBatchSize);
                 }
 
-                $this->logInfo("Delete " . count($deleteIds) . " changes.");
-
                 if(!empty($deleteIds)) {
+                    $deleteIds = array_unique($deleteIds);
+                    $this->logInfo("Delete " . count($deleteIds) . " changes.");
                     $this->connection->createQueryBuilder()
                         ->delete(ChangesService::TABLE_NAME)
                         ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')

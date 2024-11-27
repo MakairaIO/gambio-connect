@@ -28,7 +28,44 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected Connection $connection,
         protected MakairaLogger $logger,
         protected ?ProductVariantsRepository $productVariantsRepository = null,
-    ) {}
+    ) {
+    }
+
+
+
+    public function exportToMakaira(array $changes): void
+    {
+        $documents = [];
+
+        $productService = $this->getProductService();
+
+        $categoryService = $this->getCategoryService();
+
+        $manufacturerService = $this->getManufacturerService();
+
+        $this->logger->debug("Received Changes", [$changes]);
+
+        foreach ($changes as $change) {
+            $this->logger->debug("Processing Change", [
+                'change' => $change,
+                'type' => $change['type'],
+                'id' => $change['gambio_id'],
+            ]);
+            switch ($change['type']) {
+                case 'product':
+                    $documents[] = array_merge($documents, $productService->exportDocument($change));
+                    break;
+                case 'category':
+                    $documents[] = $categoryService->exportDocument($change);
+                    break;
+                case 'manufacturer':
+                    $documents[] = $manufacturerService->exportDocument($change);
+                    break;
+            }
+        }
+
+        $this->executeDocumentsInChunks($documents);
+    }
 
     private function getService(string $service): static
     {
@@ -73,7 +110,7 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     public function callStoredProcedure(int $id, string $type): void
     {
-        $this->connection->executeQuery('CALL makairaChange('.$id.',"'.$type.'")');
+        $this->connection->executeQuery('CALL makairaChange(' . $id . ',"' . $type . '")');
     }
 
     public function exportIsDoneForType(string $type)
@@ -167,13 +204,32 @@ class GambioConnectService implements GambioConnectServiceInterface
             ->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function addMakairaDocumentWrapper(MakairaEntity $document, ?string $language = null): array
+    public function addMakairaDocumentWrapper(MakairaEntity|array $document, ?string $language = null): array
     {
-        return [
-            'data' => $document->toArray(),
-            'language_id' => $language,
-            'delete' => $document->isDelete(),
-        ];
+        $data = [];
+
+        if(is_array($document)) {
+            $data['delete'] = $document['delete'];
+            unset($document['delete']);
+        } else {
+            $data['delete'] = $document->isDelete();
+        }
+
+        $data['data'] = is_array($document) ? $document : $document->toArray();
+        $data['language_id'] = $language;
+
+        return $data;
+    }
+
+    public function executeDocumentsInChunks(array $documents): void
+    {
+        foreach(array_chunk($documents, 1000) as $chunk) {
+            try {
+                $this->client->pushRevision($this->addMultipleMakairaDocuments($chunk, $_GET['language']));
+            }catch(\Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+        }
     }
 
     public function addMultipleMakairaDocuments(array $documents, ?string $language = null): array

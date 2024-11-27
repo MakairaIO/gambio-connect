@@ -7,6 +7,7 @@ use Doctrine\DBAL\FetchMode;
 use Exception;
 use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaCategory;
+use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
 use GXModules\MakairaIO\MakairaConnect\App\Mapper\MakairaDataMapper;
 use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectEntityInterface;
@@ -17,15 +18,16 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
 
     private string $currentLanguageCode;
 
+    private \CategoryReadService $categoryReadService;
+
     public function prepareExport(): void
     {
         $languages = $this->getLanguages();
 
         foreach ($languages as $language) {
-            /** @var \CategoryReadService $categoryReadService */
-            $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+            $this->categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
             /** @var \CategoryListItemCollection $categories */
-            $categories = $categoryReadService->getCategoryList(new \LanguageCode(new \StringType($language->code())));
+            $categories = $this->categoryReadService->getCategoryList(new \LanguageCode(new \StringType($language->code())));
             /** @var CategoryListItem $category */
             foreach($categories as $category) {
                 $this->callStoredProcedure($category->getCategoryId(), 'category');
@@ -40,39 +42,16 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $this->currentLanguageCode = $_SESSION['language_code'];
 
         /** @var \CategoryReadService $categoryReadService */
-        $categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+        $this->categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
 
         if (! empty($changes)) {
             $categories = [];
-            foreach ($changes as $export) {
+            foreach ($changes as $change) {
                 try {
-                    $categoryId = new \IdType($export['gambio_id']);
-                    $category = MakairaDataMapper::mapCategory(
-                        $export['gambio_id'],
-                        $this->currentLanguageCode
-                    );
-
-                    /** @var \IdCollection $subCategoryIds */
-                    $subCategoryIds = $categoryReadService->getCategoryIdsTree($categoryId);
-                    $hierarchy = $category->getCategoriesId() . '//';
-                    $depth = 1;
-                    foreach ($subCategoryIds as $subCategoryId) {
-                        /** @var IdType $subCategoryId */
-                        $subCategories = MakairaDataMapper::mapCategory(
-                            (int)$subCategoryId,
-                            $this->currentLanguageCode
-                        )->toArray();
-                        $hierarchy .= $subCategoryId. '//';
-                        $depth++;
-                    }
-                    $category->setSubCategories($subCategories);
-                    $category->setHierarchy($hierarchy);
-                    $category->setDepth($depth);
-
-                    $categories[] = $category;
+                    $categories[] = $this->exportDocument($change);
                 }catch(Exception $e){
                     $this->logger->error('Category Export to Makaira Failed', [
-                        'id' => $category->getCategoriesId(),
+                        'id' => $change['gambio_id'],
                         'message' => $e->getMessage(),
                     ]);
                 }
@@ -87,6 +66,39 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
                 .$response->getStatusCode()
             );
         }
+    }
+
+    public function exportDocument(array $change): MakairaEntity
+    {
+
+        $this->currentLanguage = $_SESSION['languages_id'];
+
+        $this->currentLanguageCode = $_SESSION['language_code'];
+        $this->categoryReadService = \StaticGXCoreLoader::getService('CategoryRead');
+        $categoryId = new \IdType($change['gambio_id']);
+        $category = MakairaDataMapper::mapCategory(
+            $change['gambio_id'],
+            $this->currentLanguageCode
+        );
+
+        /** @var \IdCollection $subCategoryIds */
+        $subCategoryIds = $this->categoryReadService->getCategoryIdsTree($categoryId);
+        $hierarchy = $category->getCategoriesId() . '//';
+        $depth = 1;
+        foreach ($subCategoryIds as $subCategoryId) {
+            /** @var IdType $subCategoryId */
+            $subCategories = MakairaDataMapper::mapCategory(
+                (int)$subCategoryId,
+                $this->currentLanguageCode
+            )->toArray();
+            $hierarchy .= $subCategoryId. '//';
+            $depth++;
+        }
+        $category->setSubCategories($subCategories);
+        $category->setHierarchy($hierarchy);
+        $category->setDepth($depth);
+
+        return $category;
     }
 
     private function calculateCategoryDepth(array $category, int $depth = 1, string $hierarchy = ''): array

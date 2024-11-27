@@ -69,40 +69,7 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
             $documents = [];
             foreach($changes as $change) {
                 try {
-                    $document = MakairaDataMapper::mapProduct((int)$change['gambio_id'], $this->currentLanguage, $this->currentLanguageCode, $this->currencyCodes, $this->customerStatusIds);
-                    $this->logger->info('Prepared Product ' . $change['gambio_id'] . ' in Language ' . $this->currentLanguageCode);
-                    if ($document->getId()) {
-                        $documents[] = $document;
-
-                        $variants =
-                            $this
-                                ->productVariantsRepository
-                                ->getProductVariantsByProductId(ProductId::create($change['gambio_id']));
-
-                        $this->logger->info(
-                            'Processing '
-                            . count($variants->toArray())
-                            . ' Variants for '
-                            . $change['gambio_id']
-                        );
-
-                        foreach ($variants as $variant) {
-                            $documents[] = MakairaDataMapper::mapVariant(
-                                (int)$change['gambio_id'],
-                                $this->currentLanguage,
-                                $this->currentLanguageCode,
-                                $this->currencyCodes,
-                                $this->customerStatusIds,
-                                $variant
-                            );
-                        }
-
-                        foreach ($documents as $document) {
-                            $this->logger->info('Prepared Document for Makaira ' . get_class($document), [
-                                'data' => $document->getId(),
-                            ]);
-                        }
-                    }
+                    $documents[] = $this->exportDocument($change);
                 } catch (\Exception $exception) {
                     $this->logger->error('Product Export to Makaira Failed', [
                         'id' => $change['gambio_id'],
@@ -111,11 +78,65 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 }
             }
 
-            foreach(array_chunk($documents, 100) as $documentChunk) {
+            foreach(array_chunk($documents, 1000) as $documentChunk) {
                 $data = $this->addMultipleMakairaDocuments($documentChunk, $this->currentLanguageCode);
 
                 $this->client->pushRevision($data);
             }
         }
+    }
+
+    public function exportDocument($change): array
+    {
+        $this->currencyCodes = $this->getCurrencyCodes();
+
+        $this->customerStatusIds = $this->getCustomerStatusIds();
+
+        $this->currentLanguage = $_SESSION['languages_id'];
+
+        $this->currentLanguageCode = $_SESSION['language_code'];
+
+        $documents = [];
+
+        $document = MakairaDataMapper::mapProduct((int)$change['gambio_id'], $this->currentLanguage, $this->currentLanguageCode, $this->currencyCodes, $this->customerStatusIds);
+        $this->logger->info('Prepared Product ' . $change['gambio_id'] . ' in Language ' . $this->currentLanguageCode, [
+            'document' => $document->toArray()
+        ]);
+        if ($document->getId()) {
+            $documents[] = $document->toArray();
+
+            $variants =
+                $this
+                    ->productVariantsRepository
+                    ->getProductVariantsByProductId(ProductId::create($change['gambio_id']));
+
+            $this->logger->info(
+                'Processing '
+                . count($variants->toArray())
+                . ' Variants for '
+                . $change['gambio_id']
+            );
+
+            foreach ($variants as $variant) {
+                $documents[] = $variantDocument = MakairaDataMapper::mapVariant(
+                    (int)$change['gambio_id'],
+                    $this->currentLanguage,
+                    $this->currentLanguageCode,
+                    $this->currencyCodes,
+                    $this->customerStatusIds,
+                    $variant
+                )->toArray();
+                $this->logger->info("Prepared Variant " . $variant->id() . " for Product " . $change['gambio_id'] . ' in Language ' . $this->currentLanguageCode, [
+                    'document' => $variantDocument
+                ]);
+            }
+
+            foreach ($documents as $document) {
+                $this->logger->info('Prepared Document for Makaira', [
+                    'data' => $document,
+                ]);
+            }
+        }
+        return $documents;
     }
 }

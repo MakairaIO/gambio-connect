@@ -40,15 +40,12 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
 
         if (! empty($changes)) {
             $manufacturers = [];
-            foreach ($changes as $export) {
+            foreach ($changes as $change) {
                 try {
-                    $manufacturers[] = MakairaDataMapper::mapManufacturer(
-                        $export['gambio_id'],
-                        $this->currentLanguageCode
-                    );
+                    $manufacturers[] = $this->exportDocument($change);
                 }catch (Exception $e){
                     $this->logger->error('Manufacturer Export to Makaira Failed', [
-                        'id' => $export['gambio_id'],
+                        'id' => $change['gambio_id'],
                         'message' => $e->getMessage(),
                     ]);
                 }
@@ -66,34 +63,23 @@ class GambioConnectManufacturerService extends GambioConnectService implements G
         }
     }
 
+    public function exportDocument(array $change): MakairaEntity
+    {
+        $this->currentLanguage = $_SESSION['languages_id'];
+
+        $this->currentLanguageCode = $_SESSION['language_code'];
+
+        return MakairaDataMapper::mapManufacturer(
+            $change['gambio_id'],
+            $this->currentLanguageCode
+        );
+    }
+
     /**
      * @throws Exception
      */
     public function pushRevision(array $manufacturer): MakairaEntity
     {
         return MakairaDataMapper::mapManufacturer($manufacturer);
-    }
-
-    public function getQuery(Language $language, array $makairaChanges = []): array
-    {
-        $query = $this->connection->createQueryBuilder()
-            ->select('*')
-            ->from('manufacturers')
-            ->leftJoin(
-                'manufacturers',
-                'manufacturers_info',
-                'manufacturers_info',
-                'manufacturers.manufacturers_id = manufacturers_info.manufacturers_id'
-            )
-            ->where('manufacturers_info.languages_id = :languageId')
-            ->setParameter('languageId', $language->id());
-
-        if (! empty($makairaChanges)) {
-            $ids = array_map(fn ($change) => $change['gambio_id'], $makairaChanges);
-            $query->where('manufacturers.manufacturers_id IN (:ids)')
-                ->setParameter('ids', implode(',', array_values($ids)));
-        }
-
-        return $query->execute()->fetchAll(FetchMode::ASSOCIATIVE);
     }
 }

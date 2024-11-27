@@ -38,6 +38,7 @@ class MakairaEntity
             'searchable' => $this->searchable,
             'hidden' => $this->hidden,
             'picture_url_main' => $this->pictureUrlMain,
+            'delete' => $this->delete,
         ];
     }
 

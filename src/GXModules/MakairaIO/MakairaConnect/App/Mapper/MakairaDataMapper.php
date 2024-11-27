@@ -138,13 +138,27 @@ class MakairaDataMapper
 
         $data['coo_product'] = serialize($cooProduct);
 
-        /** @var \StoredCategory $storedCategory */
-        $storedCategory = $categoryReadService->getCategoryById(new \IdType($storedProduct->getMainCategoryId()));
+        try {
+            /** @var \StoredCategory $storedCategory */
+            $storedCategory = $categoryReadService->getCategoryById(new \IdType($storedProduct->getMainCategoryId()));
+        }catch(\UnexpectedValueException $exception) {
+            $storedCategory = null;
+        }
+
+        $categoryPath = '';
+
+        try {
+            if($storedCategory) {
+                $categoryPath = $storedCategory->getUrlRewrite(new \LanguageCode(new \StringType($languageCode)))->getRewriteUrl();
+            }
+
+        }catch( \InvalidArgumentException $exception) {
+        }
 
         $category = [
             'catid' => $storedProduct->getMainCategoryId(),
             'shopid' => 1,
-            'path' => $storedCategory->getUrlRewrite(new \LanguageCode(new \StringType($languageCode)))->getRewriteUrl(),
+            'path' => $categoryPath,
         ];
 
         $image = '';
@@ -182,10 +196,10 @@ class MakairaDataMapper
             ->setLongDescription($storedProduct->getDescription($languageCodeEntity))
             ->setShortDescription($storedProduct->getShortDescription($languageCodeEntity))
             ->setEan($storedProduct->getEan())
-            ->setIsbn($storedProduct->getAddonValue(new \StringType('codeIsbn')))
-            ->setUpc($storedProduct->getAddonValue(new \StringType('codeUpc')))
-            ->setMpn($storedProduct->getAddonValue(new \StringType('codeMpn')))
-            ->setJan($storedProduct->getAddonValue(new \StringType('codeJan')))
+            ->setIsbn($storedProduct->getAddonValues()->keyExists('codeIsbn') ? $storedProduct->getAddonValues()->getValue('codeIsbn') : '')
+            ->setUpc($storedProduct->getAddonValues()->keyExists('codeUpc') ? $storedProduct->getAddonValues()->getValue('codeUpc') : '')
+            ->setMpn($storedProduct->getAddonValues()->keyExists('codeMpn') ? $storedProduct->getAddonValues()->getValue('codeMpn') : '')
+            ->setJan($storedProduct->getAddonValues()->keyExists('codeJan') ? $storedProduct->getAddonValues()->getValue('codeJan') : '')
             ->setModel($storedProduct->getProductModel())
             ->setDateAdded($storedProduct->getAddedDateTime()->format('Y-m-d H:i:s'))
             ->setDateAvailable($storedProduct->getAvailableDateTime()->format('Y-m-d H:i:s'))
@@ -198,7 +212,7 @@ class MakairaDataMapper
             ->setProductsVpeValue($storedProduct->getVpeValue())
             ->setSearchKeys($storedProduct->getKeywords($languageCodeEntity))
             ->setCategories([$category])
-            ->setMainCategory($storedCategory->getName(new \LanguageCode(new \StringType($languageCode))))
+            ->setMainCategory($storedCategory?->getName(new \LanguageCode(new \StringType($languageCode))) ?? '')
             ->setMainCategoryUrl($category['path'])
             ->setGroups($groups);
 

@@ -32,17 +32,21 @@ class MakairaCronServiceController extends HttpViewController
 
     public function actionDoExport(): \JsonHttpControllerResponse
     {
+        $this->logger = new MakairaLogger;
+
         if (empty($_GET['language'])) {
             return new JsonHttpControllerResponse([
                 'error' => 'This action requires language parameter',
             ]);
         }
 
-        $data = json_decode(file_get_contents('php://input'), true, flags: JSON_THROW_ON_ERROR);
+        $jsonInput = file_get_contents('php://input');
 
-        $changeType = $data['type'];
+        $this->logger->debug("Makaira CRON Service Controller", [
+            'jsonInput' => $jsonInput,
+        ]);
 
-        $changes = $data['changes'];
+        $data = json_decode($jsonInput, true, flags: JSON_THROW_ON_ERROR);
 
         $this->languageService = LegacyDependencyContainer::getInstance()->get(\Gambio\Core\Language\Services\LanguageService::class);
 
@@ -55,8 +59,6 @@ class MakairaCronServiceController extends HttpViewController
         }
 
         $this->configurationService = \LegacyDependencyContainer::getInstance()->get(ConfigurationService::class);
-
-        $this->logger = new MakairaLogger;
 
         $this->moduleConfigService = new ModuleConfigService($this->configurationService);
 
@@ -89,9 +91,11 @@ class MakairaCronServiceController extends HttpViewController
             $productVariantsReadService
         );
 
-        $serviceName = 'get' . ucfirst($changeType) . 'Service';
+        $this->logger->debug('Front-End Controller called', [
+            'changes' => $data
+        ]);
 
-        $makairaConnectService->$serviceName()->export($changes);
+        $makairaConnectService->exportToMakaira($data['changes']);
 
         return new \JsonHttpControllerResponse([
             'success' => true,
