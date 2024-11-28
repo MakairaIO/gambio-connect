@@ -43,8 +43,8 @@ class MakairaManufacturer extends MakairaEntity
             'metaKeywords' => $this->metaKeywords,
             'remoteUrl' => $this->remoteUrl,
             'isUrlClicked' => $this->isUrlClicked,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
             'lastClickedAt' => $this->lastClickedAt,
         ];
     }

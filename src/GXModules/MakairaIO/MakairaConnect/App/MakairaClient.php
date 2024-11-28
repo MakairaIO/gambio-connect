@@ -62,29 +62,27 @@ class MakairaClient
         return [
             'X-Makaira-Nonce' => $this->nonce,
             'X-Makaira-Hash' => $this->getHash($body),
-            'content-type' => 'application/json',
+            'Content-Type' => 'application/json',
         ];
     }
 
     public function doRequest($method, $url, $body = '')
     {
-        try {
-            return $this->client->request($method, $url, [
-                'headers' => $this->getHeaders($body),
-                'json' => $body,
-            ]);
-        } catch (ClientException $e) {
-            throw new \Exception('Request failed: Response: '.$e->getMessage());
-        }
+        return $this->client->request($method, $url, [
+            'headers' => $this->getHeaders($body),
+            'json' => $body,
+        ]);
     }
 
     public function pushRevision(array $document)
     {
         try {
-            return $this->doRequest('PUT', 'persistence/revisions', $document);
-        }catch (\Exception $exception) {
+            $response = $this->doRequest('PUT', 'persistence/revisions', $document);
+        } catch (ClientException $exception) {
             return $exception->getMessage();
         }
+
+        return $response->getBody()->getContents();
     }
 
     public function rebuild(array $types)

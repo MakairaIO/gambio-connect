@@ -1,5 +1,7 @@
 <?php
 
+ini_set('memory_limit', '-1');
+
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\MakairaClient;

@@ -211,23 +211,51 @@ class GambioConnectService implements GambioConnectServiceInterface
         if(is_array($document)) {
             $data['delete'] = $document['delete'];
             unset($document['delete']);
+            $data['data'] = $document;
         } else {
             $data['delete'] = $document->isDelete();
+            $data['data'] = $document->toArray();
         }
 
-        $data['data'] = is_array($document) ? $document : $document->toArray();
+        if($data['delete'] === null) {
+            $data['delete'] = false;
+        }
+
         $data['language_id'] = $language;
+
+        $this->logger->debug("Added Document Wrapper", [
+            'data' => $data,
+            'original' => is_array($document) ? $document : $document->toArray(),
+        ]);
 
         return $data;
     }
 
     public function executeDocumentsInChunks(array $documents): void
     {
-        foreach(array_chunk($documents, 1000) as $chunk) {
-            try {
-                $this->client->pushRevision($this->addMultipleMakairaDocuments($chunk, $_GET['language']));
-            }catch(\Exception $e) {
-                $this->logger->error($e->getMessage());
+        $chunks = array_chunk($documents, 2);
+        $this->logger->debug('Divided Documents in ' . count($chunks) . ' Chunks');
+        foreach($chunks as $index => $chunk) {
+            $this->logger->debug('Preparing Chunk ' . $index);
+            $payload = $this->addMultipleMakairaDocuments($chunk, $_GET['language']);
+            if(!empty($payload)) {
+                $this->logger->debug('Processing Chunk ' . $index, [
+                    'payload' => $payload,
+                ]);
+                $this->logger->debug("Payload Size: " . mb_strlen(json_encode($payload)));
+                try {
+                    $response = $this->client->pushRevision($payload);
+                }catch(\Exception $exception) {
+                    $this->logger->debug("Failed Chunk Processing: " . $exception->getMessage(), [
+                        'payload' => $payload,
+                    ]);
+                }
+                $this->logger->debug($response, [
+                    'payload' => $payload,
+                ]);
+                $this->logger->debug('Chunk ' . $index . ' Processed');
+            } else {
+                $this->logger->debug('Chunk ' . $index . ' Empty');
             }
         }
     }
@@ -235,16 +263,12 @@ class GambioConnectService implements GambioConnectServiceInterface
     public function addMultipleMakairaDocuments(array $documents, ?string $language = null): array
     {
         $data = [
-            'items' => [],
+            'items' => array_map(function ($document) use($language) {
+                return $this->addMakairaDocumentWrapper($document, $language);
+            }, $documents),
             'import_timestamp' => (new \DateTime)->format('Y-m-d H:i:s'),
             'source_identifier' => 'gambio',
         ];
-
-        foreach ($documents as $document) {
-            $data['items'][] = $this->addMakairaDocumentWrapper($document, $language);
-        }
-
-        $this->logger->debug('Makaira Documents for Debug', $data);
 
         return $data;
     }

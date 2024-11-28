@@ -4,6 +4,7 @@
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Gambio\Admin\Modules\Language\Model\Language;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\ChangesService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService;
@@ -18,6 +19,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
     protected ModuleConfigService $moduleConfigService;
 
+    protected \Gambio\Core\Language\Services\LanguageService $languageService;
+
     protected Connection $connection;
 
     private const CHANGE_TYPES = [
@@ -29,6 +32,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
     public function getCallback($cronjobStartAsMicrotime): \Closure
     {
         $dependencies = $this->dependencies->getDependencies();
+
+        $this->languageService = $dependencies['LanguageReadService'];
 
         $this->connection = $dependencies['Connection'];
 
@@ -47,7 +52,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
             $this->gambioConnectPublicFieldsService = $gambioConnectService->getGambioConnectPublicFieldsService();
 
-            return function () use ($gambioConnectService): void {
+            return function () use ($gambioConnectService, $cronjobStartAsMicrotime): void {
                 $this->logInfo('MakairaConnect Cronjob Started');
 
                 if (! $this->checkImporterSetup()) {
@@ -61,11 +66,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $host = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/';
 
-                $languages = $this->connection->createQueryBuilder()
-                    ->select('code')
-                    ->from('languages')
-                    ->execute()
-                    ->fetchAll(FetchMode::ASSOCIATIVE);
+                $languages = $this->languageService->getAvailableLanguages();
+
+                $this->logInfo("Found " . count($languages->toArray()) . " languages");
 
                 $limit = $this->moduleConfigService->getBatchSize();
 
@@ -84,14 +87,15 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $deleteIds = [];
 
+                /** @var Language $language */
                 foreach($languages as $language) {
-                    $this->logInfo('Begin Export of : ' . $countChanges.' Datasets for Language ' . $language['code'] . " with Changes");
+                    $this->logInfo('Begin Export of : ' . $countChanges.' Datasets for Language ' . $language->code() . " with Changes");
                     $client = new \GuzzleHttp\Client([
-                        'base_uri' => $host . $language['code'],
+                        'base_uri' => $host . $language->code(),
                     ]);
                     try {
-                        $response = $client->post(
-                            'shop.php?do=MakairaCronService/doExport&language=' . $language['code'],
+                        $client->post(
+                            'shop.php?do=MakairaCronService/doExport&language=' . $language->code(),
                             [
                                 'json' => [
                                     'changes' => $changes,
@@ -103,28 +107,29 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                             return $change['gambio_id'];
                         }, $changes));
                     } catch (Exception $exception) {
-                        $this->logInfo('Error in Export for Language ' . $language['code']);
+                        $this->logInfo('Error in Export for Language ' . $language->code());
                         $this->logError($exception->getMessage());
                         if(str_contains('500 Internal Server Error', $exception->getMessage())) {
                             $this->logError("Fatal Request Error - Exiting");
 
                             return;
+                        } else {
+                            $errors = true;
+                            $limit = $limit / 2;
+                            if ($limit <= 1) {
+                                $limit = 500;
+                            }
+                            $this->logInfo("Set Batch Limit to $limit");
+                            $this->moduleConfigService->setBatchSize($limit);
                         }
-                        $errors = true;
-                        $newBatchSize = $limit / 2;
-                        if($newBatchSize <= 1) {
-                            $newBatchSize = 1000;
-                        }
-                        $this->logInfo("Set Batch Limit to $newBatchSize");
-                        $this->moduleConfigService->setBatchSize($newBatchSize);
                     }
-                    $this->logInfo('End Export of : ' . $countChanges.' Datasets for Language ' . $language['code']);
+                    $this->logInfo('End Export of : ' . $countChanges.' Datasets for Language ' . $language->code());
                 }
 
                 if($errors === false) {
-                    $newBatchSize = $limit + 1;
-                    $this->logInfo("Set Batch Limit to $newBatchSize");
-                    $this->moduleConfigService->setBatchSize($newBatchSize);
+                    $limit = $limit + 1;
+                    $this->logInfo("Set Batch Limit to $limit");
+                    $this->moduleConfigService->setBatchSize($limit);
                 }
 
                 if(!empty($deleteIds)) {
