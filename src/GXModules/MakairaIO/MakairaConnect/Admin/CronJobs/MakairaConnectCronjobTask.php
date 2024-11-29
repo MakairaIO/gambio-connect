@@ -72,6 +72,12 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $limit = $this->moduleConfigService->getBatchSize();
 
+                $workingBatchSize = $this->moduleConfigService->getWorkingBatchSize();
+
+                if($workingBatchSize){ {
+                    $limit = $workingBatchSize;
+                }}
+
                 $changes = $this->connection->createQueryBuilder()
                     ->select('gambio_id', 'type')
                     ->from(ChangesService::TABLE_NAME)
@@ -90,7 +96,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     ]);
 
                     try {
-                        $response = $client->post(
+                        $client->post(
                             'shop.php?do=MakairaCronService/doExport&language=' . $language->code(),
                             [
                                 'json' => [
@@ -99,6 +105,8 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                             ]
                         );
 
+                        $this->moduleConfigService->setWorkingBatchSize($limit);
+
                         $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
                             return $change['gambio_id'];
                         }, $changes));
@@ -106,27 +114,21 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                         $this->logInfo('Error in Export for Language ' . $language->code());
                         $this->logError($exception->getMessage());
                         $errors = true;
-                        $limit = $limit / 2;
+                        $limit = (int)($limit / 2);
+
                         if ($limit <= 1) {
-                            $limit = 500;
+                            $limit = 125;
                         }
                         $this->logInfo("Set Batch Limit to $limit");
                         $this->moduleConfigService->setBatchSize($limit);
-                        throw $exception;
                     }
                     $this->logInfo('End Export of : ' . $countChanges.' Datasets for Language ' . $language->code());
-                }
-
-                if($errors === false) {
-                    $limit = $limit + 1;
-                    $this->logInfo("Set Batch Limit to $limit");
-                    $this->moduleConfigService->setBatchSize($limit);
                 }
 
                 if(!empty($deleteIds)) {
                     $deleteIds = array_unique($deleteIds);
                     $this->logInfo("Delete " . count($deleteIds) . " changes.");
-                    $result = $this->connection->createQueryBuilder()
+                    $this->connection->createQueryBuilder()
                         ->delete(ChangesService::TABLE_NAME)
                         ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')
                         ->execute();
