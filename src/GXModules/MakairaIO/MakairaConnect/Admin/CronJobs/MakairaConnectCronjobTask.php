@@ -99,11 +99,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                             ]
                         );
 
-                        if($response->getStatusCode() == 200) {
-                            $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
-                                return $change['gambio_id'];
-                            }, $changes));
-                        }
+                        $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
+                            return $change['gambio_id'];
+                        }, $changes));
                     } catch (\GuzzleHttp\Exception\ServerException $exception) {
                         $this->logInfo('Error in Export for Language ' . $language->code());
                         $this->logError($exception->getMessage());
@@ -128,7 +126,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 if(!empty($deleteIds)) {
                     $deleteIds = array_unique($deleteIds);
                     $this->logInfo("Delete " . count($deleteIds) . " changes.");
-                    $this->connection->createQueryBuilder()
+                    $result = $this->connection->createQueryBuilder()
                         ->delete(ChangesService::TABLE_NAME)
                         ->where('gambio_id IN (' . implode(',', $deleteIds) . ')')
                         ->execute();
