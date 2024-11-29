@@ -81,7 +81,6 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                 $changes = $this->connection->createQueryBuilder()
                     ->select('gambio_id', 'type')
                     ->from(ChangesService::TABLE_NAME)
-                    ->where('consumed_at is null')
                     ->setMaxResults($limit)
                 ->execute()->fetchAll(FetchMode::ASSOCIATIVE);
 
