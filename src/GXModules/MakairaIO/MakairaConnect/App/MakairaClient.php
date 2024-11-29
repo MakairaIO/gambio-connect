@@ -91,16 +91,7 @@ class MakairaClient
 
     public function pushRevision(array $document): ResponseInterface|array
     {
-        try {
-            $response = $this->doRequest('PUT', 'persistence/revisions', $document);
-            return $response;
-        } catch(\Exception $exception) {
-            dd(json_encode($document), $exception->getResponse()->getBody()->getContents());
-            $this->logger->error("Makaira Push Revision Error: ".$exception->getMessage(), [
-                'response' => $exception->getResponse()->getBody()->getContents(),
-            ]);
-            return ['payload' => $document, 'exception' => $exception];
-        }
+        return $this->doRequest('PUT', 'persistence/revisions', $document);
     }
 
     public function rebuild(array $types)

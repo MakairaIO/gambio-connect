@@ -6,6 +6,7 @@ namespace GXModules\MakairaIO\MakairaConnect\App;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\ParameterType;
 use Gambio\Admin\Modules\Language\Model\Collections\Languages;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
@@ -18,12 +19,15 @@ use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPro
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
 use Psr\Http\Message\ResponseInterface;
+use DateTime;
 
 /**
  * Class GambioConnectService
  */
 class GambioConnectService implements GambioConnectServiceInterface
 {
+    private const MAX_DOCUMENT_POST_SIZE = 1000000;
+
     public function __construct(
         protected MakairaClient $client,
         protected LanguageService $languageService,
@@ -51,7 +55,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         foreach ($changes as $change) {
             switch ($change['type']) {
                 case 'product':
-                    $documents[] = $productService->exportDocument($change);
+                    $documents = array_merge($documents, $productService->exportDocument($change));
                     break;
                 case 'category':
                     $documents[] = $categoryService->exportDocument($change);
@@ -61,6 +65,8 @@ class GambioConnectService implements GambioConnectServiceInterface
                     break;
             }
         }
+
+        $this->logger->debug("Processing Documents: " . count($documents));
 
         $this->executeDocumentsInChunks($documents);
     }
@@ -226,25 +232,43 @@ class GambioConnectService implements GambioConnectServiceInterface
 
     public function executeDocumentsInChunks(array $documents): void
     {
-        foreach($documents as $index => $chunk) {
-            $this->logger->debug('Preparing Chunk ' . $index);
+        $chunkSize = 1000;
+        do {
+            $chunks = array_chunk($documents, $chunkSize);
+            $size = mb_strlen(json_encode($chunks[0]));
+            if($size > self::MAX_DOCUMENT_POST_SIZE) {
+                $chunkSize -= 10;
+            }
+        }while($size > self::MAX_DOCUMENT_POST_SIZE);
+        $this->logger->debug("Processing Chunks: " . count($chunks));
+        foreach($chunks as $chunk) {
             $payload = $this->addMultipleMakairaDocuments($chunk, $_GET['language']);
-            if(!empty($payload)) {
-                $this->logger->debug('Processing Chunk ' . $index, [
+            if(!empty($payload) || count($chunk) === 0) {
+                $this->logger->debug("Payload Size: " . mb_strlen(json_encode($payload)), [
                     'payload' => $payload,
                 ]);
-                $this->logger->debug("Payload Size: " . mb_strlen(json_encode($payload)));
-                $response = $this->client->pushRevision($payload);
-                if(!$response instanceof ResponseInterface) {
-                    $this->logger->error("Error Processing Chunk $index", [
-                        'payload' => $payload['payload'],
-                    ]);
-                }
-                $this->logger->debug('Chunk ' . $index . ' Processed', [
+                $this->client->pushRevision($payload);
+
+                $ids = array_map(function (MakairaEntity|array $item) {
+                    if(is_array($item)) {
+                        return $item['id'];
+                    }
+                    return $item->getId();
+                }, $chunk);
+
+                $this->connection->createQueryBuilder()
+                    ->update(ChangesService::TABLE_NAME)
+                    ->set('consumed_at', '"' . (new DateTime())->format('Y-m-d H:i:s') . '"')
+                    ->where('gambio_id IN ('.implode(',', $ids).')')
+                    ->executeQuery();
+
+                $this->logger->debug('Payload Items marked as consumed');
+
+                $this->logger->debug('Chunk Processed', [
                     'payload' => $payload,
                 ]);
             } else {
-                $this->logger->debug('Chunk ' . $index . ' Empty');
+                $this->logger->debug('Chunk Empty');
             }
         }
     }
