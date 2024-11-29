@@ -80,11 +80,6 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $this->logInfo("Loaded " . $countChanges = count($changes) . " changes");
 
-                $this->logger->log([
-                    'changes' => $changes
-
-                ]);
-
                 $deleteIds = [];
 
                 /** @var Language $language */
@@ -93,8 +88,9 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                     $client = new \GuzzleHttp\Client([
                         'base_uri' => $host . $language->code(),
                     ]);
+
                     try {
-                        $client->post(
+                        $response = $client->post(
                             'shop.php?do=MakairaCronService/doExport&language=' . $language->code(),
                             [
                                 'json' => [
@@ -103,25 +99,22 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
                             ]
                         );
 
-                        $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
-                            return $change['gambio_id'];
-                        }, $changes));
-                    } catch (Exception $exception) {
+                        if($response->getStatusCode() == 200) {
+                            $deleteIds = array_merge($deleteIds, array_map(function (array $change) {
+                                return $change['gambio_id'];
+                            }, $changes));
+                        }
+                    } catch (\GuzzleHttp\Exception\ServerException $exception) {
                         $this->logInfo('Error in Export for Language ' . $language->code());
                         $this->logError($exception->getMessage());
-                        if(str_contains('500 Internal Server Error', $exception->getMessage())) {
-                            $this->logError("Fatal Request Error - Exiting");
-
-                            return;
-                        } else {
-                            $errors = true;
-                            $limit = $limit / 2;
-                            if ($limit <= 1) {
-                                $limit = 500;
-                            }
-                            $this->logInfo("Set Batch Limit to $limit");
-                            $this->moduleConfigService->setBatchSize($limit);
+                        $errors = true;
+                        $limit = $limit / 2;
+                        if ($limit <= 1) {
+                            $limit = 500;
                         }
+                        $this->logInfo("Set Batch Limit to $limit");
+                        $this->moduleConfigService->setBatchSize($limit);
+                        throw $exception;
                     }
                     $this->logInfo('End Export of : ' . $countChanges.' Datasets for Language ' . $language->code());
                 }

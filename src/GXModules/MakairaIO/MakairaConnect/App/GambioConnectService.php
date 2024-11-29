@@ -9,6 +9,7 @@ use Doctrine\DBAL\FetchMode;
 use Gambio\Admin\Modules\Language\Model\Collections\Languages;
 use Gambio\Admin\Modules\Product\Submodules\Variant\App\ProductVariantsRepository;
 use Gambio\Core\Language\Services\LanguageService;
+use GuzzleHttp\Promise\Utils;
 use GXModules\MakairaIO\MakairaConnect\App\Documents\MakairaEntity;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectCategoryService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectImporterConfigService;
@@ -16,6 +17,7 @@ use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectMan
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectProductService;
 use GXModules\MakairaIO\MakairaConnect\App\GambioConnectService\GambioConnectPublicFieldsService;
 use GXModules\MakairaIO\MakairaConnect\App\Service\GambioConnectService as GambioConnectServiceInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class GambioConnectService
@@ -29,6 +31,7 @@ class GambioConnectService implements GambioConnectServiceInterface
         protected MakairaLogger $logger,
         protected ?ProductVariantsRepository $productVariantsRepository = null,
     ) {
+        $this->client->setLogger($this->logger);
     }
 
 
@@ -46,14 +49,9 @@ class GambioConnectService implements GambioConnectServiceInterface
         $this->logger->debug("Received Changes", [$changes]);
 
         foreach ($changes as $change) {
-            $this->logger->debug("Processing Change", [
-                'change' => $change,
-                'type' => $change['type'],
-                'id' => $change['gambio_id'],
-            ]);
             switch ($change['type']) {
                 case 'product':
-                    $documents[] = array_merge($documents, $productService->exportDocument($change));
+                    $documents[] = $productService->exportDocument($change);
                     break;
                 case 'category':
                     $documents[] = $categoryService->exportDocument($change);
@@ -223,19 +221,12 @@ class GambioConnectService implements GambioConnectServiceInterface
 
         $data['language_id'] = $language;
 
-        $this->logger->debug("Added Document Wrapper", [
-            'data' => $data,
-            'original' => is_array($document) ? $document : $document->toArray(),
-        ]);
-
         return $data;
     }
 
     public function executeDocumentsInChunks(array $documents): void
     {
-        $chunks = array_chunk($documents, 2);
-        $this->logger->debug('Divided Documents in ' . count($chunks) . ' Chunks');
-        foreach($chunks as $index => $chunk) {
+        foreach($documents as $index => $chunk) {
             $this->logger->debug('Preparing Chunk ' . $index);
             $payload = $this->addMultipleMakairaDocuments($chunk, $_GET['language']);
             if(!empty($payload)) {
@@ -243,17 +234,15 @@ class GambioConnectService implements GambioConnectServiceInterface
                     'payload' => $payload,
                 ]);
                 $this->logger->debug("Payload Size: " . mb_strlen(json_encode($payload)));
-                try {
-                    $response = $this->client->pushRevision($payload);
-                }catch(\Exception $exception) {
-                    $this->logger->debug("Failed Chunk Processing: " . $exception->getMessage(), [
-                        'payload' => $payload,
+                $response = $this->client->pushRevision($payload);
+                if(!$response instanceof ResponseInterface) {
+                    $this->logger->error("Error Processing Chunk $index", [
+                        'payload' => $payload['payload'],
                     ]);
                 }
-                $this->logger->debug($response, [
+                $this->logger->debug('Chunk ' . $index . ' Processed', [
                     'payload' => $payload,
                 ]);
-                $this->logger->debug('Chunk ' . $index . ' Processed');
             } else {
                 $this->logger->debug('Chunk ' . $index . ' Empty');
             }

@@ -86,9 +86,9 @@ class GambioConnectCategoryService extends GambioConnectService implements Gambi
         $hierarchy = $category->getCategoriesId() . '//';
         $depth = 1;
         foreach ($subCategoryIds as $subCategoryId) {
-            /** @var IdType $subCategoryId */
+            /** @var \IdType $subCategoryId */
             $subCategories = MakairaDataMapper::mapCategory(
-                (int)$subCategoryId,
+                $subCategoryId->asInt(),
                 $this->currentLanguageCode
             )->toArray();
             $hierarchy .= $subCategoryId. '//';

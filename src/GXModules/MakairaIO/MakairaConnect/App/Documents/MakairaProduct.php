@@ -190,6 +190,8 @@ class MakairaProduct extends MakairaEntity
 
     private float $makBoostNormProfitMargin = 0.0;
 
+    private string $cooProduct = '';
+
     private array $groups = [];
 
     public function getGroups(): array
@@ -253,6 +255,7 @@ class MakairaProduct extends MakairaEntity
                 'mak_boost_norm_revenue' => $this->makBoostNormRevenue,
                 'mak_boost_norm_profit_margin' => $this->makBoostNormProfitMargin,
                 'groups' => $this->getGroups(),
+                'coo_product' => $this->getCooProduct(),
             ]
         );
     }
@@ -720,6 +723,17 @@ class MakairaProduct extends MakairaEntity
     {
         $this->model = $model;
 
+        return $this;
+    }
+
+    public function getCooProduct(): string
+    {
+        return $this->cooProduct;
+    }
+
+    public function setCooProduct(string $cooProduct): static
+    {
+        $this->cooProduct = $cooProduct;
         return $this;
     }
 

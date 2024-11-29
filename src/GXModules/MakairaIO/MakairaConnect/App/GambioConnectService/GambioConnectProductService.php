@@ -99,9 +99,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
         $documents = [];
 
         $document = MakairaDataMapper::mapProduct((int)$change['gambio_id'], $this->currentLanguage, $this->currentLanguageCode, $this->currencyCodes, $this->customerStatusIds);
-        $this->logger->info('Prepared Product ' . $change['gambio_id'] . ' in Language ' . $this->currentLanguageCode, [
-            'document' => $document->toArray()
-        ]);
         if ($document->getId()) {
             $documents[] = $document->toArray();
 
@@ -109,13 +106,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                 $this
                     ->productVariantsRepository
                     ->getProductVariantsByProductId(ProductId::create($change['gambio_id']));
-
-            $this->logger->info(
-                'Processing '
-                . count($variants->toArray())
-                . ' Variants for '
-                . $change['gambio_id']
-            );
 
             foreach ($variants as $variant) {
                 $documents[] = $variantDocument = MakairaDataMapper::mapVariant(
@@ -126,15 +116,6 @@ class GambioConnectProductService extends GambioConnectService implements Gambio
                     $this->customerStatusIds,
                     $variant
                 )->toArray();
-                $this->logger->info("Prepared Variant " . $variant->id() . " for Product " . $change['gambio_id'] . ' in Language ' . $this->currentLanguageCode, [
-                    'document' => $variantDocument
-                ]);
-            }
-
-            foreach ($documents as $document) {
-                $this->logger->info('Prepared Document for Makaira', [
-                    'data' => $document,
-                ]);
             }
         }
         return $documents;

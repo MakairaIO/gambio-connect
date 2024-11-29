@@ -5,6 +5,7 @@ namespace GXModules\MakairaIO\MakairaConnect\App;
 use Gambio\Core\Configuration\Services\ConfigurationService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\RequestOptions;
 use GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService;
 use GXModules\MakairaIO\MakairaConnect\App\Core\RequestBuilder;
@@ -28,6 +29,8 @@ class MakairaClient
 
     private string $language = 'de';
 
+    private MakairaLogger $logger;
+
     public function __construct(ConfigurationService $configurationFinder)
     {
         $this->moduleConfigService = new ModuleConfigService($configurationFinder);
@@ -46,6 +49,10 @@ class MakairaClient
                 'Content-Type' => 'application/json',
             ],
         ]);
+    }
+
+    public function setLogger(MakairaLogger $logger) {
+        $this->logger = $logger;
     }
 
     private function getHash($body): string
@@ -74,15 +81,26 @@ class MakairaClient
         ]);
     }
 
-    public function pushRevision(array $document)
+    public function pushRevisionsAsync(array $revisions): \GuzzleHttp\Promise\PromiseInterface
+    {
+        return $this->client->putAsync('persistence/revisions', [
+           'headers' => $this->getHeaders($revisions),
+           'json' => $revisions,
+        ]);
+    }
+
+    public function pushRevision(array $document): ResponseInterface|array
     {
         try {
             $response = $this->doRequest('PUT', 'persistence/revisions', $document);
-        } catch (ClientException $exception) {
-            return $exception->getMessage();
+            return $response;
+        } catch(\Exception $exception) {
+            dd(json_encode($document), $exception->getResponse()->getBody()->getContents());
+            $this->logger->error("Makaira Push Revision Error: ".$exception->getMessage(), [
+                'response' => $exception->getResponse()->getBody()->getContents(),
+            ]);
+            return ['payload' => $document, 'exception' => $exception];
         }
-
-        return $response->getBody()->getContents();
     }
 
     public function rebuild(array $types)

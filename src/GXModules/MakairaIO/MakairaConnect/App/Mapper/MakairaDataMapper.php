@@ -181,7 +181,6 @@ class MakairaDataMapper
                     'products_shipping_range' => $cooProduct['PRODUCTS_SHIPPING_RANGE'],
                     'products_shipping_image' => $cooProduct['PRODUCTS_SHIPPING_IMAGE'],
                     'products_shipping_link_active' => $cooProduct['PRODUCTS_SHIPPING_LINK_ACTIVE'],
-                    'coo_product' => $data['coo_product'],
                 ];
             }
         }
@@ -214,7 +213,8 @@ class MakairaDataMapper
             ->setCategories([$category])
             ->setMainCategory($storedCategory?->getName(new \LanguageCode(new \StringType($languageCode))) ?? '')
             ->setMainCategoryUrl($category['path'])
-            ->setGroups($groups);
+            ->setGroups($groups)
+            ->setCooProduct($data['coo_product']);
 
         return $transfer;
     }
