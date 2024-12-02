@@ -74,7 +74,7 @@ class MakairaConnectCronjobTask extends AbstractCronjobTask
 
                 $workingBatchSize = $this->moduleConfigService->getWorkingBatchSize();
 
-                if($workingBatchSize){
+                if($workingBatchSize && $workingBatchSize < $limit){
                     $this->logInfo("Working Batch Size found: " . $workingBatchSize);
                     $limit = $workingBatchSize;}
 
