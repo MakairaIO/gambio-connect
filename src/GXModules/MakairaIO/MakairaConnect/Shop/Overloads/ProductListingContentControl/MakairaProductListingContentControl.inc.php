@@ -2,6 +2,8 @@
 
 require __DIR__.'/../SplitPageResults/makaira_split_page_results.php';
 
+use product;
+
 class MakairaProductListingContentControl extends MakairaProductListingContentControl_parent
 {
     private \GXModules\MakairaIO\MakairaConnect\Admin\Services\ModuleConfigService $moduleConfigService;
@@ -217,7 +219,8 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                                 $GLOBALS['xtPrice']->showFrom_Attributes = false;
                             }
 
-                            $coo_product = unserialize($t_product_array['coo_product']);
+                            $product = new \product($t_product_array['id']);
+                            $coo_product = $product->buildDataArray($product->data);
                             $t_products_array[] = $coo_product;
 
                             $t_attributes_html = '';
@@ -239,7 +242,7 @@ class MakairaProductListingContentControl extends MakairaProductListingContentCo
                                 $coo_product_attributes->set_gm_product_option_template($c_template);
 
                                 // SET DATA
-                                $coo_product_attributes->set_coo_product($coo_product);
+                                $coo_product_attributes->set_coo_product($product);
                                 $coo_product_attributes->set_language_id($_SESSION['languages_id']);
 
                                 // GET HTML
